@@ -42,7 +42,6 @@ export default makeStyles((theme) => ({
     textAlign: "left",
   },
   textField: {
-    marginBottom: 30,
     "& .MuiInputBase-input": {
       color: "white",
     },
