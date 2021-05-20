@@ -20,7 +20,7 @@ const Login = () => {
     setTimeout(() => {
       setActive("signin");
     }, 600);
-  };  
+  };
 
   const contextValue = { switchToSignup, switchToSignin };
 

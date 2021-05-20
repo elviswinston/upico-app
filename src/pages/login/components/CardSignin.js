@@ -14,6 +14,8 @@ import useStyles from "./styles/cardStyles";
 
 import AccountContext from "../accountContext";
 
+import AuthService from "../../../services/auth.service";
+
 const CardSignin = () => {
   const classes = useStyles();
   const [animate, setAnimate] = useState(0);
@@ -35,17 +37,27 @@ const CardSignin = () => {
   const login = () => {
     if (username === "") {
       setUsernameMessage("Username is required.");
-    } else if (username.length <= 6) {
-      setUsernameMessage("Username must be more than 6 leters.");
     } else {
       setUsernameMessage("");
     }
     if (password === "") {
       setPasswordMessage("Password is required.");
-    } else if (password.length <= 6) {
-      setPasswordMessage("Password must be more than 6 letters.");
+    } else if (password.length < 6) {
+      setPasswordMessage("Password cant be less than 6 letters.");
     } else {
       setPasswordMessage("");
+    }
+
+    if (usernameMessage === "" && passwordMessage === "") {
+      AuthService.login(username, password).then((response) => {
+        if (response.status === 400) {
+          setUsernameMessage(response.data);
+        } else {
+          localStorage.setItem("token", JSON.stringify(response.data));
+          localStorage.setItem("username", username);
+          window.location = window.location.origin;
+        }
+      });
     }
   };
 
@@ -60,12 +72,12 @@ const CardSignin = () => {
             Username
           </Typography>
           <TextField
-            error={usernameMessage && true}
+            //error={usernameMessage > 0}
             fullWidth
             autoFocus
             className={classes.textField}
             onChange={changeUsername}
-            helperText={usernameMessage && usernameMessage}
+            //helperText={usernameMessage}
           />
         </div>
         <div style={{ marginBottom: 30 }}>
@@ -73,12 +85,12 @@ const CardSignin = () => {
             Password
           </Typography>
           <TextField
-            error={passwordMessage && true}
+            error={passwordMessage > 0}
             fullWidth
             className={classes.textField}
             onChange={changePassword}
             type="password"
-            helperText={passwordMessage && passwordMessage}
+            helperText={passwordMessage}
           />
         </div>
       </CardContent>

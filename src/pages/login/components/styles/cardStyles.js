@@ -54,6 +54,9 @@ export default makeStyles((theme) => ({
     "&:hover .MuiInput-underline:before": {
       borderBottomColor: "#8E8E8E",
     },
+    "& .MuiFormHelperText-root": {
+      color: "red",
+    },
   },
   cardAction: {
     justifyContent: "center",
