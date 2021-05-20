@@ -1,4 +1,11 @@
-import { Grid, IconButton, InputBase, Paper } from "@material-ui/core";
+import {
+  Avatar,
+  Grid,
+  IconButton,
+  InputBase,
+  Paper,
+  Typography,
+} from "@material-ui/core";
 import React, { useRef, useState } from "react";
 
 import HomeIcon from "@material-ui/icons/Home";
@@ -6,6 +13,7 @@ import FavoriteIcon from "@material-ui/icons/FavoriteBorderOutlined";
 import SearchIcon from "@material-ui/icons/Search";
 
 import logo from "../../../assets/logo.jpg";
+import avatar from "../../../assets/avatar.jpg";
 
 import useStyles from "./styles/headerStyles";
 
@@ -48,13 +56,17 @@ const Header = () => {
             />
           </Paper>
         </Grid>
-        <Grid item>
+        <Grid item style={{ display: "flex" }}>
           <IconButton className={classes.iconButton}>
             <HomeIcon className={classes.icon} />
           </IconButton>
           <IconButton className={classes.iconButton}>
             <FavoriteIcon className={classes.icon} />
           </IconButton>
+          <div className={classes.avatarContainer}>
+            <Avatar alt="avatar" src={avatar} className={classes.avatar} />
+            <Typography className={classes.name}>Lãng Đế</Typography>
+          </div>
         </Grid>
       </Grid>
     </div>

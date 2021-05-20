@@ -1,0 +1,54 @@
+import { makeStyles } from "@material-ui/core";
+
+export default makeStyles((theme) => ({
+  root: {
+    width: "15%",
+    position: "fixed",
+    top: 100,
+    right: 40,
+  },
+  header: {
+    backgroundColor: "#2a3f54",
+    padding: 10,
+    borderTopLeftRadius: 2,
+    borderTopRightRadius: 2,
+  },
+  headerText: {
+    fontSize: 12,
+    color: "#009688",
+    fontWeight: "bold",
+  },
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    padding: 10,
+    justifyContent: "space-between",
+  },
+  suggest: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  info: {
+    width: "100%",
+  },
+  avatar: {
+    width: 40,
+    height: "auto",
+    marginRight: 10,
+  },
+  name: {
+    fontSize: 12,
+    fontWeight: "bold",
+  },
+  desc: {
+    fontSize: 12,
+    color: "#8E8E8E",
+  },
+  icon: {
+    color: "#009688",
+    float: "right",
+    cursor: "pointer",
+  },
+}));
