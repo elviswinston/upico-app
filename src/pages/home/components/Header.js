@@ -17,7 +17,7 @@ import avatar from "../../../assets/avatar.jpg";
 
 import useStyles from "./styles/headerStyles";
 
-const Header = () => {
+const Header = ({ displayName }) => {
   const classes = useStyles();
 
   const textInput = useRef(null);
@@ -65,7 +65,7 @@ const Header = () => {
           </IconButton>
           <div className={classes.avatarContainer}>
             <Avatar alt="avatar" src={avatar} className={classes.avatar} />
-            <Typography className={classes.name}>Lãng Đế</Typography>
+            <Typography className={classes.name}>{displayName}</Typography>
           </div>
         </Grid>
       </Grid>

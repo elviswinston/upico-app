@@ -7,8 +7,15 @@ import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
 import useStyle from "./styles/postStyles";
 import avatar from "../../../assets/avatar.jpg";
 
-const Post = () => {
+import ReactPhotoGrid from "react-photo-grid";
+
+const Post = ({ post }) => {
   const classes = useStyle();
+  let data = [];
+
+  if (post.postImages.length > 0) {
+    post.postImages.map((image) => (data = [...data, image.url]));
+  }
   return (
     <Paper className={classes.root}>
       <div className={classes.avatarContainer}>
@@ -17,14 +24,10 @@ const Post = () => {
       </div>
       <div className={classes.content}>
         <Typography variant="body1" className={classes.text}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris
+          {post.content}
         </Typography>
       </div>
-      <div>
-        <img src={avatar} alt="postImage" className={classes.image} />
-      </div>
+      {data.length > 0 && <ReactPhotoGrid data={data}  gridSize="400x400"/>}
       <div className={classes.likeComment}>
         <div className={classes.button}>
           <FavoriteBorderIcon
@@ -32,13 +35,13 @@ const Post = () => {
             style={{ cursor: "pointer" }}
           />
           <Typography style={{ color: "#2a3f54", fontWeight: "bold" }}>
-            6 likes
+            {post.likes === 0 ? post.likes : post.likes + "likes"}
           </Typography>
         </div>
         <div className={classes.button} style={{ cursor: "pointer" }}>
           <ChatBubbleOutlineIcon className={classes.icon} />
           <Typography style={{ color: "#2a3f54", fontWeight: "bold" }}>
-            6 comments
+            {post.comments ? "0" : post.comments.length + "comments"}
           </Typography>
         </div>
       </div>
