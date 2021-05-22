@@ -15,7 +15,7 @@ export default makeStyles((theme) => ({
     position: "fixed",
     top: 97,
     left: "34%",
-    width: "32%",
+    width: "550px",
     zIndex: 100,
   },
   header: {
@@ -56,6 +56,7 @@ export default makeStyles((theme) => ({
     padding: "0 10px 10px 10px",
     display: "flex",
     alignItems: "center",
+    justifyContent: "space-between",
   },
   button: {
     width: 20,

@@ -29,7 +29,7 @@ const Upload = ({ displayName, avatar }) => {
 
   return (
     <Paper className={classes.root}>
-      <Modal isShowing={isShowing} hide={toggle} propRef={wrapperRef} />
+      <Modal isShowing={isShowing} hide={toggle} propRef={wrapperRef} displayName={displayName} avatar={avatar}/>
       <div className={classes.avatarContainer}>
         <Avatar alt="avatar" src={avatar} className={classes.avatar} />
         <Typography className={classes.name}>{displayName}</Typography>

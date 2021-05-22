@@ -9,6 +9,7 @@ import useStyles from "./styles/homeStyles";
 
 import UserService from "../../services/user.services";
 import PostService from "../../services/post.services";
+import AvatarService from "../../services/avatar.services";
 
 import avt from "../../assets/avatar.png";
 
@@ -19,18 +20,16 @@ const Home = () => {
   const [posts, setPosts] = useState([]);
 
   const username = localStorage.getItem("username");
-  const token = localStorage.getItem("token");
-  console.log(token);
 
   useEffect(() => {
-    UserService.getUserInfo(username).then((response) => {
+    UserService.getUserInfo(username).then((response) =>
       setDisplayName(
         response.data.displayName ? response.data.displayName : username
-      );
-      setAvatar(
-        response.data.avatars.length > 0 ? response.data.avatars[0] : avt
-      );
-    });
+      )
+    );
+    AvatarService.getUserAvatar(username).then((response) =>
+      setAvatar(response.data.length > 0 ? response.data.avatar[0] : avt)
+    );
     PostService.getPostUser(username).then((response) => {
       setPosts(response.data);
     });

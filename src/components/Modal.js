@@ -3,41 +3,61 @@ import MoreIcon from "@material-ui/icons/MoreHoriz";
 import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
 import SendIcon from "@material-ui/icons/Send";
 
-import React, { useRef, useState } from "react";
+import Photogrid from "./PhotoGrid";
+
+import React, { useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 
 import useStyles from "./styles/modalStyles";
-import avatar from "../assets/avatar.jpg";
 
 import PostService from "../services/post.services";
 
-const Modal = ({ isShowing, hide, propRef }) => {
+const Modal = ({ isShowing, hide, propRef, displayName, avatar }) => {
   const classes = useStyles();
   const [content, setContent] = useState("");
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [files, setFiles] = useState(null);
+  const [data, setData] = useState([]);
 
   const fileInput = useRef(null);
+
+  /*const setting = {
+    width: "600px",
+    height: ["250px", "170px"],
+    layout: [1, 4],
+    photos: data,
+    showNumOfRemainingPhotos: true,
+  };*/
 
   const handleChange = (e) => {
     setContent(e.target.value);
   };
 
   const handleFileChange = (e) => {
-    setSelectedFile(e.target.files[0]);
+    setFiles(e.target.files);
   };
 
   const handleClick = (e) => {
     fileInput.current.click();
   };
 
+  useEffect(() => {
+    if (files) {
+      for (let i = 0; i < files.length; i++) {
+        setData((prevData) => [...prevData, URL.createObjectURL(files[i])]);
+      }
+    }
+  }, [files]);
+
   const createPost = () => {
     const username = localStorage.getItem("username");
     if (content.length > 0) {
       PostService.createPost(username, content).then((response) => {
         const post = response.data;
-        if (selectedFile) {
+        if (files) {
           const formData = new FormData();
-          formData.append("postImage", selectedFile, selectedFile.name);
+          for (let i = 0; i < files.length; i++) {
+            formData.append(`postImage[${i}]`, files[i], files[i].name);
+          }
 
           PostService.uploadImage(post.id, formData);
         }
@@ -55,7 +75,7 @@ const Modal = ({ isShowing, hide, propRef }) => {
             <div className={classes.header}>
               <div className={classes.avatarContainer}>
                 <Avatar alt="avatar" src={avatar} className={classes.avatar} />
-                <Typography className={classes.name}>Lãng Đế</Typography>
+                <Typography className={classes.name}>{displayName}</Typography>
               </div>
               <MoreIcon className={classes.icon} />
             </div>
@@ -69,13 +89,11 @@ const Modal = ({ isShowing, hide, propRef }) => {
                 onChange={handleChange}
               ></TextField>
             </div>
-            {selectedFile && (
-              <img
-                src={URL.createObjectURL(selectedFile)}
-                alt={selectedFile.name}
-                className={classes.previewImage}
-              />
-            )}
+            <div style={{ padding: "0 10px" }}>
+              {data.length > 0 && (
+                <Photogrid images={data} maxWidth={540}></Photogrid>
+              )}
+            </div>
             <div className={classes.action}>
               <div className={classes.button} onClick={handleClick}>
                 <AddAPhotoIcon className={classes.icon} />
@@ -86,6 +104,7 @@ const Modal = ({ isShowing, hide, propRef }) => {
                 ref={fileInput}
                 onChange={handleFileChange}
                 accept="image/*"
+                multiple
               />
               <div className={classes.button} onClick={createPost}>
                 <SendIcon className={classes.icon} />
