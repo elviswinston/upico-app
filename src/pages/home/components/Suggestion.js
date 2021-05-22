@@ -26,14 +26,6 @@ const Suggestion = () => {
           </div>
           <FavoriteBorderIcon className={classes.icon} />
         </div>
-        <div className={classes.suggest}>
-          <Avatar alt="avatar" src={avatar} className={classes.avatar} />
-          <div className={classes.info}>
-            <Typography className={classes.name}>Vinh Lê Khánh</Typography>
-            <Typography className={classes.desc}>Tiểu lý Hoa Vinh</Typography>
-          </div>
-          <FavoriteBorderIcon className={classes.icon} />
-        </div>
       </div>
     </Paper>
   );

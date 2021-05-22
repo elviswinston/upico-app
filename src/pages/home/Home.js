@@ -52,7 +52,7 @@ const Home = () => {
             posts.map((post) => (
               <Grid
                 item
-                style={{ padding: 0, marginBottom: 100, minWidth: 400 }}
+                style={{ padding: 0, marginBottom: 100, minWidth: 500 }}
                 xs={12}
                 sm={4}
                 md={4}

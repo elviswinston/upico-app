@@ -51,6 +51,7 @@ export default makeStyles((theme) => ({
     borderTopRightRadius: 2,
     display: "flex",
     alignItems: "center",
+    cursor: "pointer",
   },
   avatar: {
     width: 25,
