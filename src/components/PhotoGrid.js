@@ -119,7 +119,7 @@ export default function PictureGrid(props) {
         if (isAVideo(images[0])) {
           return (
             <Grid container direction="row" justify="center">
-              <video width="95%" height="400" src={images[0]} controls />
+              <video width="95%" height="300" src={images[0]} controls />
             </Grid>
           );
         } else {
@@ -194,7 +194,7 @@ export default function PictureGrid(props) {
                       style={{
                         backgroundImage: `url(${image}`,
                         width: "auto",
-                        height: 400,
+                        height: 300,
                         borderRadius: 5,
                         marginBottom: 5,
                         backgroundSize: "cover",
@@ -222,7 +222,7 @@ export default function PictureGrid(props) {
                 style={{
                   backgroundImage: `url(${images[0]}`,
                   // width: 250,
-                  height: 400,
+                  height: 300,
                   borderRadius: 5,
                   backgroundSize: "cover",
                   backgroundRepeat: "no-repeat",
@@ -259,7 +259,7 @@ export default function PictureGrid(props) {
                         style={{
                           backgroundImage: `url(${image}`,
                           width: "auto",
-                          height: 195,
+                          height: 145,
                           borderRadius: 5,
                           marginBottom: 5,
                           backgroundSize: "cover",
@@ -289,7 +289,7 @@ export default function PictureGrid(props) {
                 style={{
                   backgroundImage: `url(${images[0]}`,
                   // width: 250,
-                  height: 400,
+                  height: 300,
                   borderRadius: 5,
                   backgroundSize: "cover",
                   backgroundRepeat: "no-repeat",
@@ -325,7 +325,7 @@ export default function PictureGrid(props) {
                       style={{
                         backgroundImage: `url(${image}`,
                         width: "auto",
-                        height: 130,
+                        height: 95,
                         borderRadius: 5,
                         marginBottom: 5,
                         backgroundSize: "cover",
@@ -354,7 +354,7 @@ export default function PictureGrid(props) {
                 style={{
                   backgroundImage: `url(${images[0]}`,
                   // width: 250,
-                  height: 400,
+                  height: 300,
                   borderRadius: 5,
                   backgroundSize: "cover",
                   backgroundRepeat: "no-repeat",
@@ -382,7 +382,7 @@ export default function PictureGrid(props) {
                                 backgroundImage: `url(${image}`,
                                 // background: "gray",
                                 width: "auto",
-                                height: 195,
+                                height: 145,
                                 borderRadius: 5,
                                 cursor: "pointer",
                                 // // marginBottom: 5,
@@ -489,7 +489,7 @@ export default function PictureGrid(props) {
                               style={{
                                 backgroundImage: `url(${image}`,
                                 width: "auto",
-                                height: 195,
+                                height: 145,
                                 borderRadius: 5,
                                 // marginBottom: 5,
                                 backgroundSize: "cover",

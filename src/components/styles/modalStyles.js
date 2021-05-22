@@ -64,7 +64,6 @@ export default makeStyles((theme) => ({
     borderRadius: 2,
     border: "1px solid #eeeeee",
     padding: 5,
-    marginRight: 10,
     cursor: "pointer",
     "&:hover": {
       backgroundColor: "#009688",

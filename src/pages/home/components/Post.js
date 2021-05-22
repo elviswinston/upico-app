@@ -1,5 +1,5 @@
 import { Avatar, Paper, Typography } from "@material-ui/core";
-import React from "react";
+import React, { useState } from "react";
 
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
@@ -9,9 +9,26 @@ import avatar from "../../../assets/avatar.png";
 
 import ReactPhotoGrid from "react-photo-grid";
 
+import LikeService from "../../../services/like.services";
+
 const Post = ({ post }) => {
   const classes = useStyle();
+  const [likes, setLikes] = useState(post.likes);
   let data = [];
+
+  const handleLike = () => {
+    const username = localStorage.getItem("username");
+
+    LikeService.like(username, post.id).then((response) => {
+      if (response.status === 400) {
+        LikeService.dislike(username, post.id).then((response) =>
+          setLikes(likes - 1)
+        );
+      } else {
+        setLikes(likes + 1);
+      }
+    });
+  };
 
   if (post.postImages.length > 0) {
     post.postImages.map((image) => (data = [...data, image.url]));
@@ -37,15 +54,24 @@ const Post = ({ post }) => {
           <FavoriteBorderIcon
             className={classes.icon}
             style={{ cursor: "pointer" }}
+            onClick={handleLike}
           />
           <Typography style={{ color: "#2a3f54", fontWeight: "bold" }}>
-            {post.likes === 0 ? post.likes : post.likes + "likes"}
+            {likes === 0
+              ? likes
+              : likes > 1
+              ? likes + " likes"
+              : likes + " like"}
           </Typography>
         </div>
         <div className={classes.button} style={{ cursor: "pointer" }}>
           <ChatBubbleOutlineIcon className={classes.icon} />
           <Typography style={{ color: "#2a3f54", fontWeight: "bold" }}>
-            {post.comments ? "0" : post.comments.length + "comments"}
+            {post.comments
+              ? "0"
+              : post.comments.length > 1
+              ? post.comments.length + " comment"
+              : post.comments.length + " comments"}
           </Typography>
         </div>
       </div>
