@@ -57,6 +57,10 @@ const CardSignup = () => {
     e.preventDefault();
     if (email === "") {
       setEmailMessage("Email is required.");
+    } else if (
+      !RegExp(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,15}/g).test(email)
+    ) {
+      setEmailMessage("Invalid email");
     } else {
       setEmailMessage("");
     }
@@ -73,14 +77,18 @@ const CardSignup = () => {
     if (username === "") {
       setUsernameMessage("Username is required.");
     } else if (username.length < 6) {
-      setUsernameMessage("Username must be more than 6 leters.");
+      setUsernameMessage("Username cant be less than 6 leters.");
     } else {
       setUsernameMessage("");
     }
     if (password === "") {
       setPasswordMessage("Password is required.");
-    } else if (password.length < 6) {
-      setPasswordMessage("Password must be more than 6 letters.");
+    } else if (
+      !RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{6,})").test(password)
+    ) {
+      setPasswordMessage(
+        "Password must be six charaters and contain at least lowercase character, uppercase character, numeric character."
+      );
     } else {
       setPasswordMessage("");
     }
