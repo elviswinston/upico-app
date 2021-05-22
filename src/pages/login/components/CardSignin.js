@@ -23,10 +23,7 @@ const CardSignin = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const [usernameMessage, setUsernameMessage] = useState("");
-  const [passwordMessage, setPasswordMessage] = useState("");
-
-  const [isError, setIsError] = useState(false);
+  const [error, setError] = useState({});
 
   const changeUsername = (e) => {
     setUsername(e.target.value);
@@ -36,19 +33,43 @@ const CardSignin = () => {
     setPassword(e.target.value);
   };
 
-  const login = () => {
+  const validate = () => {
+    let isError = false;
+
     if (username === "") {
-      setUsernameMessage("Username is required.");
-    } else {
-      setIsError(false);
+      setError((prevError) => ({
+        ...prevError,
+        username: "Username is required.",
+      }));
+      isError = true;
+    }
+    if (username !== "") {
+      setError((prevError) => ({
+        ...prevError,
+        username: "",
+      }));
     }
     if (password === "") {
-      setPasswordMessage("Password is required.");
-    } else {
-      setIsError(false);
+      setError((prevError) => ({
+        ...prevError,
+        password: "Password is required.",
+      }));
+      isError = true;
+    }
+    if (password !== "") {
+      setError((prevError) => ({
+        ...prevError,
+        password: "",
+      }));
     }
 
-    if (!isError) {
+    return isError;
+  };
+
+  const login = (e) => {
+    e.preventDefault();
+    
+    if (!validate()) {
       AuthService.login(username, password).then((response) => {
         console.log(response);
         if (response.status === 200) {
@@ -56,8 +77,10 @@ const CardSignin = () => {
           localStorage.setItem("username", username);
           window.location = window.location.origin;
         } else {
-          setUsernameMessage(response.data);
-          setIsError(true);
+          setError((prevError) => ({
+            ...prevError,
+            username: response.data,
+          }));
         }
       });
     }
@@ -73,12 +96,12 @@ const CardSignin = () => {
             Username
           </Typography>
           <TextField
-            error={isError}
+            error={error != null}
             fullWidth
             autoFocus
             className={classes.textField}
             onChange={changeUsername}
-            helperText={usernameMessage}
+            helperText={error.username}
           />
         </div>
         <div style={{ marginBottom: 30 }}>
@@ -86,12 +109,12 @@ const CardSignin = () => {
             Password
           </Typography>
           <TextField
-            error={isError}
+            error={error != null}
             fullWidth
             className={classes.textField}
             onChange={changePassword}
             type="password"
-            helperText={passwordMessage}
+            helperText={error.password}
           />
         </div>
       </CardContent>

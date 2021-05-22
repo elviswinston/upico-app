@@ -19,6 +19,8 @@ const Home = () => {
   const [posts, setPosts] = useState([]);
 
   const username = localStorage.getItem("username");
+  const token = localStorage.getItem("token");
+  console.log(token);
 
   useEffect(() => {
     UserService.getUserInfo(username).then((response) => {

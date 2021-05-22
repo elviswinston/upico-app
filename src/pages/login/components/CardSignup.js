@@ -27,13 +27,7 @@ const CardSignup = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const [emailMessage, setEmailMessage] = useState("");
-  const [firstnameMessage, setFirstnameMessage] = useState("");
-  const [lastnameMessage, setLastnameMessage] = useState("");
-  const [usernameMessage, setUsernameMessage] = useState("");
-  const [passwordMessage, setPasswordMessage] = useState("");
-
-  //const [isError, setIsError] = useState(false);
+  const [error, setError] = useState({});
 
   const changeEmail = (e) => {
     setEmail(e.target.value);
@@ -55,56 +49,95 @@ const CardSignup = () => {
     setPassword(e.target.value);
   };
 
-  const signup = (e) => {
-    e.preventDefault();
-    if (email === "") {
-      setEmailMessage("Email is required.");
-    } else if (
-      !RegExp(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,15}/g).test(email)
-    ) {
-      setEmailMessage("Invalid email");
+  const validate = () => {
+    let isError = false;
+    if (!RegExp(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,15}/g).test(email)) {
+      setError((prevError) => ({ ...prevError, email: "Invalid email." }));
+      isError = true;
     } else {
-      setEmailMessage("");
-    }
-    if (firstname === "") {
-      setFirstnameMessage("Firstname is required.");
-    } else {
-      setFirstnameMessage("");
-    }
-    if (lastname === "") {
-      setLastnameMessage("Lastname is required.");
-    } else {
-      setLastnameMessage("");
-    }
-    if (username === "") {
-      setUsernameMessage("Username is required.");
-    } else {
-      setUsernameMessage("");
-    }
-    if (password === "") {
-      setPasswordMessage("Password is required.");
-    } else if (
-      !RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{6,})").test(password)
-    ) {
-      setPasswordMessage(
-        "Password must be six charaters and contain at least lowercase character, uppercase character, numeric character."
-      );
-    } else {
-      setPasswordMessage("");
+      setError((prevError) => ({ ...prevError, email: "" }));
     }
 
-    if (
-      !usernameMessage &&
-      !passwordMessage &&
-      !emailMessage &&
-      !firstnameMessage &&
-      !lastnameMessage &&
-      username &&
-      password &&
-      email &&
-      firstname &&
-      lastname
-    ) {
+    if (email === "") {
+      setError((prevError) => ({ ...prevError, email: "Email is required." }));
+      isError = true;
+    }
+
+    if (firstname === "") {
+      setError((prevError) => ({
+        ...prevError,
+        firstname: "Firstname is required.",
+      }));
+      isError = true;
+    }
+    if (firstname !== "") {
+      setError((prevError) => ({
+        ...prevError,
+        firstname: "",
+      }));
+    }
+    if (lastname === "") {
+      setError((prevError) => ({
+        ...prevError,
+        lastname: "Lastname is required.",
+      }));
+      isError = true;
+    }
+    if (lastname !== "") {
+      setError((prevError) => ({
+        ...prevError,
+        lastname: "",
+      }));
+    }
+    if (username === "") {
+      setError((prevError) => ({
+        ...prevError,
+        username: "Username is required.",
+      }));
+      isError = true;
+    }
+
+    if (username !== "") {
+      if (username.length < 6) {
+        setError((prevError) => ({
+          ...prevError,
+          username: "Username cant be less than 6 characters.",
+        }));
+        isError = true;
+      } else
+        setError((prevError) => ({
+          ...prevError,
+          username: "",
+        }));
+    }
+    if (!RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{6,})").test(password)) {
+      setError((prevError) => ({
+        ...prevError,
+        password:
+          "Password must be six charaters and contain at least lowercase character, uppercase character, numeric character.",
+      }));
+      isError = true;
+    } else {
+      setError((prevError) => ({
+        ...prevError,
+        password: "",
+      }));
+    }
+    if (password === "") {
+      setError((prevError) => ({
+        ...prevError,
+        password: "Password is required.",
+      }));
+      isError = true;
+    }
+
+    return isError;
+  };
+
+  const signup = (e) => {
+    e.preventDefault();
+
+    if (!validate()) {
       const fullname = firstname + " " + lastname;
       AuthService.register(
         username,
@@ -114,10 +147,14 @@ const CardSignup = () => {
         lastname,
         fullname
       ).then((response) => {
-        if (response.status === 20) {
+        if (response.status === 200) {
           alert("Đăng ký thành công");
         } else {
-          console.log(response.data);
+          setError((prevError) => ({
+            ...prevError,
+            email: response.data.emailError,
+            username: response.data.usernameError,
+          }));
         }
       });
     }
@@ -134,12 +171,12 @@ const CardSignup = () => {
             Email
           </Typography>
           <TextField
-            error={emailMessage > 0}
+            error={error != null}
             fullWidth
             autoFocus
             className={classes.textField}
             onChange={changeEmail}
-            helperText={emailMessage && emailMessage}
+            helperText={error.email}
           />
         </div>
         <div
@@ -153,11 +190,11 @@ const CardSignup = () => {
               Firstname
             </Typography>
             <TextField
-              error={firstnameMessage > 0}
+              error={error != null}
               fullWidth
               className={classes.textField}
               onChange={changeFirstname}
-              helperText={firstnameMessage && firstnameMessage}
+              helperText={error.firstname}
             />
           </div>
           <Divider
@@ -170,11 +207,11 @@ const CardSignup = () => {
               Lastname
             </Typography>
             <TextField
-              error={lastnameMessage > 0}
+              error={error != null}
               fullWidth
               className={classes.textField}
               onChange={changeLastname}
-              helperText={lastnameMessage && lastnameMessage}
+              helperText={error.lastname}
             />
           </div>
         </div>
@@ -183,11 +220,11 @@ const CardSignup = () => {
             Username
           </Typography>
           <TextField
-            error={usernameMessage > 0}
+            error={error != null}
             fullWidth
             className={classes.textField}
             onChange={changeUsername}
-            helperText={usernameMessage && usernameMessage}
+            helperText={error.username}
           />
         </div>
         <div style={{ marginBottom: 30 }}>
@@ -195,12 +232,12 @@ const CardSignup = () => {
             Password
           </Typography>
           <TextField
-            error={passwordMessage > 0}
+            error={error != null}
             fullWidth
             className={classes.textField}
             type="password"
             onChange={changePassword}
-            helperText={passwordMessage && passwordMessage}
+            helperText={error.password}
           />
         </div>
       </CardContent>
