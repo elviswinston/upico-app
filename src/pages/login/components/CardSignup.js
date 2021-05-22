@@ -7,6 +7,7 @@ import {
   TextField,
   Typography,
   Link,
+  Divider,
 } from "@material-ui/core";
 
 import logo from "../../../assets/logo.jpg";
@@ -14,26 +15,34 @@ import useStyles from "./styles/cardStyles";
 
 import AccountContext from "../accountContext";
 
+import AuthService from "../../../services/auth.service";
+
 const CardSignup = () => {
   const classes = useStyles();
   const [animate, setAnimate] = useState(0);
 
-  const [contact, setContact] = useState("");
-  const [fullname, setFullname] = useState("");
+  const [email, setEmail] = useState("");
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const [contactMessage, setContactMessage] = useState("");
-  const [fullnameMessage, setFullnameMessage] = useState("");
+  const [emailMessage, setEmailMessage] = useState("");
+  const [firstnameMessage, setFirstnameMessage] = useState("");
+  const [lastnameMessage, setLastnameMessage] = useState("");
   const [usernameMessage, setUsernameMessage] = useState("");
   const [passwordMessage, setPasswordMessage] = useState("");
 
-  const changeContact = (e) => {
-    setContact(e.target.value);
+  const changeEmail = (e) => {
+    setEmail(e.target.value);
   };
 
-  const changeFullname = (e) => {
-    setFullname(e.target.value);
+  const changeFirstname = (e) => {
+    setFirstname(e.target.value);
+  };
+
+  const changeLastname = (e) => {
+    setLastname(e.target.value);
   };
 
   const changeUsername = (e) => {
@@ -44,30 +53,61 @@ const CardSignup = () => {
     setPassword(e.target.value);
   };
 
-  const signup = () => {
-    if (contact === "") {
-      setContactMessage("Mobile number or email is required.");
+  const signup = (e) => {
+    e.preventDefault();
+    if (email === "") {
+      setEmailMessage("Email is required.");
     } else {
-      setContactMessage("");
+      setEmailMessage("");
     }
-    if (fullname === "") {
-      setFullnameMessage("Fullname is required.");
+    if (firstname === "") {
+      setFirstnameMessage("Firstname is required.");
     } else {
-      setFullnameMessage("");
+      setFirstnameMessage("");
+    }
+    if (lastname === "") {
+      setLastnameMessage("Lastname is required.");
+    } else {
+      setLastnameMessage("");
     }
     if (username === "") {
       setUsernameMessage("Username is required.");
-    } else if (username.length <= 6) {
+    } else if (username.length < 6) {
       setUsernameMessage("Username must be more than 6 leters.");
     } else {
       setUsernameMessage("");
     }
     if (password === "") {
       setPasswordMessage("Password is required.");
-    } else if (password.length <= 6) {
+    } else if (password.length < 6) {
       setPasswordMessage("Password must be more than 6 letters.");
     } else {
       setPasswordMessage("");
+    }
+
+    if (
+      !usernameMessage &&
+      !passwordMessage &&
+      !emailMessage &&
+      !firstnameMessage &&
+      !lastnameMessage &&
+      username &&
+      password &&
+      email &&
+      firstname &&
+      lastname
+    ) {
+      const fullname = firstname + " " + lastname;
+      AuthService.register(
+        username,
+        password,
+        email,
+        firstname,
+        lastname,
+        fullname
+      ).then(() => {
+        alert("Đăng ký thành công");
+      });
     }
   };
 
@@ -79,35 +119,59 @@ const CardSignup = () => {
       <CardContent>
         <div style={{ marginBottom: 30 }}>
           <Typography className={classes.text} variant="body1" gutterBottom>
-            Mobile number or email
+            Email
           </Typography>
           <TextField
-            error={contactMessage && true}
+            error={emailMessage ? true : false}
             fullWidth
             autoFocus
             className={classes.textField}
-            onChange={changeContact}
-            helperText={contactMessage && contactMessage}
+            onChange={changeEmail}
+            helperText={emailMessage && emailMessage}
           />
         </div>
-        <div style={{ marginBottom: 30 }}>
-          <Typography className={classes.text} variant="body1" gutterBottom>
-            Full name
-          </Typography>
-          <TextField
-            error={fullnameMessage && true}
-            fullWidth
-            className={classes.textField}
-            onChange={changeFullname}
-            helperText={fullnameMessage && fullnameMessage}
+        <div
+          style={{
+            marginBottom: 30,
+            display: "flex",
+          }}
+        >
+          <div>
+            <Typography className={classes.text} variant="body1" gutterBottom>
+              Firstname
+            </Typography>
+            <TextField
+              error={firstnameMessage ? true : false}
+              fullWidth
+              className={classes.textField}
+              onChange={changeFirstname}
+              helperText={firstnameMessage && firstnameMessage}
+            />
+          </div>
+          <Divider
+            orientation="vertical"
+            style={{ margin: "0 10px" }}
+            flexItem
           />
+          <div>
+            <Typography className={classes.text} variant="body1" gutterBottom>
+              Lastname
+            </Typography>
+            <TextField
+              error={lastnameMessage ? true : false}
+              fullWidth
+              className={classes.textField}
+              onChange={changeLastname}
+              helperText={lastnameMessage && lastnameMessage}
+            />
+          </div>
         </div>
         <div style={{ marginBottom: 30 }}>
           <Typography className={classes.text} variant="body1" gutterBottom>
             Username
           </Typography>
           <TextField
-            error={usernameMessage && true}
+            error={usernameMessage ? true : false}
             fullWidth
             className={classes.textField}
             onChange={changeUsername}
@@ -119,7 +183,7 @@ const CardSignup = () => {
             Password
           </Typography>
           <TextField
-            error={passwordMessage && true}
+            error={passwordMessage ? true : false}
             fullWidth
             className={classes.textField}
             type="password"

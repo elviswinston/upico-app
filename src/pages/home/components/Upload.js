@@ -6,10 +6,10 @@ import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
 
 import useStyles from "./styles/uploadStyles";
 import useModal from "../../../hooks/useModal";
-import avatar from "../../../assets/avatar.jpg";
+
 import Modal from "../../../components/Modal";
 
-const Upload = ({ displayName }) => {
+const Upload = ({ displayName, avatar }) => {
   const classes = useStyles();
   const wrapperRef = useRef(null);
   const { isShowing, toggle } = useModal();

@@ -11,7 +11,7 @@ export default makeStyles((theme) => ({
   },
   container: {
     height: 60,
-    padding: "0 200px",
+    padding: "0 40px",
   },
   logo: {
     width: "60%",

@@ -13,11 +13,10 @@ import FavoriteIcon from "@material-ui/icons/FavoriteBorderOutlined";
 import SearchIcon from "@material-ui/icons/Search";
 
 import logo from "../../../assets/logo.jpg";
-import avatar from "../../../assets/avatar.jpg";
 
 import useStyles from "./styles/headerStyles";
 
-const Header = ({ displayName }) => {
+const Header = ({ displayName, avatar }) => {
   const classes = useStyles();
 
   const textInput = useRef(null);

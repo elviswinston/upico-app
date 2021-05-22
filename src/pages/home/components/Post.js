@@ -5,7 +5,7 @@ import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
 
 import useStyle from "./styles/postStyles";
-import avatar from "../../../assets/avatar.jpg";
+import avatar from "../../../assets/avatar.png";
 
 import ReactPhotoGrid from "react-photo-grid";
 
@@ -19,15 +19,19 @@ const Post = ({ post }) => {
   return (
     <Paper className={classes.root}>
       <div className={classes.avatarContainer}>
-        <Avatar alt="avatar" src={avatar} className={classes.avatar} />
-        <Typography className={classes.name}>Lãng Đế</Typography>
+        <Avatar
+          alt="avatar"
+          src={post.avatarUrl ? post.avatarUrl : avatar}
+          className={classes.avatar}
+        />
+        <Typography className={classes.name}>{post.displayName}</Typography>
       </div>
       <div className={classes.content}>
         <Typography variant="body1" className={classes.text}>
           {post.content}
         </Typography>
       </div>
-      {data.length > 0 && <ReactPhotoGrid data={data}  gridSize="400x400"/>}
+      {data.length > 0 && <ReactPhotoGrid data={data} gridSize="400x400" />}
       <div className={classes.likeComment}>
         <div className={classes.button}>
           <FavoriteBorderIcon

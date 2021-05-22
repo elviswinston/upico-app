@@ -4,7 +4,7 @@ const API_URL = "http://localhost:5000/api/";
 
 const createPost = (username, content) => {
   return axios
-    .post(API_URL + "posts", {
+    .post(API_URL + "Posts", {
       userName: username,
       content: content,
     })
@@ -22,7 +22,7 @@ const uploadImage = (postID, formData) => {
 
 const getPostUser = (username) => {
   return axios
-    .get(API_URL + "posts/user/" + username + "/20")
+    .get(API_URL + "Posts/user/" + username + "/20")
     .catch((error) => {
       if (error.response) return error.response;
     })
