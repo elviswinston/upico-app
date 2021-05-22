@@ -3,14 +3,18 @@ import axios from "axios";
 const API_URL = "http://localhost:5000/api/Users";
 
 const register = (username, password, email, firstname, lastname, fullname) => {
-  return axios.post(API_URL, {
-    username,
-    password,
-    email,
-    firstname,
-    lastname,
-    fullname
-  });
+  return axios
+    .post(API_URL, {
+      username,
+      password,
+      email,
+      firstname,
+      lastname,
+      fullname,
+    })
+    .catch((error) => {
+      return error.response;
+    });
 };
 
 const login = (username, password) => {
@@ -20,12 +24,7 @@ const login = (username, password) => {
       password,
     })
     .catch((error) => {
-      if (error.response) {
-        return error.response;
-      }
-    })
-    .then((response) => {
-      return response;
+      return error.response;
     });
 };
 

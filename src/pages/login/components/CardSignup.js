@@ -33,6 +33,8 @@ const CardSignup = () => {
   const [usernameMessage, setUsernameMessage] = useState("");
   const [passwordMessage, setPasswordMessage] = useState("");
 
+  //const [isError, setIsError] = useState(false);
+
   const changeEmail = (e) => {
     setEmail(e.target.value);
   };
@@ -76,8 +78,6 @@ const CardSignup = () => {
     }
     if (username === "") {
       setUsernameMessage("Username is required.");
-    } else if (username.length < 6) {
-      setUsernameMessage("Username cant be less than 6 leters.");
     } else {
       setUsernameMessage("");
     }
@@ -113,8 +113,12 @@ const CardSignup = () => {
         firstname,
         lastname,
         fullname
-      ).then(() => {
-        alert("Đăng ký thành công");
+      ).then((response) => {
+        if (response.status === 20) {
+          alert("Đăng ký thành công");
+        } else {
+          console.log(response.data);
+        }
       });
     }
   };
@@ -130,7 +134,7 @@ const CardSignup = () => {
             Email
           </Typography>
           <TextField
-            error={emailMessage ? true : false}
+            error={emailMessage > 0}
             fullWidth
             autoFocus
             className={classes.textField}
@@ -149,7 +153,7 @@ const CardSignup = () => {
               Firstname
             </Typography>
             <TextField
-              error={firstnameMessage ? true : false}
+              error={firstnameMessage > 0}
               fullWidth
               className={classes.textField}
               onChange={changeFirstname}
@@ -166,7 +170,7 @@ const CardSignup = () => {
               Lastname
             </Typography>
             <TextField
-              error={lastnameMessage ? true : false}
+              error={lastnameMessage > 0}
               fullWidth
               className={classes.textField}
               onChange={changeLastname}
@@ -179,7 +183,7 @@ const CardSignup = () => {
             Username
           </Typography>
           <TextField
-            error={usernameMessage ? true : false}
+            error={usernameMessage > 0}
             fullWidth
             className={classes.textField}
             onChange={changeUsername}
@@ -191,7 +195,7 @@ const CardSignup = () => {
             Password
           </Typography>
           <TextField
-            error={passwordMessage ? true : false}
+            error={passwordMessage > 0}
             fullWidth
             className={classes.textField}
             type="password"

@@ -26,6 +26,8 @@ const CardSignin = () => {
   const [usernameMessage, setUsernameMessage] = useState("");
   const [passwordMessage, setPasswordMessage] = useState("");
 
+  const [isError, setIsError] = useState(false);
+
   const changeUsername = (e) => {
     setUsername(e.target.value);
   };
@@ -38,29 +40,28 @@ const CardSignin = () => {
     if (username === "") {
       setUsernameMessage("Username is required.");
     } else {
-      setUsernameMessage("");
+      setIsError(false);
     }
     if (password === "") {
       setPasswordMessage("Password is required.");
-    } else if (password.length < 6) {
-      setPasswordMessage("Password cant be less than 6 letters.");
     } else {
-      setPasswordMessage("");
+      setIsError(false);
     }
 
-    if (usernameMessage === "" && passwordMessage === "") {
+    if (!isError) {
       AuthService.login(username, password).then((response) => {
-        if (response.status === 400) {
-          setUsernameMessage(response.data);
-        } else {
+        console.log(response);
+        if (response.status === 200) {
           localStorage.setItem("token", JSON.stringify(response.data));
           localStorage.setItem("username", username);
           window.location = window.location.origin;
+        } else {
+          setUsernameMessage(response.data);
+          setIsError(true);
         }
       });
     }
   };
-
   const { switchToSignup } = useContext(AccountContext);
 
   return (
@@ -72,12 +73,12 @@ const CardSignin = () => {
             Username
           </Typography>
           <TextField
-            //error={usernameMessage > 0}
+            error={isError}
             fullWidth
             autoFocus
             className={classes.textField}
             onChange={changeUsername}
-            //helperText={usernameMessage}
+            helperText={usernameMessage}
           />
         </div>
         <div style={{ marginBottom: 30 }}>
@@ -85,7 +86,7 @@ const CardSignin = () => {
             Password
           </Typography>
           <TextField
-            error={passwordMessage > 0}
+            error={isError}
             fullWidth
             className={classes.textField}
             onChange={changePassword}
