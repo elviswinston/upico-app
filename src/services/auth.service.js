@@ -38,6 +38,7 @@ const isLoggedIn = () => {
 
 const logout = () => {
   localStorage.removeItem("username");
+  localStorage.removeItem("token");
 };
 
 const getCurrentUser = () => {

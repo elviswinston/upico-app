@@ -5,35 +5,28 @@ import SendIcon from "@material-ui/icons/Send";
 
 import Photogrid from "./PhotoGrid";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 
 import useStyles from "./styles/modalStyles";
 
 import PostService from "../services/post.services";
 
-const Modal = ({ isShowing, hide, propRef, displayName, avatar }) => {
+const Modal = ({
+  isShowing,
+  hide,
+  propRef,
+  displayName,
+  avatar,
+  fileInput,
+  files,
+  handleFileChange,
+}) => {
   const classes = useStyles();
   const [content, setContent] = useState("");
-  const [files, setFiles] = useState(null);
   const [data, setData] = useState([]);
-
-  const fileInput = useRef(null);
-
-  /*const setting = {
-    width: "600px",
-    height: ["250px", "170px"],
-    layout: [1, 4],
-    photos: data,
-    showNumOfRemainingPhotos: true,
-  };*/
-
   const handleChange = (e) => {
     setContent(e.target.value);
-  };
-
-  const handleFileChange = (e) => {
-    setFiles(e.target.files);
   };
 
   const handleClick = (e) => {
@@ -45,6 +38,8 @@ const Modal = ({ isShowing, hide, propRef, displayName, avatar }) => {
       for (let i = 0; i < files.length; i++) {
         setData((prevData) => [...prevData, URL.createObjectURL(files[i])]);
       }
+    } else {
+      setData([]);
     }
   }, [files]);
 

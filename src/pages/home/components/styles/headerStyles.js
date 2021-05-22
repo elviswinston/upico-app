@@ -63,4 +63,27 @@ export default makeStyles((theme) => ({
     color: "#009688",
     fontWeight: "bold",
   },
+  user: {
+    position: "absolute",
+    right: 0,
+    bottom: -65,
+    width: 100,
+    display: "none",
+    "&[active='1']": {
+      display: "block",
+    },
+  },
+  option: {
+    display: "flex",
+    alignItems: "center",
+    padding: "5px 10px",
+    cursor: "pointer",
+    "&:hover": {
+      backgroundColor: "#bbb",
+    },
+  },
+  text: {
+    fontSize: 14,
+    marginLeft: 10,
+  },
 }));

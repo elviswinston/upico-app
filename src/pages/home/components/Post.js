@@ -2,6 +2,7 @@ import { Avatar, Paper, TextField, Typography } from "@material-ui/core";
 import React, { useState } from "react";
 
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
+import FavoriteIcon from "@material-ui/icons/Favorite";
 import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
 import SendIcon from "@material-ui/icons/Send";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
@@ -16,6 +17,7 @@ import CommentService from "../../../services/comment.services";
 const Post = ({ post }) => {
   const classes = useStyles();
   const [likes, setLikes] = useState(post.likes);
+  const [hasLiked, setHasLiked] = useState(post.likes > 0);
   const [comment, setComment] = useState("");
   const [index, setIndex] = useState(0);
 
@@ -26,11 +28,13 @@ const Post = ({ post }) => {
 
     LikeService.like(username, post.id).then((response) => {
       if (response.status === 400) {
-        LikeService.dislike(username, post.id).then((response) =>
-          setLikes(likes - 1)
-        );
+        LikeService.dislike(username, post.id).then((response) => {
+          setLikes(likes - 1);
+          setHasLiked(false);
+        });
       } else {
         setLikes(likes + 1);
+        setHasLiked(true);
       }
     });
   };
@@ -103,11 +107,19 @@ const Post = ({ post }) => {
       )}
       <div className={classes.likeComment}>
         <div className={classes.button}>
-          <FavoriteBorderIcon
-            className={classes.icon}
-            style={{ cursor: "pointer" }}
-            onClick={handleLike}
-          />
+          {hasLiked ? (
+            <FavoriteIcon
+              className={classes.icon}
+              style={{ cursor: "pointer" }}
+              onClick={handleLike}
+            />
+          ) : (
+            <FavoriteBorderIcon
+              className={classes.icon}
+              style={{ cursor: "pointer" }}
+              onClick={handleLike}
+            />
+          )}
           <Typography style={{ color: "#2a3f54", fontWeight: "bold" }}>
             {likes === 0
               ? likes

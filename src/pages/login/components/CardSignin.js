@@ -66,9 +66,7 @@ const CardSignin = () => {
     return isError;
   };
 
-  const login = (e) => {
-    e.preventDefault();
-    
+  const login = () => {
     if (!validate()) {
       AuthService.login(username, password).then((response) => {
         console.log(response);
@@ -85,6 +83,13 @@ const CardSignin = () => {
       });
     }
   };
+
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      login();
+    }
+  };
+
   const { switchToSignup } = useContext(AccountContext);
 
   return (
@@ -115,6 +120,7 @@ const CardSignin = () => {
             onChange={changePassword}
             type="password"
             helperText={error.password}
+            onKeyPress={handleKeyPress}
           />
         </div>
       </CardContent>

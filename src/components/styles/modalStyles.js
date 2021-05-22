@@ -14,7 +14,7 @@ export default makeStyles((theme) => ({
   root: {
     position: "fixed",
     top: 97,
-    left: "34%",
+    left: "32%",
     width: "550px",
     zIndex: 100,
   },
