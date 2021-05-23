@@ -1,5 +1,5 @@
 import { Avatar, Paper, TextField, Typography } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import FavoriteIcon from "@material-ui/icons/Favorite";
@@ -19,16 +19,22 @@ const Post = ({ post }) => {
   const [likes, setLikes] = useState(post.likes);
   const [hasLiked, setHasLiked] = useState(post.likes > 0);
   const [comment, setComment] = useState("");
+  const [comments, setComments] = useState([]);
   const [index, setIndex] = useState(0);
 
   let data = [];
+  const postId = post.id;
+
+  const handleChange = (e) => {
+    setComment(e.target.value);
+  };
 
   const handleLike = () => {
     const username = localStorage.getItem("username");
 
-    LikeService.like(username, post.id).then((response) => {
+    LikeService.like(username, postId).then((response) => {
       if (response.status === 400) {
-        LikeService.dislike(username, post.id).then((response) => {
+        LikeService.dislike(username, postId).then((response) => {
           setLikes(likes - 1);
           setHasLiked(false);
         });
@@ -43,13 +49,10 @@ const Post = ({ post }) => {
     if (comment === "") return;
 
     const username = localStorage.getItem("username");
-    CommentService.comment(username, comment, post.id).then((response) =>
-      console.log(response)
-    );
-  };
-
-  const handleChange = (e) => {
-    setComment(e.target.value);
+    CommentService.comment(username, comment, postId).then((response) => {
+      setComments((prevComments) => [...prevComments, response.data]);
+    });
+    setComment("");
   };
 
   const slideRight = () => {
@@ -69,6 +72,12 @@ const Post = ({ post }) => {
     post.postImages.map((image) => (data = [...data, image.url]));
   }
 
+  useEffect(() => {
+    CommentService.getComment(postId).then((response) => {
+      setComments(response.data);
+    });
+  }, [postId]);
+
   return (
     <Paper className={classes.root}>
       <div className={classes.avatarContainer}>
@@ -84,27 +93,33 @@ const Post = ({ post }) => {
           {post.content}
         </Typography>
       </div>
-      {data.length > 0 && data.length > 1 ? (
-        <div style={{ position: "relative" }}>
-          <button
-            onClick={slideLeft}
-            className={classes.slideButton}
-            style={{ left: 5 }}
-          >
-            <NavigateBeforeIcon />
-          </button>
-          <button
-            onClick={slideRight}
-            className={classes.slideButton}
-            style={{ right: 5 }}
-          >
-            <NavigateNextIcon />
-          </button>
-          <img src={data[index]} alt={index} className={classes.previewImage} />
-        </div>
-      ) : (
-        <img src={data} alt="previewImage" />
-      )}
+      {data.length > 0 ? (
+        data.length > 1 ? (
+          <div style={{ position: "relative" }}>
+            <button
+              onClick={slideLeft}
+              className={classes.slideButton}
+              style={{ left: 5 }}
+            >
+              <NavigateBeforeIcon />
+            </button>
+            <button
+              onClick={slideRight}
+              className={classes.slideButton}
+              style={{ right: 5 }}
+            >
+              <NavigateNextIcon />
+            </button>
+            <img
+              src={data[index]}
+              alt={index}
+              className={classes.previewImage}
+            />
+          </div>
+        ) : (
+          <img src={data} alt="previewImage" />
+        )
+      ) : null}
       <div className={classes.likeComment}>
         <div className={classes.button}>
           {hasLiked ? (
@@ -138,7 +153,7 @@ const Post = ({ post }) => {
               : post.comments.length + " comments"}
           </Typography>
         </div>
-        {data.length > 1 && (
+        {data.length > 1 && data.length <= 6 && (
           <div
             className={classes.button}
             style={{ position: "absolute", right: 10 }}
@@ -153,6 +168,38 @@ const Post = ({ post }) => {
           </div>
         )}
       </div>
+      <div style={{ marginTop: 10 }}>
+        {comments.length > 0 &&
+          comments.map((comment) => {
+            return (
+              <div
+                style={{
+                  display: "flex",
+                  padding: "0 15px",
+                  alignItems: "center",
+                  marginBottom: 10,
+                }}
+                key={comment.id}
+              >
+                <Avatar
+                  alt="avatar"
+                  src={comment.userAvatarUrl ? post.userAvatarUrl : avatar}
+                  className={classes.avatar}
+                  style={{ border: "1px solid #bbb" }}
+                />
+                <Typography
+                  varian="body1"
+                  style={{ fontWeight: "bold", fontSize: 14, marginRight: 10 }}
+                >
+                  {comment.userDisplayName}
+                </Typography>
+                <Typography varian="body1" style={{ fontSize: 14 }}>
+                  {comment.content}
+                </Typography>
+              </div>
+            );
+          })}
+      </div>
       <div className={classes.comment}>
         <TextField
           className={classes.textField}
@@ -161,6 +208,7 @@ const Post = ({ post }) => {
           rows={2}
           rowsMax={4}
           onChange={handleChange}
+          value={comment}
         />
         <div className={classes.commentButton} onClick={handleComment}>
           <SendIcon className={classes.icon} />

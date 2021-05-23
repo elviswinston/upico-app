@@ -21,7 +21,7 @@ export default makeStyles((theme) => ({
     fontWeight: "bold",
   },
   content: {
-    padding: 10,
+    padding: "10px 15px",
   },
   text: {
     fontSize: 14,

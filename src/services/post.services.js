@@ -22,7 +22,7 @@ const uploadImage = (postID, formData) => {
 
 const getPostUser = (username) => {
   return axios
-    .get(API_URL + "Posts/user/" + username + "/20")
+    .get(API_URL + "Posts/user/" + username + "/10")
     .catch((error) => {
       if (error.response) return error.response;
     })

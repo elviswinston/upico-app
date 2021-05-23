@@ -25,9 +25,13 @@ const Upload = ({ displayName, avatar }) => {
   };
 
   const handleFileChange = (e) => {
-    setFiles(e.target.files);
+    if (files) {
+      setFiles((prevFiles) =>
+        Array.from(prevFiles).concat(Array.from(e.target.files))
+      );
+    } else setFiles(e.target.files);
   };
-
+  
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {

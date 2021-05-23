@@ -28,7 +28,7 @@ const Home = () => {
       )
     );
     AvatarService.getUserAvatar(username).then((response) =>
-      setAvatar(response.data.length > 0 ? response.data.avatar[0] : avt)
+      setAvatar(response.data.length > 0 ? response.data[0].path : avt)
     );
     PostService.getPostUser(username).then((response) => {
       setPosts(response.data);
