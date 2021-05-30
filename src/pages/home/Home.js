@@ -24,14 +24,14 @@ const Home = () => {
   useEffect(() => {
     UserService.getUserInfo(username).then((response) =>
       setDisplayName(
-        response.data.displayName ? response.data.displayName : username
+        response?.data?.displayName ? response.data.displayName : username
       )
     );
     AvatarService.getUserAvatar(username).then((response) =>
-      setAvatar(response.data.length > 0 ? response.data[0].path : avt)
+      setAvatar(response?.data?.length > 0 ? response.data[0].path : avt)
     );
     PostService.getPostUser(username).then((response) => {
-      setPosts(response.data);
+      setPosts(response?.data);
     });
   }, [username]);
 

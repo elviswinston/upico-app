@@ -16,9 +16,18 @@ const comment = (username, content, postId) => {
     });
 };
 
+const replyComment = (username, content, parentId) => {
+  return axios
+    .post(API_URL + "/reply", { username, content, parentId })
+    .catch((error) => {
+      return error.response;
+    });
+};
+
 const CommentService = {
   getComment,
   comment,
+  replyComment,
 };
 
 export default CommentService;

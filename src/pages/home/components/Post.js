@@ -13,6 +13,7 @@ import avatar from "../../../assets/avatar.png";
 
 import LikeService from "../../../services/like.services";
 import CommentService from "../../../services/comment.services";
+import Comment from "./Comment";
 
 const Post = ({ post }) => {
   const classes = useStyles();
@@ -171,33 +172,7 @@ const Post = ({ post }) => {
       <div style={{ marginTop: 10 }}>
         {comments.length > 0 &&
           comments.map((comment) => {
-            return (
-              <div
-                style={{
-                  display: "flex",
-                  padding: "0 15px",
-                  alignItems: "center",
-                  marginBottom: 10,
-                }}
-                key={comment.id}
-              >
-                <Avatar
-                  alt="avatar"
-                  src={comment.userAvatarUrl ? post.userAvatarUrl : avatar}
-                  className={classes.avatar}
-                  style={{ border: "1px solid #bbb" }}
-                />
-                <Typography
-                  varian="body1"
-                  style={{ fontWeight: "bold", fontSize: 14, marginRight: 10 }}
-                >
-                  {comment.userDisplayName}
-                </Typography>
-                <Typography varian="body1" style={{ fontSize: 14 }}>
-                  {comment.content}
-                </Typography>
-              </div>
-            );
+            return <Comment comment={comment} key={comment.id} />;
           })}
       </div>
       <div className={classes.comment}>
