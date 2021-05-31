@@ -9,11 +9,8 @@ const createPost = (username, content) => {
       content: content,
     })
     .catch((error) => {
-      if (error.response) return error.response;
+      return error.response;
     })
-    .then((response) => {
-      return response;
-    });
 };
 
 const uploadImage = (postID, formData) => {

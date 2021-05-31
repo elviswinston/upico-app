@@ -1,5 +1,7 @@
 import { Avatar, Paper, TextField, Typography } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+
+import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 
 import useStyles from "./styles/commentStyles";
 import avatar from "../../../assets/avatar.png";
@@ -11,8 +13,11 @@ import CommentService from "../../../services/comment.services";
 const Comment = ({ comment }) => {
   const classes = useStyles();
 
+  const wrapperRef = useRef(null);
+
   const [isReplying, setIsReplying] = useState(false);
   const [isShowingReply, setIsShowingReply] = useState(false);
+  const [isOpeningMore, setIsOpeningMore] = useState(false);
   const [replies, setReplies] = useState(comment.childs ? comment.childs : []);
   const [text, setText] = useState("Show replies");
 
@@ -41,6 +46,23 @@ const Comment = ({ comment }) => {
     isShowingReply ? setText("Show replies") : setText("Hide replies");
   };
 
+  const openMore = () => {
+    setIsOpeningMore(!isOpeningMore);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+        setIsOpeningMore(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [wrapperRef]);
+
   return (
     <div>
       <div className={classes.comment}>
@@ -49,14 +71,39 @@ const Comment = ({ comment }) => {
           src={comment.userAvatarUrl ? comment.userAvatarUrl : avatar}
           className={classes.avatar}
         />
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <div style={{ display: "flex" }}>
+        <div
+          style={{ display: "flex", flexDirection: "column", width: "100%" }}
+        >
+          <div style={{ display: "flex", position: "relative" }}>
             <Typography varian="body1" className={classes.displayName}>
               {comment.userDisplayName}
             </Typography>
-            <Typography varian="body1" style={{ fontSize: 14 }}>
+            <Typography
+              varian="body1"
+              style={{
+                fontSize: 14,
+                wordBreak: "break-word",
+              }}
+            >
               {comment.content}
             </Typography>
+            <MoreHorizIcon className={classes.moreButton} onClick={openMore} />
+            <Paper
+              className={classes.more}
+              active={isOpeningMore ? 1 : 0}
+              ref={wrapperRef}
+            >
+              <div className={classes.option}>
+                <Typography varian="body1" style={{ fontSize: 12 }}>
+                  Edit
+                </Typography>
+              </div>
+              <div className={classes.option}>
+                <Typography varian="body1" style={{ fontSize: 12 }}>
+                  Delete
+                </Typography>
+              </div>
+            </Paper>
           </div>
           <div>
             <TimeAgo
@@ -87,7 +134,7 @@ const Comment = ({ comment }) => {
                   alt="avatar"
                   src={reply.userAvatarUrl ? reply.userAvatarUrl : avatar}
                   className={classes.avatar}
-                  style={{ width: 20 }}
+                  style={{ width: 21, height: 21 }}
                 />
                 <div style={{ display: "flex", flexDirection: "column" }}>
                   <div style={{ display: "flex" }}>
@@ -115,7 +162,7 @@ const Comment = ({ comment }) => {
             alt="avatar"
             src={comment.userAvatarUrl ? comment.userAvatarUrl : avatar}
             className={classes.avatar}
-            style={{ width: 20 }}
+            style={{ width: 20, height: 20 }}
           />
           <Paper className={classes.paper}>
             <TextField

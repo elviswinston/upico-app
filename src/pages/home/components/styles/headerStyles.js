@@ -30,6 +30,35 @@ export default makeStyles((theme) => ({
       cursor: "text",
     },
   },
+  searchBox: {
+    position: "absolute",
+    width: "120%",
+    height: 300,
+    left: "-10%",
+    top: 40,
+    flexDirection: "column",
+    flexShrink: 0,
+    display: "none",   
+    "&[active='1']": {
+      display: "flex",
+    },
+    "&:before": {
+      content: "''",
+      position: "absolute",
+      width: 14,
+      height: 14,
+      backgroundColor: "white",
+      left: "50%",
+      top: -7,
+      transform: "rotate(45deg)",
+    },
+  },
+  searchBoxContent: {
+    display: "flex",
+    flexGrow: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   input: {
     width: "20%",
     "&[search='1']": {
@@ -41,6 +70,7 @@ export default makeStyles((theme) => ({
     "&[icon='search']": {
       color: "lightgray",
     },
+    fontSize: 27,
   },
   iconButton: {
     padding: 5,
@@ -54,8 +84,8 @@ export default makeStyles((theme) => ({
     cursor: "pointer",
   },
   avatar: {
-    width: 25,
-    height: "auto",
+    width: 27,
+    height: 27,
     marginRight: 10,
   },
   name: {
@@ -79,11 +109,20 @@ export default makeStyles((theme) => ({
     padding: "5px 10px",
     cursor: "pointer",
     "&:hover": {
-      backgroundColor: "#bbb",
+      backgroundColor: "#d9d9d9",
     },
   },
   text: {
     fontSize: 14,
     marginLeft: 10,
+  },
+  searchUser: {
+    display: "flex",
+    alignItems: "center",
+    padding: "10px 20px",
+    cursor: "pointer",
+    "&:hover": {
+      backgroundColor: "#d9d9d9",
+    },
   },
 }));

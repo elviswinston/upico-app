@@ -35,7 +35,7 @@ export default makeStyles((theme) => ({
   },
   avatar: {
     width: 40,
-    height: "auto",
+    height: 40,
     marginRight: 10,
   },
   name: {

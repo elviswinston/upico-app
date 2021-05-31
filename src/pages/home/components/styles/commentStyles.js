@@ -2,15 +2,15 @@ import { makeStyles } from "@material-ui/core";
 
 export default makeStyles((theme) => ({
   avatar: {
-    width: 25,
-    height: "auto",
+    width: 27,
+    height: 27,
     marginRight: 10,
     border: "1px solid #bbb",
   },
   comment: {
     display: "flex",
     padding: "0 15px",
-    alignItems: "center",
+    alignItems: "flex-start",
     marginBottom: 10,
   },
   displayName: {
@@ -35,6 +35,27 @@ export default makeStyles((theme) => ({
     padding: 0,
     marginLeft: 5,
   },
+  moreButton: {
+    marginLeft: "auto",
+    color: "#8e8e8e",
+    cursor: "pointer",
+  },
+  more: {
+    position: "absolute",
+    right: 0,
+    top: 17,
+    display: "none",
+    "&[active='1']": {
+      display: "block",
+    },
+  },
+  option: {
+    padding: "2px 10px",
+    cursor: "pointer",
+    "&:hover": {
+      backgroundColor: "#d9d9d9",
+    },
+  },
   divider: {
     borderBottom: "1px solid rgba(var(--f52,142,142,142),1)",
     display: "inline-block",
@@ -52,7 +73,6 @@ export default makeStyles((theme) => ({
     fontWeight: "bold",
     width: "auto",
     padding: 0,
-    marginBottom: 10,
   },
   textField: {
     marginTop: 5,
@@ -78,8 +98,8 @@ export default makeStyles((theme) => ({
   },
   reply: {
     display: "flex",
-    alignItems: "center",
+    alignItems: "flex-start",
     padding: "0 15px",
-    marginLeft: 35,
+    margin: "10px 0 10px 35px",
   },
 }));

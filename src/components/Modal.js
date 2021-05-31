@@ -21,6 +21,7 @@ const Modal = ({
   fileInput,
   files,
   handleFileChange,
+  setPosts,
 }) => {
   const classes = useStyles();
   const [content, setContent] = useState("");
@@ -48,14 +49,20 @@ const Modal = ({
     const username = localStorage.getItem("username");
     if (content.length > 0) {
       PostService.createPost(username, content).then((response) => {
-        const post = response.data;
-        if (files) {
-          const formData = new FormData();
-          for (let i = 0; i < files.length; i++) {
-            formData.append(`postImage[${i}]`, files[i], files[i].name);
-          }
+        if (response.status === 200) {
+          const post = response.data;
+          if (files) {
+            const formData = new FormData();
+            for (let i = 0; i < files.length; i++) {
+              formData.append(`postImage[${i}]`, files[i], files[i].name);
+            }
 
-          PostService.uploadImage(post.id, formData);
+            PostService.uploadImage(post.id, formData);
+          }
+          /*setPosts((prevPosts) => {
+            return [response.data, ...prevPosts];
+          });*/
+          console.log([response.data]);
         }
       });
       setContent("");

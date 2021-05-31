@@ -9,6 +9,7 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 
 import HomeIcon from "@material-ui/icons/Home";
+import HomeOutlinedIcon from "@material-ui/icons/HomeOutlined";
 import FavoriteIcon from "@material-ui/icons/FavoriteBorderOutlined";
 import SearchIcon from "@material-ui/icons/Search";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
@@ -19,26 +20,44 @@ import logo from "../../../assets/logo.jpg";
 import useStyles from "./styles/headerStyles";
 
 import AuthService from "../../../services/auth.service";
+import UserService from "../../../services/user.services";
 
-const Header = ({ displayName, avatar }) => {
+import { useHistory } from "react-router";
+
+const Header = ({ displayName, avatar, isHome }) => {
   const classes = useStyles();
-  const textInput = useRef(null);
-  const wrapperRef = useRef(null);
+
+  const inputRef = useRef(null);
+  const profileRef = useRef(null);
+  const searchRef = useRef(null);
+
+  const history = useHistory();
 
   const [userMenu, setUserMenu] = useState(false);
   const [isSearching, setIsSearching] = useState(0);
+  const [searchUsers, setSearchUsers] = useState([]);
+  const [searchKey, setSearchKey] = useState("");
 
   const search = () => {
     setIsSearching(1);
-    textInput.current.focus();
-  };
-
-  const blur = () => {
-    setIsSearching(0);
+    inputRef.current.focus();
   };
 
   const handleUserMenu = () => {
     setUserMenu(!userMenu);
+  };
+
+  const handleChange = (e) => {
+    setSearchKey(e.target.value);
+    UserService.searchUser(e.target.value).then((response) => {
+      if (response.status === 200) {
+        setSearchUsers(response.data);
+      }
+    });
+  };
+
+  const handleClick = (e, username) => {
+    window.location.href = window.location.origin + "/" + username;
   };
 
   const logout = () => {
@@ -46,10 +65,23 @@ const Header = ({ displayName, avatar }) => {
     window.location.reload();
   };
 
+  const profile = (e) => {
+    e.preventDefault();
+    history.push(localStorage.getItem("username"));
+  };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+      if (profileRef.current && !profileRef.current.contains(event.target)) {
         setUserMenu(false);
+      }
+      if (
+        searchRef.current &&
+        !searchRef.current.contains(event.target) &&
+        inputRef.current &&
+        !inputRef.current.contains(event.target)
+      ) {
+        setIsSearching(0);
       }
     };
 
@@ -57,7 +89,7 @@ const Header = ({ displayName, avatar }) => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [wrapperRef]);
+  }, [profileRef, searchRef, inputRef]);
 
   return (
     <div className={classes.root}>
@@ -68,23 +100,99 @@ const Header = ({ displayName, avatar }) => {
         className={classes.container}
       >
         <Grid item>
-          <img src={logo} alt="Logo" className={classes.logo} />
+          <img
+            src={logo}
+            alt="Logo"
+            className={classes.logo}
+            onClick={() => {
+              window.location.href = window.location.origin;
+            }}
+          />
         </Grid>
-        <Grid item>
+        <Grid item style={{ position: "relative" }}>
           <Paper className={classes.paper} onClick={search}>
             <SearchIcon className={classes.icon} icon="search" />
             <InputBase
               placeholder="Search"
               className={classes.input}
               search={isSearching}
-              inputRef={textInput}
-              onBlur={blur}
+              inputRef={inputRef}
+              onChange={handleChange}
             />
+          </Paper>
+          <Paper
+            className={classes.searchBox}
+            active={isSearching ? 1 : 0}
+            ref={searchRef}
+          >
+            {searchUsers.length > 0 ? null : (
+              <div style={{ padding: 20 }}>
+                <Typography
+                  variant="h6"
+                  style={{ fontSize: 16, fontWeight: "bold" }}
+                >
+                  Recently
+                </Typography>
+              </div>
+            )}
+            {searchUsers.length > 0 ? (
+              <div style={{ marginTop: 20, overflowY: "auto" }}>
+                {searchUsers.map((user) => {
+                  return (
+                    <div
+                      className={classes.searchUser}
+                      key={user.id}
+                      onClick={(e) => handleClick(e, user.username)}
+                    >
+                      <Avatar
+                        alt="avatar"
+                        src={user.avatarUrl ? user.avatarUrl : null}
+                      />
+                      <div style={{ display: "flex", flexDirection: "column" }}>
+                        <Typography
+                          variant="body1"
+                          className={classes.text}
+                          style={{ fontWeight: "bold" }}
+                        >
+                          {user.username}
+                        </Typography>
+                        <Typography variant="body1" className={classes.text}>
+                          {user.displayName}
+                        </Typography>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className={classes.searchBoxContent}>
+                <Typography
+                  variant="body1"
+                  style={{
+                    fontSize: 14,
+                    fontWeight: "bold",
+                    color: "#8e8e8e",
+                    textAlign: "center",
+                  }}
+                >
+                  {searchKey ? "No result is found." : "No recent searches."}
+                </Typography>
+              </div>
+            )}
           </Paper>
         </Grid>
         <Grid item style={{ display: "flex", position: "relative" }}>
-          <IconButton className={classes.iconButton}>
-            <HomeIcon className={classes.icon} />
+          <IconButton
+            className={classes.iconButton}
+            onClick={() => {
+              window.location.href = window.location.origin;
+            }}
+          >
+            {isHome ? (
+              <HomeIcon className={classes.icon} />
+            ) : (
+              <HomeOutlinedIcon className={classes.icon} />
+            )}
           </IconButton>
           <IconButton className={classes.iconButton}>
             <FavoriteIcon className={classes.icon} />
@@ -96,9 +204,9 @@ const Header = ({ displayName, avatar }) => {
           <Paper
             className={classes.user}
             active={userMenu ? 1 : 0}
-            ref={wrapperRef}
+            ref={profileRef}
           >
-            <div className={classes.option}>
+            <div className={classes.option} onClick={profile}>
               <AccountCircleIcon className={classes.icon} />
               <Typography className={classes.text}>Profile</Typography>
             </div>

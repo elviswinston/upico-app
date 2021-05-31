@@ -11,8 +11,8 @@ export default makeStyles((theme) => ({
     alignItems: "center",
   },
   avatar: {
-    width: 25,
-    height: "auto",
+    width: 27,
+    height: 27,
     marginRight: 10,
   },
   name: {

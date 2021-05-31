@@ -27,9 +27,9 @@ const Home = () => {
         response?.data?.displayName ? response.data.displayName : username
       )
     );
-    AvatarService.getUserAvatar(username).then((response) =>
-      setAvatar(response?.data?.length > 0 ? response.data[0].path : avt)
-    );
+    AvatarService.getUserAvatar(username).then((response) => {
+      response.status === 404 ? setAvatar(avt) : setAvatar(response.data.path);
+    });
     PostService.getPostUser(username).then((response) => {
       setPosts(response?.data);
     });
@@ -50,9 +50,9 @@ const Home = () => {
 
   return (
     <div className={classes.root}>
-      <Header displayName={displayName} avatar={avatar} />
+      <Header displayName={displayName} avatar={avatar} isHome={true} />
       <div className={classes.content}>
-        <Upload displayName={displayName} avatar={avatar} />
+        <Upload displayName={displayName} avatar={avatar} setPosts={setPosts} />
         <Grid
           container
           className={classes.container}
@@ -75,9 +75,11 @@ const Home = () => {
                 <Post post={post} />
               </Grid>
             ))}
-          <Button color="primary" onClick={handleClick}>
-            More posts
-          </Button>
+          {posts.length > 0 && (
+            <Button color="primary" onClick={handleClick}>
+              More posts
+            </Button>
+          )}
         </Grid>
         <Suggestion />
       </div>

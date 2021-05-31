@@ -9,7 +9,7 @@ import useModal from "../../../hooks/useModal";
 
 import Modal from "../../../components/Modal";
 
-const Upload = ({ displayName, avatar }) => {
+const Upload = ({ displayName, avatar, setPosts }) => {
   const classes = useStyles();
   const wrapperRef = useRef(null);
   const [upload, setUpload] = useState(false);
@@ -31,7 +31,7 @@ const Upload = ({ displayName, avatar }) => {
       );
     } else setFiles(e.target.files);
   };
-  
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
@@ -62,6 +62,7 @@ const Upload = ({ displayName, avatar }) => {
         fileInput={fileInput}
         files={files}
         handleFileChange={handleFileChange}
+        setPosts={setPosts}
       />
       <div className={classes.avatarContainer}>
         <Avatar alt="avatar" src={avatar} className={classes.avatar} />
