@@ -1,4 +1,4 @@
-import { Grid } from "@material-ui/core";
+import { Button, Grid } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import Header from "./components/Header";
 import Post from "./components/Post";
@@ -35,6 +35,19 @@ const Home = () => {
     });
   }, [username]);
 
+  const handleClick = () => {
+    const username = localStorage.getItem("username");
+    const lastedPostId = posts[posts.length - 1].id;
+
+    PostService.getMorePost(username, lastedPostId).then((response) => {
+      if (response.status === 200) {
+        response.data.length > 0
+          ? setPosts(posts.concat(response.data))
+          : alert("There are no more posts");
+      }
+    });
+  };
+
   return (
     <div className={classes.root}>
       <Header displayName={displayName} avatar={avatar} />
@@ -62,6 +75,9 @@ const Home = () => {
                 <Post post={post} />
               </Grid>
             ))}
+          <Button color="primary" onClick={handleClick}>
+            More posts
+          </Button>
         </Grid>
         <Suggestion />
       </div>

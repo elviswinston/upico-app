@@ -13,7 +13,7 @@ const Comment = ({ comment }) => {
 
   const [isReplying, setIsReplying] = useState(false);
   const [isShowingReply, setIsShowingReply] = useState(false);
-  const [replies, setReplies] = useState(comment.childs);
+  const [replies, setReplies] = useState(comment.childs ? comment.childs : []);
   const [text, setText] = useState("Show replies");
 
   const handleClick = () => {
@@ -63,6 +63,7 @@ const Comment = ({ comment }) => {
               date={comment.dateCreate}
               className={classes.timeAgo}
               title={null}
+              live={false}
             />
             <button className={classes.button} onClick={handleClick}>
               Reply
@@ -70,14 +71,16 @@ const Comment = ({ comment }) => {
           </div>
         </div>
       </div>
-      <div className={classes.reply}>
-        <button className={classes.showReplyButton} onClick={showReply}>
-          <div className={classes.divider}></div>
-          <span>{text}</span>
-        </button>
-      </div>
-      {isShowingReply & (replies.length > 0)
-        ? replies.map((reply) => {
+      {replies?.length > 0 && (
+        <div className={classes.reply}>
+          <button className={classes.showReplyButton} onClick={showReply}>
+            <div className={classes.divider}></div>
+            <span>{text}</span>
+          </button>
+        </div>
+      )}
+      {isShowingReply & (replies?.length > 0)
+        ? replies?.map((reply) => {
             return (
               <div className={classes.reply} key={reply.id}>
                 <Avatar

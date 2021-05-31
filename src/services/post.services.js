@@ -24,10 +24,15 @@ const getPostUser = (username) => {
   return axios
     .get(API_URL + "Posts/user/" + username + "/10")
     .catch((error) => {
-      if (error.response) return error.response;
-    })
-    .then((response) => {
-      return response;
+      return error.response;
+    });
+};
+
+const getMorePost = (username, lastedPostId) => {
+  return axios
+    .get(API_URL + "Posts/user/" + username + "/" + lastedPostId + "/10")
+    .catch((error) => {
+      return error.response;
     });
 };
 
@@ -35,6 +40,7 @@ const PostService = {
   createPost,
   uploadImage,
   getPostUser,
+  getMorePost,
 };
 
 export default PostService;

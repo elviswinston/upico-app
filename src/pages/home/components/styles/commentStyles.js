@@ -52,7 +52,7 @@ export default makeStyles((theme) => ({
     fontWeight: "bold",
     width: "auto",
     padding: 0,
-    marginBottom: 10
+    marginBottom: 10,
   },
   textField: {
     marginTop: 5,
