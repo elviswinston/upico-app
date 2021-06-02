@@ -15,16 +15,19 @@ import SearchIcon from "@material-ui/icons/Search";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 
+import CircularProgress from "@material-ui/core/CircularProgress";
+
 import logo from "../../../assets/logo.jpg";
 
 import useStyles from "./styles/headerStyles";
 
 import AuthService from "../../../services/auth.service";
+import AvatarService from "../../../services/avatar.services";
 import UserService from "../../../services/user.services";
 
 import { useHistory } from "react-router";
 
-const Header = ({ displayName, avatar, isHome }) => {
+const Header = ({ isHome }) => {
   const classes = useStyles();
 
   const inputRef = useRef(null);
@@ -33,10 +36,15 @@ const Header = ({ displayName, avatar, isHome }) => {
 
   const history = useHistory();
 
+  const username = localStorage.getItem("username");
+
   const [userMenu, setUserMenu] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [isSearching, setIsSearching] = useState(0);
   const [searchUsers, setSearchUsers] = useState([]);
   const [searchKey, setSearchKey] = useState("");
+  const [avatar, setAvatar] = useState("");
+  const [displayName, setDisplayName] = useState("");
 
   const search = () => {
     setIsSearching(1);
@@ -49,8 +57,10 @@ const Header = ({ displayName, avatar, isHome }) => {
 
   const handleChange = (e) => {
     setSearchKey(e.target.value);
+    setLoading(true);
     UserService.searchUser(e.target.value).then((response) => {
       if (response.status === 200) {
+        setLoading(false);
         setSearchUsers(response.data);
       }
     });
@@ -71,6 +81,15 @@ const Header = ({ displayName, avatar, isHome }) => {
   };
 
   useEffect(() => {
+    AvatarService.getUserAvatar(username).then((response) => {
+      response.status === 404 ? setAvatar(null) : setAvatar(response.data.path);
+    });
+    UserService.getUserInfo(username).then((response) => {
+      if (response.status === 200) {
+        setDisplayName(response.data.displayName);
+      }
+    });
+
     const handleClickOutside = (event) => {
       if (profileRef.current && !profileRef.current.contains(event.target)) {
         setUserMenu(false);
@@ -84,12 +103,12 @@ const Header = ({ displayName, avatar, isHome }) => {
         setIsSearching(0);
       }
     };
-
+    
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [profileRef, searchRef, inputRef]);
+  }, [profileRef, searchRef, inputRef, username]);
 
   return (
     <div className={classes.root}>
@@ -136,34 +155,42 @@ const Header = ({ displayName, avatar, isHome }) => {
               </div>
             )}
             {searchUsers.length > 0 ? (
-              <div style={{ marginTop: 20, overflowY: "auto" }}>
-                {searchUsers.map((user) => {
-                  return (
-                    <div
-                      className={classes.searchUser}
-                      key={user.id}
-                      onClick={(e) => handleClick(e, user.username)}
-                    >
-                      <Avatar
-                        alt="avatar"
-                        src={user.avatarUrl ? user.avatarUrl : null}
-                      />
-                      <div style={{ display: "flex", flexDirection: "column" }}>
-                        <Typography
-                          variant="body1"
-                          className={classes.text}
-                          style={{ fontWeight: "bold" }}
+              loading ? (
+                <div className={classes.progress}>
+                  <CircularProgress size={30} />
+                </div>
+              ) : (
+                <div style={{ marginTop: 20, overflowY: "auto" }}>
+                  {searchUsers.map((user) => {
+                    return (
+                      <div
+                        className={classes.searchUser}
+                        key={user.id}
+                        onClick={(e) => handleClick(e, user.username)}
+                      >
+                        <Avatar
+                          alt="avatar"
+                          src={user.avatarUrl ? user.avatarUrl : null}
+                        />
+                        <div
+                          style={{ display: "flex", flexDirection: "column" }}
                         >
-                          {user.username}
-                        </Typography>
-                        <Typography variant="body1" className={classes.text}>
-                          {user.displayName}
-                        </Typography>
+                          <Typography
+                            variant="body1"
+                            className={classes.text}
+                            style={{ fontWeight: "bold" }}
+                          >
+                            {user.username}
+                          </Typography>
+                          <Typography variant="body1" className={classes.text}>
+                            {user.displayName}
+                          </Typography>
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
-              </div>
+                    );
+                  })}
+                </div>
+              )
             ) : (
               <div className={classes.searchBoxContent}>
                 <Typography

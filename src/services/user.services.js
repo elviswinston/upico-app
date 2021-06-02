@@ -29,7 +29,27 @@ const getProfile = (sourceUsername, targetUsername) => {
 
 const follow = (sourceUsername, targetUsername) => {
   return axios
-    .get(API_URL + "/" + sourceUsername + "/" + targetUsername)
+    .get(
+      API_URL +
+        "/follow?sourceUsername=" +
+        sourceUsername +
+        "&targetUsername=" +
+        targetUsername
+    )
+    .catch((error) => {
+      return error.response;
+    });
+};
+
+const unfollow = (sourceUsername, targetUsername) => {
+  return axios
+    .get(
+      API_URL +
+        "/unfollow?sourceUsername=" +
+        sourceUsername +
+        "&targetUsername=" +
+        targetUsername
+    )
     .catch((error) => {
       return error.response;
     });
@@ -40,6 +60,7 @@ const UserService = {
   searchUser,
   getProfile,
   follow,
+  unfollow,
 };
 
 export default UserService;

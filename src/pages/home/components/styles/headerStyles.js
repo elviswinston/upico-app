@@ -38,7 +38,7 @@ export default makeStyles((theme) => ({
     top: 40,
     flexDirection: "column",
     flexShrink: 0,
-    display: "none",   
+    display: "none",
     "&[active='1']": {
       display: "flex",
     },
@@ -124,5 +124,13 @@ export default makeStyles((theme) => ({
     "&:hover": {
       backgroundColor: "#d9d9d9",
     },
+  },
+  progress: {
+    width: "100%",
+    height: "100%",
+    textAlign: "center",
+    alignItems: "center",
+    display: "flex",
+    justifyContent: "center",
   },
 }));

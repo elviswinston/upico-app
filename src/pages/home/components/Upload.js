@@ -9,15 +9,23 @@ import useModal from "../../../hooks/useModal";
 
 import Modal from "../../../components/Modal";
 
-const Upload = ({ displayName, avatar, setPosts }) => {
+import AvatarService from "../../../services/avatar.services";
+import UserService from "../../../services/user.services";
+
+const Upload = ({ setPosts }) => {
   const classes = useStyles();
+
   const wrapperRef = useRef(null);
   const [upload, setUpload] = useState(false);
   const [files, setFiles] = useState(null);
+  const [avatar, setAvatar] = useState("");
+  const [displayName, setDisplayName] = useState("");
 
   const { isShowing, toggle } = useModal();
 
   const fileInput = useRef(null);
+
+  const username = localStorage.getItem("username");
 
   const handleClick = () => {
     setUpload(true);
@@ -33,6 +41,15 @@ const Upload = ({ displayName, avatar, setPosts }) => {
   };
 
   useEffect(() => {
+    AvatarService.getUserAvatar(username).then((response) => {
+      response.status === 404 ? setAvatar(null) : setAvatar(response.data.path);
+    });
+    UserService.getUserInfo(username).then((response) => {
+      if (response.status === 200) {
+        setDisplayName(response.data.displayName);
+      }
+    });
+
     const handleClickOutside = (event) => {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
         setFiles(null);
@@ -49,7 +66,7 @@ const Upload = ({ displayName, avatar, setPosts }) => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [wrapperRef, toggle, upload]);
+  }, [wrapperRef, toggle, upload, username]);
 
   return (
     <Paper className={classes.root}>

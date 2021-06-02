@@ -15,12 +15,12 @@ export default makeStyles((theme) => ({
     alignItems: "center",
   },
   avatar: {
-    width: 27,
-    height: 27,
+    width: 30,
+    height: 30,
     marginRight: 10,
   },
   name: {
-    fontSize: 12,
+    fontSize: 13,
     color: "#009688",
     fontWeight: "bold",
   },

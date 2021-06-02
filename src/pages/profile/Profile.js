@@ -2,56 +2,103 @@ import React, { useEffect, useRef, useState } from "react";
 
 import Header from "../home/components/Header";
 
+import { useLoading } from "../../hooks/hooks";
+
 import useStyles from "./styles/profileStyles";
 
-import AvatarService from "../../services/avatar.services";
-import UserService from "../../services/user.services";
+import { UserService, PostService } from "../../services/services";
 
-import avt from "../../assets/avatar.png";
-import { Avatar, Button, Grid, Typography } from "@material-ui/core";
+import {
+  Avatar,
+  Button,
+  CircularProgress,
+  Grid,
+  Typography,
+} from "@material-ui/core";
 
-import PersonIcon from "@material-ui/icons/Person";
-import CheckIcon from "@material-ui/icons/Check";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import ModeCommentIcon from "@material-ui/icons/ModeComment";
+import {
+  Person,
+  Check,
+  Favorite,
+  ModeComment,
+  PhotoLibrary,
+} from "@material-ui/icons";
 
 import UnfollowModal from "./components/UnfollowModal";
+import PostDetailModal from "./components/PostDetailModal";
 
 const Profile = ({ match }) => {
   const classes = useStyles();
 
-  const modalRef = useRef(null);
+  const unfollowModalRef = useRef(null);
+  const postDetailModalRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   const [user, setUser] = useState({});
-  const [displayName, setDisplayName] = useState("");
-  const [avatar, setAvatar] = useState("");
-  const [isShowing, setIsShowing] = useState(false);
+  const [isShowingUnfollow, setIsShowingUnfollow] = useState(false);
+  const [isShowingPost, setIsShowingPost] = useState(false);
+  const [posts, setPosts] = useState([]);
+  const [postId, setPostId] = useState("");
+
+  const { loading, onLoading, offLoading } = useLoading();
 
   const sourceUsername = localStorage.getItem("username");
   const targetUsername = match.params.username;
 
   const handleClick = () => {
-    setIsShowing(true);
+    setIsShowingUnfollow(true);
+  };
+
+  const showPostDetail = (postId) => {
+    setIsShowingPost(true);
+    setPostId(postId);
+  };
+
+  const selectAvatar = () => {
+    fileInputRef.current.click();
+  };
+
+  const uploadAvatar = (e) => {
+    console.log(e.target.files[0]);
+  };
+
+  const follow = () => {
+    onLoading();
+    UserService.follow(sourceUsername, targetUsername).then((response) => {
+      if (response.status === 200) {
+        setUser({ ...user, isFollowed: true, followers: user.followers + 1 });
+        offLoading();
+      }
+    });
   };
 
   useEffect(() => {
-    UserService.getUserInfo(sourceUsername).then((response) => {
-      if (response.status === 200) {
-        setDisplayName(response.data.displayName);
-      }
-    });
     UserService.getProfile(sourceUsername, targetUsername).then((response) => {
       if (response.status === 200) {
         setUser(response.data);
       }
     });
-    AvatarService.getUserAvatar(sourceUsername).then((response) => {
-      response.status === 404 ? setAvatar(avt) : setAvatar(response.data.path);
-    });
+
+    PostService.getPostProfile(sourceUsername, targetUsername, 15).then(
+      (response) => {
+        if (response.status === 200) {
+          setPosts(response.data);
+        }
+      }
+    );
 
     const handleClickOutside = (event) => {
-      if (modalRef.current && !modalRef.current.contains(event.target)) {
-        setIsShowing(false);
+      if (
+        unfollowModalRef.current &&
+        !unfollowModalRef.current.contains(event.target)
+      ) {
+        setIsShowingUnfollow(false);
+      }
+      if (
+        postDetailModalRef.current &&
+        !postDetailModalRef.current.contains(event.target)
+      ) {
+        setIsShowingPost(false);
       }
     };
 
@@ -59,18 +106,25 @@ const Profile = ({ match }) => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [sourceUsername, targetUsername, modalRef]);
+  }, [sourceUsername, targetUsername, unfollowModalRef, postDetailModalRef]);
 
   return (
     <div className={classes.root}>
       <UnfollowModal
         avatar={user.avatarUrl ? user.avatarUrl : null}
-        isShowing={isShowing}
-        modalRef={modalRef}
-        setIsShowing={setIsShowing}
-        username={user.userName ? user.userName : null}
+        isShowing={isShowingUnfollow}
+        modalRef={unfollowModalRef}
+        toggleModal={setIsShowingUnfollow}
+        sourceUsername={sourceUsername}
+        targetUsername={user.userName ? user.userName : null}
+        setUser={setUser}
       />
-      <Header displayName={displayName} avatar={avatar} />
+      <PostDetailModal
+        isShowing={isShowingPost}
+        modalRef={postDetailModalRef}
+        postId={postId}
+      />
+      <Header />
       {Object.keys(user).length > 0 ? (
         <div className={classes.profile}>
           <div className={classes.content}>
@@ -81,12 +135,18 @@ const Profile = ({ match }) => {
                   className={classes.avatar}
                 />
               ) : (
-                <button className={classes.uploadButton}>
+                <button className={classes.uploadButton} onClick={selectAvatar}>
                   <Avatar
                     src={user.avatarUrl ? user.avatarUrl : null}
                     className={classes.avatar}
                   />
-                  <input type="file" hidden accept="image/*" />
+                  <input
+                    type="file"
+                    hidden
+                    accept="image/*"
+                    ref={fileInputRef}
+                    onChange={uploadAvatar}
+                  />
                 </button>
               )}
             </div>
@@ -97,29 +157,44 @@ const Profile = ({ match }) => {
                 </Typography>
                 {sourceUsername !== targetUsername ? (
                   user.isFollowed ? (
-                    <Button
-                      className={classes.button}
-                      style={{
-                        border: "1px solid #d9d9d9",
-                        backgroundColor: "white",
-                      }}
-                      onClick={handleClick}
-                    >
-                      <PersonIcon className={classes.icon} />
-                      <CheckIcon
-                        className={classes.icon}
-                        style={{ width: 15 }}
-                      />
-                    </Button>
+                    <div style={{ position: "relative" }}>
+                      <Button
+                        className={classes.button}
+                        style={{
+                          border: "1px solid #d9d9d9",
+                          backgroundColor: "white",
+                        }}
+                        onClick={handleClick}
+                        disabled={loading}
+                      >
+                        <Person className={classes.icon} />
+                        <Check className={classes.icon} style={{ width: 15 }} />
+                      </Button>
+                      {loading && (
+                        <CircularProgress
+                          size={20}
+                          className={classes.buttonProgress}
+                        />
+                      )}
+                    </div>
                   ) : (
-                    <Button
-                      className={classes.button}
-                      variant="contained"
-                      color="primary"
-                      disableElevation
-                    >
-                      Follow
-                    </Button>
+                    <div style={{ position: "relative" }}>
+                      <Button
+                        className={classes.button}
+                        variant="contained"
+                        color="primary"
+                        disabled={loading}
+                        onClick={follow}
+                      >
+                        Follow
+                      </Button>
+                      {loading && (
+                        <CircularProgress
+                          size={20}
+                          className={classes.buttonProgress}
+                        />
+                      )}
+                    </div>
                   )
                 ) : (
                   <Button
@@ -162,32 +237,45 @@ const Profile = ({ match }) => {
           </div>
           <div className={classes.divider}></div>
           <Grid container className={classes.gallery} spacing={3}>
-            <Grid
-              item
-              xs={4}
-              md={4}
-              sm={4}
-              lg={4}
-              className={classes.galleryItem}
-            >
-              <div className={classes.galleryOverlay}>
-                <img
-                  alt="postImage"
-                  src={avatar}
-                  className={classes.galleryImage}
-                ></img>
-              </div>
-              <div className={classes.galleryItemInfo}>
-                <ul>
-                  <li>
-                    <FavoriteIcon /> 47
-                  </li>
-                  <li>
-                    <ModeCommentIcon /> 10
-                  </li>
-                </ul>
-              </div>
-            </Grid>
+            {posts.length > 0
+              ? posts.map((post) => (
+                  <Grid
+                    item
+                    xs={12}
+                    md={4}
+                    sm={6}
+                    lg={4}
+                    className={classes.galleryItem}
+                    key={post.id}
+                    onClick={() => showPostDetail(post.id)}
+                  >
+                    <div className={classes.galleryOverlay}>
+                      <img
+                        alt="postImage"
+                        className={classes.galleryImage}
+                        src={post.postImages[0].url}
+                      ></img>
+                    </div>
+                    {post.postImages.length > 1 ? (
+                      <div className={classes.galleryItemType}>
+                        <PhotoLibrary />
+                      </div>
+                    ) : null}
+                    <div className={classes.galleryItemInfo}>
+                      <ul>
+                        <li>
+                          <Favorite style={{ marginRight: 5 }} />
+                          {post.likes}
+                        </li>
+                        <li>
+                          <ModeComment style={{ marginRight: 5 }} />
+                          {post.comments}
+                        </li>
+                      </ul>
+                    </div>
+                  </Grid>
+                ))
+              : null}
           </Grid>
         </div>
       ) : null}

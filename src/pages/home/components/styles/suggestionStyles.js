@@ -14,7 +14,7 @@ export default makeStyles((theme) => ({
     borderTopRightRadius: 2,
   },
   headerText: {
-    fontSize: 12,
+    fontSize: 13,
     color: "#009688",
     fontWeight: "bold",
   },

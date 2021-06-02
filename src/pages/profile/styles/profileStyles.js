@@ -44,7 +44,6 @@ export default makeStyles((theme) => ({
     marginRight: 20,
   },
   button: {
-    marginLeft: 20,
     textTransform: "inherit",
     padding: "3px 20px",
     backgroundColor: "#0095f6",
@@ -85,6 +84,12 @@ export default makeStyles((theme) => ({
       marginRight: 30,
     },
   },
+  galleryItemType: {
+    position: "absolute",
+    top: "1rem",
+    right: "1rem",
+    color: "white",
+  },
   galleryOverlay: {
     width: "100%",
     height: "100%",
@@ -94,5 +99,13 @@ export default makeStyles((theme) => ({
     width: "100%",
     height: "100%",
     objectFit: "cover",
+  },
+  buttonProgress: {
+    position: "absolute",
+    color: "#009688",
+    top: "50%",
+    left: "50%",
+    marginLeft: -12,
+    marginTop: -12,
   },
 }));

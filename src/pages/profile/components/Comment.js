@@ -1,4 +1,4 @@
-import { Avatar, Paper, TextField, Typography } from "@material-ui/core";
+import { Avatar, TextField, Typography } from "@material-ui/core";
 import React, { useState } from "react";
 
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
@@ -136,17 +136,19 @@ const Comment = ({ comment }) => {
             className={classes.avatar}
             style={{ width: 25, height: 25 }}
           />
-          <Paper className={classes.paper}>
-            <TextField
-              className={classes.textField}
-              placeholder="Reply something..."
-              multiline
-              rows={1}
-              rowsMax={3}
-              onKeyDown={(e) => handleKeyDown(e, "id")}
-              id={comment.id}
-            />
-          </Paper>
+          <TextField
+            className={classes.textField}
+            multiline
+            rows={1}
+            rowsMax={2}
+            onKeyDown={(e) => handleKeyDown(e, "id")}
+            id={comment.id}
+            InputProps={{
+              classes: {
+                input: classes.input,
+              },
+            }}
+          />
         </div>
       ) : null}
     </div>

@@ -10,7 +10,15 @@ const createPost = (username, content) => {
     })
     .catch((error) => {
       return error.response;
-    })
+    });
+};
+
+const getPostDetail = (username, postId) => {
+  return axios
+    .get(API_URL + "Posts?sourceUsername=" + username + "&postId=" + postId)
+    .catch((error) => {
+      return error.response;
+    });
 };
 
 const uploadImage = (postID, formData) => {
@@ -19,15 +27,38 @@ const uploadImage = (postID, formData) => {
 
 const getPostUser = (username) => {
   return axios
-    .get(API_URL + "Posts/user/" + username + "/10")
+    .get(API_URL + "Posts/relatedPosts?username=" + username + "&numPosts=10")
     .catch((error) => {
       return error.response;
     });
 };
 
-const getMorePost = (username, lastedPostId) => {
+const getMorePost = (username, lastestPostId) => {
   return axios
-    .get(API_URL + "Posts/user/" + username + "/" + lastedPostId + "/10")
+    .get(
+      API_URL +
+        "Posts/moreRelatedPosts?username=" +
+        username +
+        "&lastestPostId=" +
+        lastestPostId +
+        "&numPosts=10"
+    )
+    .catch((error) => {
+      return error.response;
+    });
+};
+
+const getPostProfile = (sourceUsername, targetUsername, numPosts) => {
+  return axios
+    .get(
+      API_URL +
+        "Posts/UserProfilePosts?sourceUsername=" +
+        sourceUsername +
+        "&targetUsername=" +
+        targetUsername +
+        "&numPosts=" +
+        numPosts
+    )
     .catch((error) => {
       return error.response;
     });
@@ -35,9 +66,11 @@ const getMorePost = (username, lastedPostId) => {
 
 const PostService = {
   createPost,
+  getPostDetail,
   uploadImage,
   getPostUser,
   getMorePost,
+  getPostProfile,
 };
 
 export default PostService;

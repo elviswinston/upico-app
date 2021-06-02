@@ -18,30 +18,29 @@ import Comment from "./Comment";
 const Post = ({ post }) => {
   const classes = useStyles();
   const [likes, setLikes] = useState(post.likes);
-  const [hasLiked, setHasLiked] = useState(post.likes > 0);
+  const [isLiked, setIsLiked] = useState(post.isLiked);
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
   const [index, setIndex] = useState(0);
 
   let data = [];
   const postId = post.id;
+  const username = localStorage.getItem("username");
 
   const handleChange = (e) => {
     setComment(e.target.value);
   };
 
   const handleLike = () => {
-    const username = localStorage.getItem("username");
-
     LikeService.like(username, postId).then((response) => {
       if (response.status === 400) {
         LikeService.dislike(username, postId).then((response) => {
           setLikes(likes - 1);
-          setHasLiked(false);
+          setIsLiked(false);
         });
       } else {
         setLikes(likes + 1);
-        setHasLiked(true);
+        setIsLiked(true);
       }
     });
   };
@@ -49,7 +48,6 @@ const Post = ({ post }) => {
   const handleComment = () => {
     if (comment === "") return;
 
-    const username = localStorage.getItem("username");
     CommentService.comment(username, comment, postId).then((response) => {
       setComments((prevComments) => [...prevComments, response.data]);
     });
@@ -97,20 +95,16 @@ const Post = ({ post }) => {
       {data.length > 0 ? (
         data.length > 1 ? (
           <div style={{ position: "relative" }}>
-            <button
+            <NavigateBeforeIcon
               onClick={slideLeft}
-              className={classes.slideButton}
-              style={{ left: 5 }}
-            >
-              <NavigateBeforeIcon />
-            </button>
-            <button
+              className={classes.slideIcon}
+              style={{ left: 0 }}
+            />
+            <NavigateNextIcon
               onClick={slideRight}
-              className={classes.slideButton}
+              className={classes.slideIcon}
               style={{ right: 5 }}
-            >
-              <NavigateNextIcon />
-            </button>
+            />
             <img
               src={data[index]}
               alt={index}
@@ -123,7 +117,7 @@ const Post = ({ post }) => {
       ) : null}
       <div className={classes.likeComment}>
         <div className={classes.button}>
-          {hasLiked ? (
+          {isLiked ? (
             <FavoriteIcon
               className={classes.icon}
               style={{ cursor: "pointer" }}

@@ -68,13 +68,14 @@ export default makeStyles((theme) => ({
   commentButton: {
     cursor: "pointer",
   },
-  slideButton: {
+  slideIcon: {
     position: "absolute",
     top: "50%",
     padding: 0,
-    borderRadius: "50%",
-    backgroundColor: "white",
+    backgroundColor: "rgba(0, 0, 0, 0.4)",
+    color: "white",
     border: "none",
+    borderRadius: "50%",
   },
   previewImage: {
     width: "100%",

@@ -7,29 +7,15 @@ import Upload from "./components/Upload";
 
 import useStyles from "./styles/homeStyles";
 
-import UserService from "../../services/user.services";
 import PostService from "../../services/post.services";
-import AvatarService from "../../services/avatar.services";
-
-import avt from "../../assets/avatar.png";
 
 const Home = () => {
   const classes = useStyles();
-  const [displayName, setDisplayName] = useState("");
-  const [avatar, setAvatar] = useState("");
   const [posts, setPosts] = useState([]);
 
   const username = localStorage.getItem("username");
 
   useEffect(() => {
-    UserService.getUserInfo(username).then((response) =>
-      setDisplayName(
-        response?.data?.displayName ? response.data.displayName : username
-      )
-    );
-    AvatarService.getUserAvatar(username).then((response) => {
-      response.status === 404 ? setAvatar(avt) : setAvatar(response.data.path);
-    });
     PostService.getPostUser(username).then((response) => {
       setPosts(response?.data);
     });
@@ -37,9 +23,9 @@ const Home = () => {
 
   const handleClick = () => {
     const username = localStorage.getItem("username");
-    const lastedPostId = posts[posts.length - 1].id;
+    const lastestPostId = posts[posts.length - 1].id;
 
-    PostService.getMorePost(username, lastedPostId).then((response) => {
+    PostService.getMorePost(username, lastestPostId).then((response) => {
       if (response.status === 200) {
         response.data.length > 0
           ? setPosts(posts.concat(response.data))
@@ -50,9 +36,9 @@ const Home = () => {
 
   return (
     <div className={classes.root}>
-      <Header displayName={displayName} avatar={avatar} isHome={true} />
+      <Header isHome={true} />
       <div className={classes.content}>
-        <Upload displayName={displayName} avatar={avatar} setPosts={setPosts} />
+        <Upload setPosts={setPosts} />
         <Grid
           container
           className={classes.container}

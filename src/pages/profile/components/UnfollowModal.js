@@ -2,20 +2,40 @@ import { Avatar, Paper, Typography } from "@material-ui/core";
 
 import React from "react";
 
-import useStyles from "./styles/modalStyles";
+import useStyles from "./styles/unfollowModalStyles";
+import useLoading from "../../../hooks/useLoading";
 
-import UserService from "../../../services/user.services";
+import { UserService } from "../../../services/services";
 
 const UnfollowModal = ({
   avatar,
   isShowing,
   modalRef,
-  setIsShowing,
-  username,
+  toggleModal,
+  sourceUsername,
+  targetUsername,
+  setUser,
 }) => {
   const classes = useStyles();
 
-  const handleClick = () => {};
+  const { onLoading, offLoading } = useLoading();
+
+  const handleClick = () => {
+    onLoading();
+    toggleModal();
+    UserService.unfollow(sourceUsername, targetUsername).then((response) => {
+      if (response.status === 200) {
+        setUser((prevUser) => {
+          return {
+            ...prevUser,
+            isFollowed: false,
+            followers: prevUser.followers - 1,
+          };
+        });
+        offLoading();
+      }
+    });
+  };
 
   return isShowing ? (
     <div>
@@ -27,7 +47,7 @@ const UnfollowModal = ({
         <div className={classes.textContainer}>
           <Typography variant="body1" className={classes.text}>
             If you change your mind, you will have to request a follow-up to
-            {" @" + username}
+            {" @" + targetUsername}
           </Typography>
         </div>
         <div
@@ -37,7 +57,7 @@ const UnfollowModal = ({
         >
           Unfollow
         </div>
-        <div className={classes.option} onClick={() => setIsShowing(false)}>
+        <div className={classes.option} onClick={() => toggleModal(false)}>
           Cancel
         </div>
       </Paper>
