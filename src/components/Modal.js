@@ -9,8 +9,10 @@ import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 
 import useStyles from "./styles/modalStyles";
+import { useLoading } from "../hooks/hooks";
 
 import PostService from "../services/post.services";
+import FullscreenLoading from "./FullscreenLoading";
 
 const Modal = ({
   isShowing,
@@ -34,6 +36,8 @@ const Modal = ({
     fileInput.current.click();
   };
 
+  const { loading, onLoading, offLoading } = useLoading();
+
   useEffect(() => {
     if (files) {
       setData([]);
@@ -46,23 +50,35 @@ const Modal = ({
   }, [files]);
 
   const createPost = () => {
+    onLoading();
     const username = localStorage.getItem("username");
     if (content.length > 0) {
       PostService.createPost(username, content).then((response) => {
         if (response.status === 200) {
-          const post = response.data;
+          let post = response.data;
           if (files) {
             const formData = new FormData();
             for (let i = 0; i < files.length; i++) {
               formData.append(`postImage[${i}]`, files[i], files[i].name);
             }
 
-            PostService.uploadImage(post.id, formData);
+            PostService.uploadImage(post.id, formData).then((response) => {
+              if (response.status === 200) {
+                post.postImages = response.data;
+                setTimeout(() => {
+                  offLoading();
+                  setPosts((prevPosts) => {
+                    return [post, ...prevPosts];
+                  });
+                }, 3000);
+              }
+            });
+          } else {
+            offLoading();
+            setPosts((prevPosts) => {
+              return [response.data, ...prevPosts];
+            });
           }
-          /*setPosts((prevPosts) => {
-            return [response.data, ...prevPosts];
-          });*/
-          console.log([response.data]);
         }
       });
       setContent("");
@@ -72,7 +88,7 @@ const Modal = ({
 
   return isShowing
     ? ReactDOM.createPortal(
-        <div>
+        <div style={{ position: "relative" }}>
           <div className={classes.modalOverflay}></div>
           <Paper className={classes.root} ref={propRef}>
             <div className={classes.header}>
@@ -117,6 +133,8 @@ const Modal = ({
         </div>,
         document.body
       )
+    : loading
+    ? ReactDOM.createPortal(<FullscreenLoading />, document.body)
     : null;
 };
 

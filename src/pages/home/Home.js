@@ -23,9 +23,9 @@ const Home = () => {
 
   const handleClick = () => {
     const username = localStorage.getItem("username");
-    const lastestPostId = posts[posts.length - 1].id;
+    const latestPostId = posts[posts.length - 1].id;
 
-    PostService.getMorePost(username, lastestPostId).then((response) => {
+    PostService.getMorePost(username, latestPostId).then((response) => {
       if (response.status === 200) {
         response.data.length > 0
           ? setPosts(posts.concat(response.data))

@@ -97,6 +97,7 @@ const PostDetailModal = ({ isShowing, modalRef, setIsShowing, postId }) => {
 
   return isShowing ? (
     <div>
+      <Close className={classes.closeIcon} />
       <div className={classes.modalOverlay}></div>
       <Paper className={classes.root} ref={modalRef}>
         <Grid container spacing={0} className={classes.postContainer}>

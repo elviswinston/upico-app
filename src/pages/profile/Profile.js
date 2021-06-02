@@ -62,6 +62,10 @@ const Profile = ({ match }) => {
     console.log(e.target.files[0]);
   };
 
+  const editAccount = () => {
+    window.location.href = window.location.origin + "/accounts/edit";
+  };
+
   const follow = () => {
     onLoading();
     UserService.follow(sourceUsername, targetUsername).then((response) => {
@@ -203,6 +207,7 @@ const Profile = ({ match }) => {
                       border: "1px solid #d9d9d9",
                       backgroundColor: "white",
                     }}
+                    onClick={editAccount}
                   >
                     Edit profile
                   </Button>

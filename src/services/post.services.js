@@ -33,14 +33,14 @@ const getPostUser = (username) => {
     });
 };
 
-const getMorePost = (username, lastestPostId) => {
+const getMorePost = (username, latestPostId) => {
   return axios
     .get(
       API_URL +
         "Posts/moreRelatedPosts?username=" +
         username +
-        "&lastestPostId=" +
-        lastestPostId +
+        "&latestPostId=" +
+        latestPostId +
         "&numPosts=10"
     )
     .catch((error) => {

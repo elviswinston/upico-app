@@ -25,16 +25,12 @@ import AuthService from "../../../services/auth.service";
 import AvatarService from "../../../services/avatar.services";
 import UserService from "../../../services/user.services";
 
-import { useHistory } from "react-router";
-
 const Header = ({ isHome }) => {
   const classes = useStyles();
 
   const inputRef = useRef(null);
   const profileRef = useRef(null);
   const searchRef = useRef(null);
-
-  const history = useHistory();
 
   const username = localStorage.getItem("username");
 
@@ -77,7 +73,7 @@ const Header = ({ isHome }) => {
 
   const profile = (e) => {
     e.preventDefault();
-    history.push(localStorage.getItem("username"));
+    window.location.href = window.location.origin + "/" + username;
   };
 
   useEffect(() => {
@@ -103,7 +99,7 @@ const Header = ({ isHome }) => {
         setIsSearching(0);
       }
     };
-    
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
