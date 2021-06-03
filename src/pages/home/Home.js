@@ -52,7 +52,7 @@ const Home = () => {
           alignItems="center"
         >
           {posts.length > 0 &&
-            posts.map((post) => (
+            posts.map((post, index) => (
               <Grid
                 item
                 style={{ padding: 0, marginBottom: 100, minWidth: 500 }}
@@ -62,7 +62,7 @@ const Home = () => {
                 lg={4}
                 key={post.id}
               >
-                <Post post={post} />
+                <Post post={post} setPosts={setPosts} postIndex={index} />
               </Grid>
             ))}
           {posts.length > 0 && (

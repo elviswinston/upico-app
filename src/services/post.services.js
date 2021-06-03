@@ -96,6 +96,18 @@ const setPublic = (postId) => {
     });
 };
 
+const deletePostImage = (postId) => {
+  return axios.delete(API_URL + "postedImages/" + postId).catch((error) => {
+    return error.response;
+  });
+};
+
+const deletePost = (postId) => {
+  return axios.delete(API_URL + "Posts?postId=" + postId).catch((error) => {
+    return error.response;
+  });
+};
+
 const PostService = {
   createPost,
   getPostDetail,
@@ -106,6 +118,8 @@ const PostService = {
   getMorePostProfile,
   setPrivate,
   setPublic,
+  deletePostImage,
+  deletePost,
 };
 
 export default PostService;

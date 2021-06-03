@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/core";
+import { green } from "@material-ui/core/colors";
 
 export default makeStyles(() => ({
   modalOverlay: {
@@ -36,7 +37,17 @@ export default makeStyles(() => ({
     alignItems: "center",
     justifyContent: "center",
   },
+  iconContainer: {
+    display: "flex",
+    alignItems: "center",
+    flex: "1.1 0 0px",
+  },
   icon: {
     marginRight: 10,
+  },
+  checkIcon: {
+    fontSize: 14,
+    marginLeft: 5,
+    color: green[500],
   },
 }));

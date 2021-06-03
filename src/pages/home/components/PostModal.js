@@ -1,29 +1,41 @@
 import { Paper } from "@material-ui/core";
 
-import { Public, Group } from "@material-ui/icons";
+import { Public, Group, CheckCircle } from "@material-ui/icons";
 
 import React, { useEffect, useRef } from "react";
 
 import useStyles from "./styles/modalStyles";
-import { useLoading } from "../../../hooks/hooks";
-
-import FullScreenLoading from "../../../components/FullscreenLoading";
 
 import ReactDOM from "react-dom";
 import { PostService } from "../../../services/services";
 
-const PostModal = ({ isShowing, toggleModal, postId, auth }) => {
+const PostModal = ({
+  isShowing,
+  toggleModal,
+  postId,
+  auth,
+  privateMode,
+  setPosts,
+  postIndex,
+  onLoading,
+  offLoading,
+}) => {
   const classes = useStyles();
 
   const modalRef = useRef(null);
-
-  const { loading, onLoading, offLoading } = useLoading();
 
   const setPrivate = () => {
     onLoading();
     toggleModal();
     PostService.setPrivate(postId).then((response) => {
       if (response.status === 200) {
+        setPosts((prevPosts) => {
+          let posts = [...prevPosts];
+          let post = posts[postIndex];
+          post.privateMode = true;
+          posts[postIndex] = post;
+          return posts;
+        });
         offLoading();
       }
       document.body.style.overflow = "auto";
@@ -35,7 +47,34 @@ const PostModal = ({ isShowing, toggleModal, postId, auth }) => {
     toggleModal();
     PostService.setPublic(postId).then((response) => {
       if (response.status === 200) {
+        setPosts((prevPosts) => {
+          let posts = [...prevPosts];
+          let post = posts[postIndex];
+          post.privateMode = false;
+          posts[postIndex] = post;
+          return posts;
+        });
         offLoading();
+      }
+      document.body.style.overflow = "auto";
+    });
+  };
+
+  const removePost = () => {
+    onLoading();
+    toggleModal();
+    PostService.deletePostImage(postId).then((response) => {
+      if (response.status === 200) {
+        PostService.deletePost(postId).then((response) => {
+          if (response.status === 200) {
+            setPosts((prevPosts) => {
+              let posts = [...prevPosts];
+              posts.splice(postIndex, 1);
+              return posts;
+            });
+            offLoading();
+          }
+        });
       }
       document.body.style.overflow = "auto";
     });
@@ -60,7 +99,6 @@ const PostModal = ({ isShowing, toggleModal, postId, auth }) => {
   return isShowing
     ? ReactDOM.createPortal(
         <div>
-          {loading ? <FullScreenLoading /> : null}
           <div className={classes.modalOverlay}></div>
           <Paper className={classes.root} ref={modalRef}>
             {auth ? (
@@ -70,18 +108,36 @@ const PostModal = ({ isShowing, toggleModal, postId, auth }) => {
                   style={{ color: "#0095f6", borderRadius: 15 }}
                   onClick={setPrivate}
                 >
-                  <Group className={classes.icon} />
-                  Private
+                  <div style={{ flex: "1 0 0px", textAlign: "right" }}>
+                    <Group className={classes.icon} />
+                  </div>
+                  <div className={classes.iconContainer}>
+                    Private
+                    {privateMode && (
+                      <CheckCircle className={classes.checkIcon} />
+                    )}
+                  </div>
                 </div>
                 <div
                   className={classes.option}
                   style={{ color: "#0095f6" }}
                   onClick={setPublic}
                 >
-                  <Public className={classes.icon} />
-                  Public
+                  <div style={{ flex: "1 0 0px", textAlign: "right" }}>
+                    <Public className={classes.icon} />
+                  </div>
+                  <div className={classes.iconContainer}>
+                    Public
+                    {!privateMode && (
+                      <CheckCircle className={classes.checkIcon} />
+                    )}
+                  </div>
                 </div>
-                <div className={classes.option} style={{ color: "#ed4956" }}>
+                <div
+                  className={classes.option}
+                  style={{ color: "#ed4956" }}
+                  onClick={removePost}
+                >
                   Remove
                 </div>
               </div>
@@ -93,7 +149,13 @@ const PostModal = ({ isShowing, toggleModal, postId, auth }) => {
                 Report
               </div>
             )}
-            <div className={classes.option} onClick={() => toggleModal()}>
+            <div
+              className={classes.option}
+              onClick={() => {
+                toggleModal();
+                document.body.style.overflow = "auto";
+              }}
+            >
               Cancel
             </div>
           </Paper>

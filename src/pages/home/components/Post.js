@@ -12,7 +12,7 @@ import {
 } from "@material-ui/icons";
 
 import useStyles from "./styles/postStyles";
-import { useModal } from "../../../hooks/hooks";
+import { useModal, useLoading } from "../../../hooks/hooks";
 
 import avatar from "../../../assets/avatar.png";
 
@@ -20,8 +20,9 @@ import { CommentService, LikeService } from "../../../services/services";
 
 import Comment from "./Comment";
 import PostModal from "./PostModal";
+import FullscreenLoading from "../../../components/FullscreenLoading";
 
-const Post = ({ post }) => {
+const Post = ({ post, setPosts, postIndex }) => {
   const classes = useStyles();
 
   const [likes, setLikes] = useState(post.likes);
@@ -35,6 +36,7 @@ const Post = ({ post }) => {
   const username = localStorage.getItem("username");
 
   const { isShowing, toggle } = useModal();
+  const { loading, onLoading, offLoading } = useLoading();
 
   const handleChange = (e) => {
     setComment(e.target.value);
@@ -88,12 +90,18 @@ const Post = ({ post }) => {
 
   return (
     <Paper className={classes.root}>
+      {loading ? <FullscreenLoading /> : null}
       <PostModal
         isShowing={isShowing}
         toggleModal={toggle}
         postId={post.id}
         auth={post.username === username}
-      />
+        privateMode={post.privateMode}
+        setPosts={setPosts}
+        postIndex={postIndex}
+        onLoading={onLoading}
+        offLoading={offLoading} 
+      /> 
       <div className={classes.avatarContainer}>
         <Avatar
           alt="avatar"

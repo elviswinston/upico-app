@@ -80,7 +80,10 @@ const CommentModal = ({
             <div
               className={classes.option}
               style={{ borderRadius: 0 }}
-              onClick={() => toggleModal()}
+              onClick={() => {
+                toggleModal();
+                document.body.style.overflow = "auto";
+              }}
             >
               Cancel
             </div>
