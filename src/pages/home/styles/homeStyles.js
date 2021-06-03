@@ -8,4 +8,18 @@ export default makeStyles((theme) => ({
   container: {
     padding: "5px 0",
   },
+  uploadSkeleton: {
+    width: "15%",
+    height: 100,
+    borderRadius: 10,
+    position: "fixed",
+  },
+  suggestionSkeleton: {
+    width: "15%",
+    height: 100,
+    position: "fixed",
+    top: 100,
+    right: 40,
+    borderRadius: 10,
+  },
 }));

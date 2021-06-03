@@ -62,6 +62,15 @@ const Post = ({ post, setPosts, postIndex }) => {
     CommentService.comment(username, comment, postId).then((response) => {
       setComments((prevComments) => [...prevComments, response.data]);
     });
+    setPosts((prevPosts) => {
+      let posts = [...prevPosts];
+      let post = posts[postIndex];
+      let comments = [...post.comments];
+      comments.push(comment);
+      post.comments = comments;
+      posts[postIndex] = post;
+      return posts;
+    });
     setComment("");
   };
 
@@ -100,8 +109,8 @@ const Post = ({ post, setPosts, postIndex }) => {
         setPosts={setPosts}
         postIndex={postIndex}
         onLoading={onLoading}
-        offLoading={offLoading} 
-      /> 
+        offLoading={offLoading}
+      />
       <div className={classes.avatarContainer}>
         <Avatar
           alt="avatar"
@@ -174,11 +183,9 @@ const Post = ({ post, setPosts, postIndex }) => {
         <div className={classes.button} style={{ cursor: "pointer" }}>
           <ChatBubbleOutline className={classes.icon} />
           <Typography style={{ color: "#2a3f54", fontWeight: "bold" }}>
-            {post.comments
-              ? "0"
-              : post.comments.length > 1
-              ? post.comments.length + " comment"
-              : post.comments.length + " comments"}
+            {post.comments.length > 1
+              ? post.comments.length + " comments"
+              : post.comments.length + " comment"}
           </Typography>
         </div>
         {data.length > 1 && data.length <= 6 && (
