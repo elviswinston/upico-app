@@ -1,5 +1,6 @@
 import {
   Avatar,
+  CircularProgress,
   Grid,
   IconButton,
   InputBase,
@@ -8,22 +9,22 @@ import {
 } from "@material-ui/core";
 import React, { useEffect, useRef, useState } from "react";
 
-import HomeIcon from "@material-ui/icons/Home";
-import HomeOutlinedIcon from "@material-ui/icons/HomeOutlined";
-import FavoriteIcon from "@material-ui/icons/FavoriteBorderOutlined";
-import SearchIcon from "@material-ui/icons/Search";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import {
+  Home,
+  HomeOutlined,
+  FavoriteBorder,
+  Search,
+  AccountCircle,
+  ExitToApp,
+} from "@material-ui/icons";
 
-import CircularProgress from "@material-ui/core/CircularProgress";
-
-import logo from "../../../assets/logo.jpg";
+import logo from "../assets/logo.jpg";
 
 import useStyles from "./styles/headerStyles";
 
-import AuthService from "../../../services/auth.service";
-import AvatarService from "../../../services/avatar.services";
-import UserService from "../../../services/user.services";
+import { useLoading } from "../hooks/hooks";
+
+import { AuthService, AvatarService, UserService } from "../services/services";
 
 const Header = ({ isHome }) => {
   const classes = useStyles();
@@ -35,12 +36,13 @@ const Header = ({ isHome }) => {
   const username = localStorage.getItem("username");
 
   const [userMenu, setUserMenu] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [isSearching, setIsSearching] = useState(0);
   const [searchUsers, setSearchUsers] = useState([]);
   const [searchKey, setSearchKey] = useState("");
   const [avatar, setAvatar] = useState("");
   const [displayName, setDisplayName] = useState("");
+
+  const { loading, onLoading, offLoading } = useLoading();
 
   const search = () => {
     setIsSearching(1);
@@ -53,10 +55,11 @@ const Header = ({ isHome }) => {
 
   const handleChange = (e) => {
     setSearchKey(e.target.value);
-    setLoading(true);
+
+    onLoading();
     UserService.searchUser(e.target.value).then((response) => {
       if (response.status === 200) {
-        setLoading(false);
+        offLoading();
         setSearchUsers(response.data);
       }
     });
@@ -80,7 +83,7 @@ const Header = ({ isHome }) => {
     AvatarService.getUserAvatar(username).then((response) => {
       response.status === 404 ? setAvatar(null) : setAvatar(response.data.path);
     });
-    UserService.getUserInfo(username).then((response) => {
+    UserService.getProfile(username, username).then((response) => {
       if (response.status === 200) {
         setDisplayName(response.data.displayName);
       }
@@ -126,7 +129,7 @@ const Header = ({ isHome }) => {
         </Grid>
         <Grid item style={{ position: "relative" }}>
           <Paper className={classes.paper} onClick={search}>
-            <SearchIcon className={classes.icon} icon="search" />
+            <Search className={classes.icon} icon="search" />
             <InputBase
               placeholder="Search"
               className={classes.input}
@@ -150,12 +153,8 @@ const Header = ({ isHome }) => {
                 </Typography>
               </div>
             )}
-            {searchUsers.length > 0 ? (
-              loading ? (
-                <div className={classes.progress}>
-                  <CircularProgress size={30} />
-                </div>
-              ) : (
+            {!loading ? (
+              searchUsers.length > 0 ? (
                 <div style={{ marginTop: 20, overflowY: "auto" }}>
                   {searchUsers.map((user) => {
                     return (
@@ -186,20 +185,24 @@ const Header = ({ isHome }) => {
                     );
                   })}
                 </div>
+              ) : (
+                <div className={classes.searchBoxContent}>
+                  <Typography
+                    variant="body1"
+                    style={{
+                      fontSize: 14,
+                      fontWeight: "bold",
+                      color: "#8e8e8e",
+                      textAlign: "center",
+                    }}
+                  >
+                    {searchKey ? "No result is found." : "No recent searches."}
+                  </Typography>
+                </div>
               )
             ) : (
-              <div className={classes.searchBoxContent}>
-                <Typography
-                  variant="body1"
-                  style={{
-                    fontSize: 14,
-                    fontWeight: "bold",
-                    color: "#8e8e8e",
-                    textAlign: "center",
-                  }}
-                >
-                  {searchKey ? "No result is found." : "No recent searches."}
-                </Typography>
+              <div className={classes.progress}>
+                <CircularProgress size={30} />
               </div>
             )}
           </Paper>
@@ -212,13 +215,13 @@ const Header = ({ isHome }) => {
             }}
           >
             {isHome ? (
-              <HomeIcon className={classes.icon} />
+              <Home className={classes.icon} />
             ) : (
-              <HomeOutlinedIcon className={classes.icon} />
+              <HomeOutlined className={classes.icon} />
             )}
           </IconButton>
           <IconButton className={classes.iconButton}>
-            <FavoriteIcon className={classes.icon} />
+            <FavoriteBorder className={classes.icon} />
           </IconButton>
           <div className={classes.avatarContainer} onClick={handleUserMenu}>
             <Avatar alt="avatar" src={avatar} className={classes.avatar} />
@@ -230,11 +233,11 @@ const Header = ({ isHome }) => {
             ref={profileRef}
           >
             <div className={classes.option} onClick={profile}>
-              <AccountCircleIcon className={classes.icon} />
+              <AccountCircle className={classes.icon} />
               <Typography className={classes.text}>Profile</Typography>
             </div>
             <div className={classes.option} onClick={logout}>
-              <ExitToAppIcon className={classes.icon} />
+              <ExitToApp className={classes.icon} />
               <Typography className={classes.text}>Logout</Typography>
             </div>
           </Paper>

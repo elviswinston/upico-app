@@ -72,6 +72,10 @@ const PostDetailModal = ({ isShowing, modalRef, setIsShowing, postId }) => {
     }
   };
 
+  isShowing
+    ? (document.body.style.overflow = "hidden")
+    : (document.body.style.overflow = "auto");
+
   useEffect(() => {
     if (isShowing) {
       setIsLoading(true);

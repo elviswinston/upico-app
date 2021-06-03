@@ -11,11 +11,17 @@ const getUserAvatar = (username) => {
     });
 };
 
-const addAvatar = () => {};
+const uploadAvatar = (username, file) => {
+  return axios
+    .post(API_URL + username, file, { headers: authHeader() })
+    .catch((error) => {
+      return error.response;
+    });
+};
 
 const AvatarService = {
   getUserAvatar,
-  addAvatar,
+  uploadAvatar,
 };
 
 export default AvatarService;

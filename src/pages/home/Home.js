@@ -1,13 +1,15 @@
 import { Button, Grid } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-import Header from "./components/Header";
+
+import Header from "../../components/Header";
+
 import Post from "./components/Post";
 import Suggestion from "./components/Suggestion";
 import Upload from "./components/Upload";
 
 import useStyles from "./styles/homeStyles";
 
-import PostService from "../../services/post.services";
+import { PostService } from "../../services/services";
 
 const Home = () => {
   const classes = useStyles();

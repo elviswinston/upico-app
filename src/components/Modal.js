@@ -1,7 +1,6 @@
 import { Avatar, Paper, TextField, Typography } from "@material-ui/core";
-import MoreIcon from "@material-ui/icons/MoreHoriz";
-import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
-import SendIcon from "@material-ui/icons/Send";
+
+import { AddAPhoto, More, Send } from "@material-ui/icons";
 
 import Photogrid from "./PhotoGrid";
 
@@ -37,6 +36,10 @@ const Modal = ({
   };
 
   const { loading, onLoading, offLoading } = useLoading();
+
+  isShowing
+    ? (document.body.style.overflow = "hidden")
+    : (document.body.style.overflow = "auto");
 
   useEffect(() => {
     if (files) {
@@ -96,7 +99,7 @@ const Modal = ({
                 <Avatar alt="avatar" src={avatar} className={classes.avatar} />
                 <Typography className={classes.name}>{displayName}</Typography>
               </div>
-              <MoreIcon className={classes.icon} />
+              <More className={classes.icon} />
             </div>
             <div style={{ padding: 10 }}>
               <TextField
@@ -115,7 +118,7 @@ const Modal = ({
             </div>
             <div className={classes.action}>
               <div className={classes.button} onClick={handleClick}>
-                <AddAPhotoIcon className={classes.icon} />
+                <AddAPhoto className={classes.icon} />
               </div>
               <input
                 type="file"
@@ -126,7 +129,7 @@ const Modal = ({
                 multiple
               />
               <div className={classes.button} onClick={createPost}>
-                <SendIcon className={classes.icon} />
+                <Send className={classes.icon} />
               </div>
             </div>
           </Paper>

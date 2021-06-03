@@ -1,16 +1,15 @@
 import { Avatar, Paper, Typography } from "@material-ui/core";
 import React, { useEffect, useRef, useState } from "react";
 
-import CreateIcon from "@material-ui/icons/Create";
-import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
+import { AddAPhoto, Create } from "@material-ui/icons";
 
 import useStyles from "./styles/uploadStyles";
+
 import useModal from "../../../hooks/useModal";
 
 import Modal from "../../../components/Modal";
 
-import AvatarService from "../../../services/avatar.services";
-import UserService from "../../../services/user.services";
+import { AvatarService, UserService } from "../../../services/services";
 
 const Upload = ({ setPosts }) => {
   const classes = useStyles();
@@ -44,7 +43,7 @@ const Upload = ({ setPosts }) => {
     AvatarService.getUserAvatar(username).then((response) => {
       response.status === 404 ? setAvatar(null) : setAvatar(response.data.path);
     });
-    UserService.getUserInfo(username).then((response) => {
+    UserService.getProfile(username, username).then((response) => {
       if (response.status === 200) {
         setDisplayName(response.data.displayName);
       }
@@ -87,10 +86,10 @@ const Upload = ({ setPosts }) => {
       </div>
       <div className={classes.content}>
         <div className={classes.button} onClick={toggle}>
-          <CreateIcon className={classes.icon} />
+          <Create className={classes.icon} />
         </div>
         <div className={classes.button} onClick={handleClick}>
-          <AddAPhotoIcon className={classes.icon} />
+          <AddAPhoto className={classes.icon} />
         </div>
       </div>
     </Paper>

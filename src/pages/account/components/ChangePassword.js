@@ -1,10 +1,23 @@
 import { Avatar, Button, Grid, TextField, Typography } from "@material-ui/core";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import useStyles from "./styles/changePasswordStyles";
 
-const ChangePassword = ({ avatar, user }) => {
+import { UserService } from "../../../services/services";
+
+const ChangePassword = ({ avatar }) => {
   const classes = useStyles();
+
+  const [user, setUser] = useState({});
+  const username = localStorage.getItem("username");
+
+  useEffect(() => {
+    UserService.getProfile(username, username).then((response) => {
+      if (response.status === 200) {
+        setUser(response.data);
+      }
+    });
+  }, [username]);
   return (
     <div>
       <Grid item className={classes.gridItem}>

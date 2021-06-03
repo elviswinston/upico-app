@@ -2,17 +2,17 @@ import { makeStyles } from "@material-ui/core";
 
 export default makeStyles(() => ({
   modalOverlay: {
-    position: "absolute",
+    position: "fixed",
     top: 0,
     left: 0,
     zIndex: 99,
-    width: "100%",
-    height: "100%",
+    width: "100vw",
+    height: "100vh",
     backgroundColor: "#000",
     opacity: 0.5,
   },
   root: {
-    position: "absolute",
+    position: "fixed",
     top: "50vh",
     left: "50%",
     width: "60vw",
@@ -139,7 +139,7 @@ export default makeStyles(() => ({
     marginRight: 10,
   },
   closeIcon: {
-    position: "absolute",
+    position: "fixed",
     right: 10,
     top: 10,
     zIndex: 100,

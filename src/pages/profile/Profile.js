@@ -1,12 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
 
-import Header from "../home/components/Header";
+import Header from "../../components/Header";
 
 import { useLoading } from "../../hooks/hooks";
 
 import useStyles from "./styles/profileStyles";
 
-import { UserService, PostService } from "../../services/services";
+import {
+  AvatarService,
+  UserService,
+  PostService,
+} from "../../services/services";
 
 import {
   Avatar,
@@ -59,7 +63,15 @@ const Profile = ({ match }) => {
   };
 
   const uploadAvatar = (e) => {
-    console.log(e.target.files[0]);
+    const formData = new FormData();
+    formData.append("file", e.target.files[0]);
+    onLoading();
+    AvatarService.uploadAvatar(sourceUsername, formData).then((response) => {
+      if (response.status === 200) {
+        setUser({ ...user, avatarUrl: response.data.path });
+        offLoading();
+      }
+    });
   };
 
   const editAccount = () => {
@@ -143,7 +155,14 @@ const Profile = ({ match }) => {
                   <Avatar
                     src={user.avatarUrl ? user.avatarUrl : null}
                     className={classes.avatar}
+                    loading={loading ? 1 : 0}
                   />
+                  {loading ? (
+                    <CircularProgress
+                      size={24}
+                      className={classes.avatarProgress}
+                    />
+                  ) : null}
                   <input
                     type="file"
                     hidden

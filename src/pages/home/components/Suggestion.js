@@ -1,7 +1,7 @@
 import { Avatar, Paper, Typography } from "@material-ui/core";
 import React from "react";
 
-import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
+import {FavoriteBorder} from "@material-ui/icons";
 
 import useStyles from "./styles/suggestionStyles";
 import avatar from "../../../assets/avatar.jpg";
@@ -24,7 +24,7 @@ const Suggestion = () => {
               Tiểu lý quảng Hoa Vinh
             </Typography>
           </div>
-          <FavoriteBorderIcon className={classes.icon} />
+          <FavoriteBorder className={classes.icon} />
         </div>
       </div>
     </Paper>

@@ -16,6 +16,10 @@ export default makeStyles((theme) => ({
     width: 35,
     height: 35,
     marginLeft: "auto",
+    cursor: "pointer",
+    "&[loading='1']": {
+      opacity: 0.5,
+    },
   },
   username: {
     fontSize: 18,
@@ -59,5 +63,15 @@ export default makeStyles((theme) => ({
     color: "#8e8e8e",
     marginTop: 10,
     width: "75%",
+  },
+  progress: {
+    position: "absolute",
+    color: "#009688",
+  },
+  progressAvatar: {
+    position: "absolute",
+    color: "#009688",
+    right: 10,
+    top: 10,
   },
 }));

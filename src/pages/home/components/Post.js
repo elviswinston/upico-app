@@ -1,18 +1,21 @@
 import { Avatar, Paper, TextField, Typography } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 
-import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
-import SendIcon from "@material-ui/icons/Send";
-import NavigateNextIcon from "@material-ui/icons/NavigateNext";
-import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
+import {
+  ChatBubbleOutline,
+  Favorite,
+  FavoriteBorder,
+  NavigateNext,
+  NavigateBefore,
+  Send,
+} from "@material-ui/icons";
 
 import useStyles from "./styles/postStyles";
+
 import avatar from "../../../assets/avatar.png";
 
-import LikeService from "../../../services/like.services";
-import CommentService from "../../../services/comment.services";
+import { CommentService, LikeService } from "../../../services/services";
+
 import Comment from "./Comment";
 
 const Post = ({ post }) => {
@@ -95,14 +98,14 @@ const Post = ({ post }) => {
       {data.length > 0 ? (
         data.length > 1 ? (
           <div style={{ position: "relative" }}>
-            <NavigateBeforeIcon
+            <NavigateBefore
               onClick={slideLeft}
-              className={classes.slideIcon}
+              className={classes.slide}
               style={{ left: 0 }}
             />
-            <NavigateNextIcon
+            <NavigateNext
               onClick={slideRight}
-              className={classes.slideIcon}
+              className={classes.slide}
               style={{ right: 5 }}
             />
             <img
@@ -118,13 +121,13 @@ const Post = ({ post }) => {
       <div className={classes.likeComment}>
         <div className={classes.button}>
           {isLiked ? (
-            <FavoriteIcon
+            <Favorite
               className={classes.icon}
               style={{ cursor: "pointer" }}
               onClick={handleLike}
             />
           ) : (
-            <FavoriteBorderIcon
+            <FavoriteBorder
               className={classes.icon}
               style={{ cursor: "pointer" }}
               onClick={handleLike}
@@ -139,7 +142,7 @@ const Post = ({ post }) => {
           </Typography>
         </div>
         <div className={classes.button} style={{ cursor: "pointer" }}>
-          <ChatBubbleOutlineIcon className={classes.icon} />
+          <ChatBubbleOutline className={classes.icon} />
           <Typography style={{ color: "#2a3f54", fontWeight: "bold" }}>
             {post.comments
               ? "0"
@@ -180,7 +183,7 @@ const Post = ({ post }) => {
           value={comment}
         />
         <div className={classes.commentButton} onClick={handleComment}>
-          <SendIcon className={classes.icon} />
+          <Send className={classes.icon} />
         </div>
       </div>
     </Paper>

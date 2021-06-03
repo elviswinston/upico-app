@@ -24,19 +24,10 @@ export default makeStyles(() => ({
     alignItems: "center",
     borderRadius: 15,
   },
-  avatarContainer: {
-    padding: "20px 0",
-  },
-  avatar: {
-    width: 80,
-    height: 80,
-  },
-  textContainer: {
-    padding: "0px 20px 20px 20px",
-    textAlign: "center",
-  },
   text: {
-    fontSize: 14,
+    fontSize: 18,
+    fontWeight: "bold",
+    padding: "20px 0",
   },
   option: {
     borderTop: "1px solid #d9d9d9",
@@ -45,5 +36,6 @@ export default makeStyles(() => ({
     padding: "15px 0",
     fontSize: 14,
     cursor: "pointer",
+    fontWeight: "bold",
   },
 }));

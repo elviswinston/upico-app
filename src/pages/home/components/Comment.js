@@ -1,14 +1,13 @@
 import { Avatar, Paper, TextField, Typography } from "@material-ui/core";
 import React, { useState } from "react";
 
-import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
+import { MoreHoriz } from "@material-ui/icons";
 
 import useStyles from "./styles/commentStyles";
 
 import TimeAgo from "react-timeago";
 
-import CommentService from "../../../services/comment.services";
-import AvatarService from "../../../services/avatar.services";
+import { AvatarService, CommentService } from "../../../services/services";
 
 const Comment = ({ comment }) => {
   const classes = useStyles();
@@ -75,7 +74,7 @@ const Comment = ({ comment }) => {
             >
               {comment.content}
             </Typography>
-            <MoreHorizIcon className={classes.moreButton} />
+            <MoreHoriz className={classes.moreButton} />
           </div>
           <div>
             <TimeAgo

@@ -55,12 +55,35 @@ const unfollow = (sourceUsername, targetUsername) => {
     });
 };
 
+const updateProfile = (
+  userName,
+  firstName,
+  lastName,
+  displayName,
+  bio,
+  phoneNumber
+) => {
+  return axios
+    .put(API_URL + "/updateProfile", {
+      userName,
+      firstName,
+      lastName,
+      displayName,
+      bio,
+      phoneNumber,
+    })
+    .catch((error) => {
+      return error.response;
+    });
+};
+
 const UserService = {
   getUserInfo,
   searchUser,
   getProfile,
   follow,
   unfollow,
+  updateProfile,
 };
 
 export default UserService;
