@@ -77,6 +77,24 @@ const updateProfile = (
     });
 };
 
+const changePassword = (
+  userName,
+  currentPassword,
+  newPassword,
+  newPasswordConfirm
+) => {
+  return axios
+    .put(API_URL + "/changePassword", {
+      userName,
+      currentPassword,
+      newPassword,
+      newPasswordConfirm,
+    })
+    .catch((error) => {
+      return error.response;
+    });
+};
+
 const UserService = {
   getUserInfo,
   searchUser,
@@ -84,6 +102,7 @@ const UserService = {
   follow,
   unfollow,
   updateProfile,
+  changePassword,
 };
 
 export default UserService;

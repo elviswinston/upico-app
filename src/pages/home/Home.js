@@ -19,7 +19,9 @@ const Home = () => {
 
   useEffect(() => {
     PostService.getPostUser(username).then((response) => {
-      setPosts(response?.data);
+      if (response.status === 200) {
+        setPosts(response.data);
+      }
     });
   }, [username]);
 

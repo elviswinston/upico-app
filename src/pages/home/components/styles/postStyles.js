@@ -14,6 +14,7 @@ export default makeStyles((theme) => ({
     width: 27,
     height: 27,
     marginRight: 10,
+    cursor: "pointer",
   },
   name: {
     fontSize: 12,

@@ -30,6 +30,9 @@ export default makeStyles((theme) => ({
   },
   textField: {
     width: "75%",
+    "& .MuiFormHelperText-root": {
+      margin: "10px 0 0 0",
+    },
   },
   input: {
     padding: "5px 10px",

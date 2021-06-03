@@ -48,7 +48,7 @@ const getMorePost = (username, latestPostId) => {
     });
 };
 
-const getPostProfile = (sourceUsername, targetUsername, numPosts) => {
+const getPostProfile = (sourceUsername, targetUsername) => {
   return axios
     .get(
       API_URL +
@@ -56,8 +56,24 @@ const getPostProfile = (sourceUsername, targetUsername, numPosts) => {
         sourceUsername +
         "&targetUsername=" +
         targetUsername +
-        "&numPosts=" +
-        numPosts
+        "&numPosts=15"
+    )
+    .catch((error) => {
+      return error.response;
+    });
+};
+
+const getMorePostProfile = (sourceUsername, targetUsername, latestPostId) => {
+  return axios
+    .get(
+      API_URL +
+        "Posts/MoreUserProfilePosts?sourceUsername=" +
+        sourceUsername +
+        "&targetUsername=" +
+        targetUsername +
+        "&latestPostId=" +
+        latestPostId +
+        "&numPosts=15"
     )
     .catch((error) => {
       return error.response;
@@ -71,6 +87,7 @@ const PostService = {
   getPostUser,
   getMorePost,
   getPostProfile,
+  getMorePostProfile,
 };
 
 export default PostService;

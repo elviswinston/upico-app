@@ -88,6 +88,23 @@ const Profile = ({ match }) => {
     });
   };
 
+  const loadMorePost = () => {
+    const latestPostId = posts[posts.length - 1].id;
+    console.log(latestPostId);
+    console.log(posts);
+    PostService.getMorePostProfile(
+      sourceUsername,
+      targetUsername,
+      latestPostId
+    ).then((response) => {
+      if (response.status === 200) {
+        response.data.length > 0
+          ? setPosts(posts.concat(response.data))
+          : alert("There are no more posts");
+      }
+    });
+  };
+
   useEffect(() => {
     UserService.getProfile(sourceUsername, targetUsername).then((response) => {
       if (response.status === 200) {
@@ -95,7 +112,7 @@ const Profile = ({ match }) => {
       }
     });
 
-    PostService.getPostProfile(sourceUsername, targetUsername, 15).then(
+    PostService.getPostProfile(sourceUsername, targetUsername).then(
       (response) => {
         if (response.status === 200) {
           setPosts(response.data);
@@ -303,6 +320,13 @@ const Profile = ({ match }) => {
           </Grid>
         </div>
       ) : null}
+      {posts.length >= 15 && (
+        <div className={classes.loadMore}>
+          <Button color="primary" onClick={loadMorePost}>
+            Load more
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

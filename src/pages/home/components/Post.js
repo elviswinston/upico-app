@@ -87,8 +87,17 @@ const Post = ({ post }) => {
           alt="avatar"
           src={post.avatarUrl ? post.avatarUrl : avatar}
           className={classes.avatar}
+          onClick={() => {
+            window.location.href = window.location.origin + "/" + post.username;
+          }}
         />
-        <Typography className={classes.name}>{post.displayName}</Typography>
+        <a
+          href={"/" + post.username}
+          style={{ textDecoration: "none" }}
+          className={classes.name}
+        >
+          {post.displayName}
+        </a>
       </div>
       <div className={classes.content}>
         <Typography variant="body1" className={classes.text}>

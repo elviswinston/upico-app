@@ -1,13 +1,11 @@
 import { Grid, Tab, Tabs } from "@material-ui/core";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 
 import Header from "../../components/Header";
 
 import useStyles from "./styles/accountStyles";
-
-import { AvatarService } from "../../services/services";
 
 import UpdateAccount from "./components/UpdateAccount";
 import ChangePassword from "./components/ChangePassword";
@@ -50,21 +48,10 @@ const Account = () => {
   const classes = useStyles();
 
   const [value, setValue] = useState(0);
-  const [avatar, setAvatar] = useState("");
-
-  const username = localStorage.getItem("username");
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
-  useEffect(() => {
-    AvatarService.getUserAvatar(username).then((response) => {
-      if (response.status === 200) {
-        setAvatar(response.data.path);
-      }
-    });
-  }, [username]);
 
   return (
     <div className={classes.root}>
@@ -90,10 +77,10 @@ const Account = () => {
           ></Tab>
         </Tabs>
         <TabPanel value={value} index={0} className={classes.tabPanel}>
-          <UpdateAccount avatar={avatar} />
+          <UpdateAccount />
         </TabPanel>
         <TabPanel value={value} index={1} className={classes.tabPanel}>
-          <ChangePassword avatar={avatar} />
+          <ChangePassword />
         </TabPanel>
       </div>
     </div>

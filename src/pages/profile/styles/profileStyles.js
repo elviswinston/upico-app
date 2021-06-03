@@ -5,7 +5,7 @@ export default makeStyles((theme) => ({
     position: "relative",
   },
   profile: {
-    padding: "100px 40px",
+    padding: "100px 40px 0 40px",
   },
   content: {
     width: "40%",
@@ -119,5 +119,11 @@ export default makeStyles((theme) => ({
     color: "#009688",
     marginLeft: -12,
     marginTop: -12,
+  },
+  loadMore: {
+    width: "100%",
+    display: "grid",
+    placeItems: "center",
+    marginBottom: 40,
   },
 }));
