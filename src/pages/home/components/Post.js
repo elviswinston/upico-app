@@ -8,18 +8,22 @@ import {
   NavigateNext,
   NavigateBefore,
   Send,
+  MoreHoriz,
 } from "@material-ui/icons";
 
 import useStyles from "./styles/postStyles";
+import { useModal } from "../../../hooks/hooks";
 
 import avatar from "../../../assets/avatar.png";
 
 import { CommentService, LikeService } from "../../../services/services";
 
 import Comment from "./Comment";
+import PostModal from "./PostModal";
 
 const Post = ({ post }) => {
   const classes = useStyles();
+
   const [likes, setLikes] = useState(post.likes);
   const [isLiked, setIsLiked] = useState(post.isLiked);
   const [comment, setComment] = useState("");
@@ -29,6 +33,8 @@ const Post = ({ post }) => {
   let data = [];
   const postId = post.id;
   const username = localStorage.getItem("username");
+
+  const { isShowing, toggle } = useModal();
 
   const handleChange = (e) => {
     setComment(e.target.value);
@@ -82,6 +88,12 @@ const Post = ({ post }) => {
 
   return (
     <Paper className={classes.root}>
+      <PostModal
+        isShowing={isShowing}
+        toggleModal={toggle}
+        postId={post.id}
+        auth={post.username === username}
+      />
       <div className={classes.avatarContainer}>
         <Avatar
           alt="avatar"
@@ -98,6 +110,7 @@ const Post = ({ post }) => {
         >
           {post.displayName}
         </a>
+        <MoreHoriz className={classes.moreButton} onClick={toggle} />
       </div>
       <div className={classes.content}>
         <Typography variant="body1" className={classes.text}>
@@ -177,8 +190,15 @@ const Post = ({ post }) => {
       </div>
       <div style={{ marginTop: 10 }}>
         {comments.length > 0 &&
-          comments.map((comment) => {
-            return <Comment comment={comment} key={comment.id} />;
+          comments.map((comment, index) => {
+            return (
+              <Comment
+                comment={comment}
+                key={index}
+                setComments={setComments}
+                index={index}
+              />
+            );
           })}
       </div>
       <div className={classes.comment}>

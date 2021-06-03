@@ -1,5 +1,5 @@
 import { Avatar, Paper, TextField, Typography } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 
 import { MoreHoriz } from "@material-ui/icons";
 
@@ -8,17 +8,27 @@ import useStyles from "./styles/commentStyles";
 import TimeAgo from "react-timeago";
 
 import { AvatarService, CommentService } from "../../../services/services";
+import CommentModal from "./CommentModal";
 
-const Comment = ({ comment }) => {
+const Comment = ({ comment, index, setComments }) => {
   const classes = useStyles();
+
+  const modalRef = useRef(null);
 
   const [isReplying, setIsReplying] = useState(false);
   const [isShowingReply, setIsShowingReply] = useState(false);
   const [replies, setReplies] = useState(comment.childs ? comment.childs : []);
   const [text, setText] = useState("Show replies");
   const [avatar, setAvatar] = useState("");
+  const [auth, setAuth] = useState(false);
+
+  const [isShowing, setIsShowing] = useState(false);
 
   const username = localStorage.getItem("username");
+
+  const toggle = () => {
+    setIsShowing(!isShowing);
+  };
 
   const handleClick = () => {
     setIsReplying(!isReplying);
@@ -50,8 +60,28 @@ const Comment = ({ comment }) => {
     isShowingReply ? setText("Show replies") : setText("Hide replies");
   };
 
+  const openMoreModal = (e) => {
+    e.preventDefault();
+    if (comment.username === username) {
+      setAuth(true);
+      toggle();
+    } else {
+      setAuth(false);
+      toggle();
+    }
+  };
+
   return (
     <div>
+      <CommentModal
+        isShowing={isShowing}
+        toggleModal={toggle}
+        modalRef={modalRef}
+        auth={auth}
+        commentId={auth ? comment.id : null}
+        setComments={setComments}
+        commentIndex={index}
+      />
       <div className={classes.comment}>
         <Avatar
           alt="avatar"
@@ -74,7 +104,7 @@ const Comment = ({ comment }) => {
             >
               {comment.content}
             </Typography>
-            <MoreHoriz className={classes.moreButton} />
+            <MoreHoriz className={classes.moreButton} onClick={openMoreModal} />
           </div>
           <div>
             <TimeAgo

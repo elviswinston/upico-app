@@ -80,6 +80,22 @@ const getMorePostProfile = (sourceUsername, targetUsername, latestPostId) => {
     });
 };
 
+const setPrivate = (postId) => {
+  return axios
+    .put(API_URL + "Posts?postId=" + postId + "&privateMode=true")
+    .catch((error) => {
+      return error.response;
+    });
+};
+
+const setPublic = (postId) => {
+  return axios
+    .put(API_URL + "Posts?postId=" + postId + "&privateMode=false")
+    .catch((error) => {
+      return error.response;
+    });
+};
+
 const PostService = {
   createPost,
   getPostDetail,
@@ -88,6 +104,8 @@ const PostService = {
   getMorePost,
   getPostProfile,
   getMorePostProfile,
+  setPrivate,
+  setPublic,
 };
 
 export default PostService;

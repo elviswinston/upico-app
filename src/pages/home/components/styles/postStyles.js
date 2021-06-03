@@ -92,4 +92,9 @@ export default makeStyles((theme) => ({
       backgroundColor: "#009688",
     },
   },
+  moreButton: {
+    cursor: "pointer",
+    marginLeft: "auto",
+    color: "#009688",
+  },
 }));

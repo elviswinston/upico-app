@@ -24,10 +24,17 @@ const replyComment = (username, content, parentId) => {
     });
 };
 
+const deleteComment = (commentId) => {
+  return axios.delete(API_URL + "?commentId=" + commentId).catch((error) => {
+    return error.response;
+  });
+};
+
 const CommentService = {
   getComment,
   comment,
   replyComment,
+  deleteComment,
 };
 
 export default CommentService;
