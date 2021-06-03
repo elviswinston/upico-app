@@ -37,6 +37,7 @@ const CommentModal = ({
         });
         offLoading();
       }
+      document.body.style.overflow = "auto";
     });
   };
 

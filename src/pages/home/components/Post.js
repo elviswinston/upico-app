@@ -122,12 +122,12 @@ const Post = ({ post }) => {
           <div style={{ position: "relative" }}>
             <NavigateBefore
               onClick={slideLeft}
-              className={classes.slide}
+              className={classes.slideIcon}
               style={{ left: 0 }}
             />
             <NavigateNext
               onClick={slideRight}
-              className={classes.slide}
+              className={classes.slideIcon}
               style={{ right: 5 }}
             />
             <img

@@ -26,6 +26,7 @@ const PostModal = ({ isShowing, toggleModal, postId, auth }) => {
       if (response.status === 200) {
         offLoading();
       }
+      document.body.style.overflow = "auto";
     });
   };
 
@@ -36,6 +37,7 @@ const PostModal = ({ isShowing, toggleModal, postId, auth }) => {
       if (response.status === 200) {
         offLoading();
       }
+      document.body.style.overflow = "auto";
     });
   };
 
