@@ -25,7 +25,6 @@ export default function PictureGrid(props) {
       if (images.length === 1) {
         return (
           <div
-            container
             justify="center"
             style={{
               backgroundImage: `url(${images[0]}`,
@@ -59,7 +58,6 @@ export default function PictureGrid(props) {
               return (
                 <Grid item md={12} lg={12} xl={12} xs={12} sm={12}>
                   <div
-                    container
                     direction="row"
                     justify="center"
                     style={{
@@ -125,7 +123,6 @@ export default function PictureGrid(props) {
         } else {
           return (
             <div
-              container
               justify="center"
               style={{
                 backgroundImage: `url(${images[0]}`,
@@ -136,10 +133,20 @@ export default function PictureGrid(props) {
                 backgroundRepeat: "no-repeat",
                 backgroundPosition: "center",
               }}
-              onDoubleClick={() => {
-                setShowImage(images[0]);
-              }}
-            ></div>
+            >
+              <CloseIcon
+                style={{
+                  position: "absolute",
+                  right: 10,
+                  cursor: "pointer",
+                  color: "#ed4956",
+                }}
+                onClick={() => {
+                  props.setData([]);
+                  props.setFiles(null);
+                }}
+              />
+            </div>
           );
         }
       } else if (images.length === 2) {
@@ -186,7 +193,7 @@ export default function PictureGrid(props) {
             <Grid container spacing={1}>
               {images.map((image, index) => {
                 return (
-                  <Grid item md={6} lg={6} xl={6} xs={6} sm={6}>
+                  <Grid item md={6} lg={6} xl={6} xs={6} sm={6} key={index}>
                     <Grid
                       container
                       direction="row"
@@ -200,11 +207,32 @@ export default function PictureGrid(props) {
                         backgroundSize: "cover",
                         backgroundRepeat: "no-repeat",
                         backgroundPosition: "center",
+                        position: "relative",
                       }}
                       onDoubleClick={() => {
                         setShowImage(image);
                       }}
-                    ></Grid>
+                    >
+                      <CloseIcon
+                        style={{
+                          position: "absolute",
+                          right: 5,
+                          top: 5,
+                          cursor: "pointer",
+                          color: "#ed4956",
+                        }}
+                        onClick={() => {
+                          let array = [...images];
+                          array.splice(index, 1);
+                          props.setData(array);
+                          props.setFiles((prevFiles) => {
+                            let files = [...prevFiles];
+                            files.splice(index, 1);
+                            return files;
+                          });
+                        }}
+                      />
+                    </Grid>
                   </Grid>
                 );
               })}
@@ -227,12 +255,33 @@ export default function PictureGrid(props) {
                   backgroundSize: "cover",
                   backgroundRepeat: "no-repeat",
                   backgroundPosition: "center",
+                  position: "relative",
                 }}
                 onDoubleClick={() => {
                   setShowImage(images[0]);
                 }}
-              ></Grid>
-            </Grid>{" "}
+              >
+                <CloseIcon
+                  style={{
+                    position: "absolute",
+                    top: 5,
+                    right: 5,
+                    cursor: "pointer",
+                    color: "#ed4956",
+                  }}
+                  onClick={() => {
+                    let array = [...images];
+                    array.splice(0, 1);
+                    props.setData(array);
+                    props.setFiles((prevFiles) => {
+                      let files = [...prevFiles];
+                      files.splice(0, 1);
+                      return files;
+                    });
+                  }}
+                />
+              </Grid>
+            </Grid>
             <Grid item md={6} lg={6} xl={6} xs={6} sm={6}>
               {images.map((image, index) => {
                 if (index !== 0) {
@@ -265,11 +314,33 @@ export default function PictureGrid(props) {
                           backgroundSize: "cover",
                           backgroundRepeat: "no-repeat",
                           backgroundPosition: "center",
+                          position: "relative",
                         }}
                         onDoubleClick={() => {
                           setShowImage(image);
                         }}
-                      ></Grid>
+                        key={index}
+                      >
+                        <CloseIcon
+                          style={{
+                            position: "absolute",
+                            top: 5,
+                            right: 5,
+                            cursor: "pointer",
+                            color: "#ed4956",
+                          }}
+                          onClick={() => {
+                            let array = [...images];
+                            array.splice(index, 1);
+                            props.setData(array);
+                            props.setFiles((prevFiles) => {
+                              let files = [...prevFiles];
+                              files.splice(index, 1);
+                              return files;
+                            });
+                          }}
+                        />
+                      </Grid>
                     );
                   }
                 }
@@ -294,12 +365,33 @@ export default function PictureGrid(props) {
                   backgroundSize: "cover",
                   backgroundRepeat: "no-repeat",
                   backgroundPosition: "center",
+                  position: "relative",
                 }}
                 onDoubleClick={() => {
                   setShowImage(images[0]);
                 }}
-              ></Grid>
-            </Grid>{" "}
+              >
+                <CloseIcon
+                  style={{
+                    position: "absolute",
+                    top: 5,
+                    right: 5,
+                    cursor: "pointer",
+                    color: "#ed4956",
+                  }}
+                  onClick={() => {
+                    let array = [...images];
+                    array.splice(0, 1);
+                    props.setData(array);
+                    props.setFiles((prevFiles) => {
+                      let files = [...prevFiles];
+                      files.splice(0, 1);
+                      return files;
+                    });
+                  }}
+                />
+              </Grid>
+            </Grid>
             <Grid item md={6} lg={6} xl={6} xs={6} sm={6}>
               {images.map((image, index) => {
                 if (index !== 0) {
@@ -331,11 +423,33 @@ export default function PictureGrid(props) {
                         backgroundSize: "cover",
                         backgroundRepeat: "no-repeat",
                         backgroundPosition: "center",
+                        position: "relative",
                       }}
                       onDoubleClick={() => {
                         setShowImage(image);
                       }}
-                    ></Grid>
+                      key={index}
+                    >
+                      <CloseIcon
+                        style={{
+                          position: "absolute",
+                          top: 5,
+                          right: 5,
+                          cursor: "pointer",
+                          color: "#ed4956",
+                        }}
+                        onClick={() => {
+                          let array = [...images];
+                          array.splice(index, 1);
+                          props.setData(array);
+                          props.setFiles((prevFiles) => {
+                            let files = [...prevFiles];
+                            files.splice(index, 1);
+                            return files;
+                          });
+                        }}
+                      />
+                    </Grid>
                   );
                 }
                 return null;
@@ -359,12 +473,33 @@ export default function PictureGrid(props) {
                   backgroundSize: "cover",
                   backgroundRepeat: "no-repeat",
                   backgroundPosition: "center",
+                  position: "relative",
                 }}
                 onDoubleClick={() => {
                   setShowImage(images[0]);
                 }}
-              ></Grid>
-            </Grid>{" "}
+              >
+                <CloseIcon
+                  style={{
+                    position: "absolute",
+                    top: 5,
+                    right: 5,
+                    cursor: "pointer",
+                    color: "#ed4956",
+                  }}
+                  onClick={() => {
+                    let array = [...images];
+                    array.splice(0, 1);
+                    props.setData(array);
+                    props.setFiles((prevFiles) => {
+                      let files = [...prevFiles];
+                      files.splice(0, 1);
+                      return files;
+                    });
+                  }}
+                />
+              </Grid>
+            </Grid>
             <Grid item md={6} lg={6} xl={6} xs={6} sm={6}>
               <Grid container spacing={1}>
                 {images.map((image, index) => {
@@ -449,6 +584,7 @@ export default function PictureGrid(props) {
                                   backgroundSize: "cover",
                                   backgroundRepeat: "no-repeat",
                                   backgroundPosition: "center",
+                                  position: "relative",
                                 }}
                                 onDoubleClick={() => {
                                   setShowImage(image);
@@ -481,7 +617,15 @@ export default function PictureGrid(props) {
                         );
                       } else {
                         return (
-                          <Grid item md={6} lg={6} xl={6} xs={6} sm={6}>
+                          <Grid
+                            item
+                            md={6}
+                            lg={6}
+                            xl={6}
+                            xs={6}
+                            sm={6}
+                            key={index}
+                          >
                             <Grid
                               container
                               direction="row"
@@ -495,11 +639,32 @@ export default function PictureGrid(props) {
                                 backgroundSize: "cover",
                                 backgroundRepeat: "no-repeat",
                                 backgroundPosition: "center",
+                                position: "relative",
                               }}
                               onDoubleClick={() => {
                                 setShowImage(image);
                               }}
-                            ></Grid>
+                            >
+                              <CloseIcon
+                                style={{
+                                  position: "absolute",
+                                  top: 5,
+                                  right: 5,
+                                  cursor: "pointer",
+                                  color: "#ed4956",
+                                }}
+                                onClick={() => {
+                                  let array = [...images];
+                                  array.splice(index, 1);
+                                  props.setData(array);
+                                  props.setFiles((prevFiles) => {
+                                    let files = [...prevFiles];
+                                    files.splice(index, 1);
+                                    return files;
+                                  });
+                                }}
+                              />
+                            </Grid>
                           </Grid>
                         );
                       }
@@ -534,7 +699,11 @@ export default function PictureGrid(props) {
           hideActions={true}
         >
           <Grid container direction="row" justify="center">
-            <img style={{ maxWidth: "100%" }} src={showImage} alt="previewImage"></img>
+            <img
+              style={{ maxWidth: "100%" }}
+              src={showImage}
+              alt="previewImage"
+            ></img>
           </Grid>
         </Dialog>
       )}

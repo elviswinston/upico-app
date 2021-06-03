@@ -1,6 +1,6 @@
 import { Avatar, Paper, TextField, Typography } from "@material-ui/core";
 
-import { AddAPhoto, More, Send } from "@material-ui/icons";
+import { AddAPhoto, MoreHoriz, Send } from "@material-ui/icons";
 
 import Photogrid from "./PhotoGrid";
 
@@ -23,6 +23,7 @@ const Modal = ({
   files,
   handleFileChange,
   setPosts,
+  setFiles,
 }) => {
   const classes = useStyles();
   const [content, setContent] = useState("");
@@ -68,12 +69,10 @@ const Modal = ({
             PostService.uploadImage(post.id, formData).then((response) => {
               if (response.status === 200) {
                 post.postImages = response.data;
-                setTimeout(() => {
-                  offLoading();
-                  setPosts((prevPosts) => {
-                    return [post, ...prevPosts];
-                  });
-                }, 3000);
+                setPosts((prevPosts) => {
+                  return [post, ...prevPosts];
+                });
+                offLoading();
               }
             });
           } else {
@@ -85,6 +84,7 @@ const Modal = ({
         }
       });
       setContent("");
+      setFiles(null);
       hide();
     }
   };
@@ -99,7 +99,7 @@ const Modal = ({
                 <Avatar alt="avatar" src={avatar} className={classes.avatar} />
                 <Typography className={classes.name}>{displayName}</Typography>
               </div>
-              <More className={classes.icon} />
+              <MoreHoriz className={classes.icon} />
             </div>
             <div style={{ padding: 10 }}>
               <TextField
@@ -113,7 +113,7 @@ const Modal = ({
             </div>
             <div style={{ padding: "0 10px" }}>
               {data.length > 0 && (
-                <Photogrid images={data} maxWidth={540}></Photogrid>
+                <Photogrid images={data} setData={setData} setFiles={setFiles} maxWidth={540}></Photogrid>
               )}
             </div>
             <div className={classes.action}>

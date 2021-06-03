@@ -79,6 +79,7 @@ const Upload = ({ setPosts }) => {
         files={files}
         handleFileChange={handleFileChange}
         setPosts={setPosts}
+        setFiles={setFiles}
       />
       <div className={classes.avatarContainer}>
         <Avatar alt="avatar" src={avatar} className={classes.avatar} />
