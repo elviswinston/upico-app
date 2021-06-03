@@ -148,4 +148,11 @@ export default makeStyles(() => ({
     color: "white",
     cursor: "pointer",
   },
+  more: {
+    width: "100%",
+    display: "grid",
+    placeItems: "center",
+    marginTop: 20,
+    cursor: "pointer",
+  },
 }));

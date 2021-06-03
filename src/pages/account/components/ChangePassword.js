@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import useStyles from "./styles/changePasswordStyles";
 
 import { UserService } from "../../../services/services";
+import BottomNotification from "../../../components/BottomNotification";
 
 const ChangePassword = () => {
   const classes = useStyles();
@@ -48,6 +49,7 @@ const ChangePassword = () => {
   };
 
   const handleClick = (e) => {
+    e.preventDefault();
     if (validate()) {
       UserService.changePassword(
         username,
@@ -56,6 +58,7 @@ const ChangePassword = () => {
         confirmPassword
       ).then((response) => {
         if (response.status === 404) {
+          document.body.style.overflow = "hidden";
           setError((prevError) => {
             return { ...prevError, old: "Your current password is incorrect." };
           });
@@ -65,6 +68,7 @@ const ChangePassword = () => {
           });
         }
         if (response.status === 400) {
+          document.body.style.overflow = "hidden";
           setError((prevError) => {
             return {
               ...prevError,
@@ -74,18 +78,34 @@ const ChangePassword = () => {
           });
         }
         if (response.status === 200) {
-          alert("Change passwor success!");
+          alert("Change password success!");
           setError({ old: "", password: "", confirm: "" });
           setOldPassword("");
           setNewPassword("");
           setConfirmPassword("");
         }
       });
+      document.body.style.overflow = "auto";
     }
   };
 
   const validate = () => {
     let isValid = true;
+
+    if (newPassword !== confirmPassword) {
+      console.log(error);
+      setError((prevError) => {
+        return {
+          ...prevError,
+          confirm: "New password and old password do not match.",
+        };
+      });
+      isValid = false;
+    } else {
+      setError((prevError) => {
+        return { ...prevError, confirm: "" };
+      });
+    }
 
     if (
       !RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{6,})").test(newPassword)
@@ -104,21 +124,6 @@ const ChangePassword = () => {
       });
     }
 
-    if (newPassword !== confirmPassword) {
-      console.log(error);
-      setError((prevError) => {
-        return {
-          ...prevError,
-          confirm: "New password and old password do not match.",
-        };
-      });
-      isValid = false;
-    } else {
-      setError((prevError) => {
-        return { ...prevError, confirm: "" };
-      });
-    }
-
     return isValid;
   };
 
@@ -131,6 +136,7 @@ const ChangePassword = () => {
   }, [username]);
   return (
     <div>
+      <BottomNotification error={error} />
       <Grid item className={classes.gridItem}>
         <div style={{ flex: "1 0 0px" }}>
           <Avatar
@@ -151,8 +157,6 @@ const ChangePassword = () => {
         </Typography>
         <div className={classes.gridItemInfo}>
           <TextField
-            error={error.old !== ""}
-            helperText={error.old}
             className={classes.textField}
             variant="outlined"
             type="password"
@@ -173,8 +177,6 @@ const ChangePassword = () => {
         </Typography>
         <div className={classes.gridItemInfo}>
           <TextField
-            error={error.password !== ""}
-            helperText={error.password}
             className={classes.textField}
             variant="outlined"
             type="password"
@@ -194,8 +196,6 @@ const ChangePassword = () => {
         </Typography>
         <div className={classes.gridItemInfo}>
           <TextField
-            error={error.confirm !== ""}
-            helperText={error.confirm}
             className={classes.textField}
             variant="outlined"
             type="password"

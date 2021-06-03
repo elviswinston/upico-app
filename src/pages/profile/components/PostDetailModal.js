@@ -13,6 +13,7 @@ import {
 import TimeAgo from "react-timeago";
 import Comment from "./Comment";
 import {
+  AddCircleOutlineOutlined,
   NavigateBefore,
   NavigateNext,
   Close,
@@ -230,6 +231,11 @@ const PostDetailModal = ({ isShowing, modalRef, setIsShowing, postId }) => {
                   comments.map((comment) => {
                     return <Comment comment={comment} key={comment.id} />;
                   })}
+                <div className={classes.more}>
+                  <AddCircleOutlineOutlined
+                    style={{ color: "#8e8e8e", fontSize: 25 }}
+                  />
+                </div>
               </div>
             ) : (
               <div className={classes.postComment}></div>
