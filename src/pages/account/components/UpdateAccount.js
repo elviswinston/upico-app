@@ -15,6 +15,7 @@ import { useLoading, useModal } from "../../../hooks/hooks";
 
 import { UserService } from "../../../services/services";
 import AvatarModal from "./AvatarModal";
+import BottomNotification from "../../../components/BottomNotification";
 
 const UpdateAccount = () => {
   const classes = useStyles();
@@ -22,7 +23,7 @@ const UpdateAccount = () => {
   const modalRef = useRef(null);
 
   const [user, setUser] = useState({});
-  const [error, setError] = useState({});
+  const [error, setError] = useState("");
   const [isValid, setIsValid] = useState(true);
 
   const username = localStorage.getItem("username");
@@ -53,13 +54,12 @@ const UpdateAccount = () => {
 
   const changePhone = (e) => {
     setUser({ ...user, phoneNumber: e.target.value });
-    if (e.target.value.length < 10) {
-      setError({ ...error, phoneNumber: "Please enter a valid phone number" });
-    } else setError({});
   };
 
   const updateProfile = () => {
-    if (Object.keys(error).length === 0) {
+    if (user.phoneNumber.length < 10) {
+      setError("Please enter a valid phone number");
+    } else {
       onLoading();
       UserService.updateProfile(
         user.userName,
@@ -71,11 +71,10 @@ const UpdateAccount = () => {
       ).then((response) => {
         if (response.status === 200) {
           offLoading();
-          setError({});
+          setError("");
+          document.body.style.overflow = "auto";
         }
       });
-    } else {
-      console.log(error);
     }
   };
 
@@ -291,6 +290,7 @@ const UpdateAccount = () => {
           </Button>
         </div>
       </Grid>
+      <BottomNotification error={error} isValid={isValid} />
     </div>
   );
 };

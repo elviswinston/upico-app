@@ -57,14 +57,18 @@ const Comment = ({ comment }) => {
           alt="avatar"
           src={comment.userAvatarUrl ? comment.userAvatarUrl : avatar}
           className={classes.avatar}
+          onClick={() => {
+            window.location.href =
+              window.location.origin + "/" + comment.username;
+          }}
         />
         <div
           style={{ display: "flex", flexDirection: "column", width: "100%" }}
         >
           <div style={{ display: "flex", position: "relative" }}>
-            <Typography varian="body1" className={classes.displayName}>
+            <a href={"/" + comment.username} className={classes.displayName}>
               {comment.userDisplayName}
-            </Typography>
+            </a>
             <Typography
               varian="body1"
               style={{
@@ -106,12 +110,19 @@ const Comment = ({ comment }) => {
                   src={reply.userAvatarUrl ? reply.userAvatarUrl : avatar}
                   className={classes.avatar}
                   style={{ width: 25, height: 25 }}
+                  onClick={() => {
+                    window.location.href =
+                      window.location.origin + "/" + reply.username;
+                  }}
                 />
                 <div style={{ display: "flex", flexDirection: "column" }}>
                   <div style={{ display: "flex" }}>
-                    <Typography varian="body1" className={classes.displayName}>
+                    <a
+                      href={"/" + reply.username}
+                      className={classes.displayName}
+                    >
                       {reply.userDisplayName}
-                    </Typography>
+                    </a>
                     <Typography varian="body1" style={{ fontSize: 14 }}>
                       {reply.content}
                     </Typography>

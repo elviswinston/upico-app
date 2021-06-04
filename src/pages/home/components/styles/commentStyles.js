@@ -5,6 +5,7 @@ export default makeStyles((theme) => ({
     width: 27,
     height: 27,
     marginRight: 10,
+    cursor: "pointer",
   },
   comment: {
     display: "flex",
@@ -16,6 +17,10 @@ export default makeStyles((theme) => ({
     fontWeight: "bold",
     fontSize: 14,
     marginRight: 10,
+    textDecoration: "none",
+    "&:visited": {
+      color: "inherit",
+    },
   },
   timeAgo: {
     color: "#8e8e8e",

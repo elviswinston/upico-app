@@ -5,31 +5,16 @@ import useStyles from "./styles/bottomNotificationStyles";
 const BottomNotification = ({ error }) => {
   const classes = useStyles();
 
-  let valid = false;
+  let valid = true;
 
-  if (error.confirm !== "") {
-    valid = true;
-    document.body.style.overflow = "hidden";
-  }
-
-  if (error.password !== "") {
-    valid = true;
-    document.body.style.overflow = "hidden";
-  }
-
-  if (error.old !== "") {
-    valid = true;
+  if (error !== "") {
+    valid = false;
     document.body.style.overflow = "hidden";
   }
 
   return (
-    <div className={classes.root} active={valid ? 1 : 0}>
-      {error.confirm !== ""
-        ? error.confirm
-        : error.password !== ""
-        ? error.password
-        : null}
-      {error.old !== "" ? error.old : null}
+    <div className={classes.root} active={!valid ? 1 : 0}>
+      {error}
     </div>
   );
 };

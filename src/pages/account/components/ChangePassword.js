@@ -14,7 +14,7 @@ const ChangePassword = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const [error, setError] = useState({ old: "", password: "", confirm: "" });
+  const [error, setError] = useState("");
   const [isValid, setIsValid] = useState(false);
 
   const username = localStorage.getItem("username");
@@ -59,27 +59,19 @@ const ChangePassword = () => {
       ).then((response) => {
         if (response.status === 404) {
           document.body.style.overflow = "hidden";
-          setError((prevError) => {
-            return { ...prevError, old: "Your current password is incorrect." };
-          });
+          setError("Your current password is incorrect.");
         } else {
-          setError((prevError) => {
-            return { ...prevError, old: "" };
-          });
+          setError("");
         }
         if (response.status === 400) {
           document.body.style.overflow = "hidden";
-          setError((prevError) => {
-            return {
-              ...prevError,
-              password:
-                "The new password and the current password cannot be the same.",
-            };
-          });
+          setError(
+            "The new password and the current password cannot be the same."
+          );
         }
         if (response.status === 200) {
           alert("Change password success!");
-          setError({ old: "", password: "", confirm: "" });
+          setError("");
           setOldPassword("");
           setNewPassword("");
           setConfirmPassword("");
@@ -93,35 +85,17 @@ const ChangePassword = () => {
     let isValid = true;
 
     if (newPassword !== confirmPassword) {
-      console.log(error);
-      setError((prevError) => {
-        return {
-          ...prevError,
-          confirm: "New password and old password do not match.",
-        };
-      });
+      setError("New password and old password do not match.");
       isValid = false;
-    } else {
-      setError((prevError) => {
-        return { ...prevError, confirm: "" };
-      });
-    }
-
-    if (
+    } else if (
       !RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{6,})").test(newPassword)
     ) {
-      setError((prevError) => {
-        return {
-          ...prevError,
-          password:
-            "Password must be six charaters and contain at least lowercase character, uppercase character, numeric character.",
-        };
-      });
+      setError(
+        "Password must be six charaters and contain at least lowercase character, uppercase character, numeric character."
+      );
       isValid = false;
     } else {
-      setError((prevError) => {
-        return { ...prevError, password: "" };
-      });
+      setError("");
     }
 
     return isValid;
