@@ -11,7 +11,7 @@ import { PostService, UserService } from "../../../services/services";
 const ProfileStateContext = createContext();
 const ProfileDispatchContext = createContext();
 
-const reducer = (state, action) => {
+const postReducer = (state, action) => {
   switch (action.type) {
     case "FETCH_SUCCESS":
       return action.payload;
@@ -32,13 +32,17 @@ const userReducer = (state, action) => {
       return {};
     case "UPLOAD_AVATAR":
       return { ...state, avatarUrl: action.path };
+    case "FOLLOW":
+      return { ...state, isFollowed: true, followers: state.followers + 1 };
+    case "UNFOLLOW":
+      return { ...state, isFollowed: false, followers: state.followers - 1 };
     default:
       return state;
   }
 };
 
 const ProfileProvider = (props) => {
-  const [posts, postsDispatch] = useReducer(reducer, []);
+  const [posts, postsDispatch] = useReducer(postReducer, []);
   const [user, userDispatch] = useReducer(userReducer, {});
   const [targetUsername, setTargetUsername] = useState("");
 

@@ -90,10 +90,12 @@ const Post = ({ post, setPosts, postIndex }) => {
   }
 
   useEffect(() => {
-    CommentService.getComment(postId).then((response) => {
-      setComments(response.data);
-    });
-  }, [postId]);
+    if (comments.length === 0) {
+      CommentService.getComment(postId).then((response) => {
+        setComments(response.data);
+      });
+    }
+  }, [postId, comments]);
 
   return (
     <Paper className={classes.root}>

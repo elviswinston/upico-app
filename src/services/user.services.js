@@ -95,6 +95,16 @@ const changePassword = (
     });
 };
 
+const getSuggestion = (username) => {
+  return axios
+    .get(
+      API_URL + "/followingSuggestion?username=" + username + "&numFollowings=5"
+    )
+    .catch((error) => {
+      return error.response;
+    });
+};
+
 const UserService = {
   getUserInfo,
   searchUser,
@@ -103,6 +113,7 @@ const UserService = {
   unfollow,
   updateProfile,
   changePassword,
+  getSuggestion,
 };
 
 export default UserService;

@@ -5,7 +5,7 @@ export default makeStyles((theme) => ({
     position: "fixed",
     top: 0,
     left: 0,
-    zIndex: 99,
+    zIndex: 102,
     width: "100vw",
     height: "100vh",
     backgroundColor: "#000",

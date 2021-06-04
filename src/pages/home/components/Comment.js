@@ -1,5 +1,5 @@
 import { Avatar, Paper, TextField, Typography } from "@material-ui/core";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { MoreHoriz } from "@material-ui/icons";
 
@@ -17,7 +17,7 @@ const Comment = ({ comment, index, setComments }) => {
 
   const [isReplying, setIsReplying] = useState(false);
   const [isShowingReply, setIsShowingReply] = useState(false);
-  const [replies, setReplies] = useState(comment.childs ? comment.childs : []);
+  const [replies, setReplies] = useState([]);
   const [text, setText] = useState("Show replies");
   const [avatar, setAvatar] = useState("");
   const [auth, setAuth] = useState(false);
@@ -70,6 +70,14 @@ const Comment = ({ comment, index, setComments }) => {
       toggle();
     }
   };
+
+  useEffect(() => {
+    CommentService.getReply(comment.id).then((response) => {
+      if (response.status === 200) {
+        setReplies(response.data);
+      }
+    });
+  }, [comment]);
 
   return (
     <div>

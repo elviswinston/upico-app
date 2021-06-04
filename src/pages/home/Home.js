@@ -20,6 +20,7 @@ import PostSkeleton from "./components/PostSkeleton";
 const Home = () => {
   const classes = useStyles();
   const [posts, setPosts] = useState([]);
+  const [suggests, setSuggests] = useState([]);
 
   const username = localStorage.getItem("username");
 
@@ -29,16 +30,30 @@ const Home = () => {
   const [displayName, setDisplayName] = useState("");
 
   useEffect(() => {
-    AvatarService.getUserAvatar(username).then((response) => {
-      if (response.status === 200) {
-        setAvatar(response.data.path);
-      }
-    });
-    UserService.getProfile(username, username).then((response) => {
-      if (response.status === 200) {
-        setDisplayName(response.data.displayName);
-      }
-    });
+    if (avatar === "") {
+      AvatarService.getUserAvatar(username).then((response) => {
+        if (response.status === 200) {
+          setAvatar(response.data.path);
+        }
+      });
+    }
+
+    if (displayName === "") {
+      UserService.getProfile(username, username).then((response) => {
+        if (response.status === 200) {
+          setDisplayName(response.data.displayName);
+        }
+      });
+    }
+
+    if (suggests.length === 0) {
+      UserService.getSuggestion(username).then((response) => {
+        if (response.status === 200) {
+          setSuggests(response.data);
+        }
+      });
+    }
+
     if (posts.length === 0) {
       onLoading();
       PostService.getPostUser(username).then((response) => {
@@ -48,7 +63,7 @@ const Home = () => {
         }
       });
     }
-  }, [username, posts, onLoading, offLoading]);
+  }, [username, suggests, posts, onLoading, offLoading, avatar, displayName]);
 
   const handleClick = () => {
     const username = localStorage.getItem("username");
@@ -116,7 +131,7 @@ const Home = () => {
             )}
           </Grid>
         )}
-        {loading ? null : <Suggestion />}
+        {loading ? null : <Suggestion suggests={suggests} />}
       </div>
     </div>
   );

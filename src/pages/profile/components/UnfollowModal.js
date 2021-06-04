@@ -9,6 +9,8 @@ import { UserService } from "../../../services/services";
 
 import ReactDOM from "react-dom";
 
+import { useDispatchProfile } from "../reducer/profileReducer";
+
 const UnfollowModal = ({
   avatar,
   isShowing,
@@ -16,7 +18,6 @@ const UnfollowModal = ({
   toggleModal,
   sourceUsername,
   targetUsername,
-  setUser,
 }) => {
   const classes = useStyles();
 
@@ -26,18 +27,14 @@ const UnfollowModal = ({
     ? (document.body.style.overflow = "hidden")
     : (document.body.style.overflow = "auto");
 
+  const { userDispatch } = useDispatchProfile();
+
   const handleClick = () => {
     onLoading();
     toggleModal();
     UserService.unfollow(sourceUsername, targetUsername).then((response) => {
       if (response.status === 200) {
-        setUser((prevUser) => {
-          return {
-            ...prevUser,
-            isFollowed: false,
-            followers: prevUser.followers - 1,
-          };
-        });
+        userDispatch({ type: "UNFOLLOW" });
         offLoading();
       }
     });

@@ -1,5 +1,5 @@
 import { Avatar, TextField, Typography } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 
@@ -14,8 +14,8 @@ const Comment = ({ comment }) => {
 
   const [isReplying, setIsReplying] = useState(false);
   const [isShowingReply, setIsShowingReply] = useState(false);
-  const [replies, setReplies] = useState(comment.childs ? comment.childs : []);
-  const [text, setText] = useState("Show replies");
+  const [replies, setReplies] = useState([]);
+  const [text, setText] = useState("Show " + comment.replies + " replies");
   const [avatar, setAvatar] = useState("");
 
   const username = localStorage.getItem("username");
@@ -46,9 +46,42 @@ const Comment = ({ comment }) => {
   };
 
   const showReply = () => {
-    setIsShowingReply(!isShowingReply);
-    isShowingReply ? setText("Show replies") : setText("Hide replies");
+    if (replies.length < comment.replies && isShowingReply) {
+      const latestReplyId = replies[replies.length - 1].id;
+      CommentService.getMoreReply(comment.id, latestReplyId).then(
+        (response) => {
+          if (response.status === 200) {
+            setReplies((prevReplies) => {
+              return prevReplies.concat(response.data);
+            });
+            const remainReply =
+              comment.replies - replies.length - response.data.length;
+            remainReply !== 0
+              ? setText("Show more " + remainReply + " replies")
+              : setText("Hide replies");
+          }
+        }
+      );
+    } else if (replies.length === comment.replies && isShowingReply) {
+      setText("Show replies");
+      setIsShowingReply(false);
+    } else {
+      setIsShowingReply(true);
+      replies.length === comment.replies
+        ? setText("Hide replies")
+        : setText(
+            "Show more " + (comment.replies - replies.length) + " replies"
+          );
+    }
   };
+
+  useEffect(() => {
+    CommentService.getReply(comment.id).then((response) => {
+      if (response.status === 200) {
+        setReplies(response.data);
+      }
+    });
+  }, [comment]);
 
   return (
     <div>

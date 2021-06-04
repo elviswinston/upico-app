@@ -6,7 +6,11 @@ import useStyles from "./styles/profileStyles";
 
 import { useLoading } from "../../hooks/hooks";
 
-import { AvatarService, PostService } from "../../services/services";
+import {
+  AvatarService,
+  PostService,
+  UserService,
+} from "../../services/services";
 
 import {
   Avatar,
@@ -34,10 +38,12 @@ const Profile = ({ match }) => {
 
   const unfollowModalRef = useRef(null);
   const postDetailModalRef = useRef(null);
+  const statusModalRef = useRef(null);
   const fileInputRef = useRef(null);
 
   const [isShowingUnfollow, setIsShowingUnfollow] = useState(false);
   const [isShowingPost, setIsShowingPost] = useState(false);
+  const [statusShowing, setStatusShowing] = useState(false);
   const [postId, setPostId] = useState("");
 
   const { loading, onLoading, offLoading } = useLoading();
@@ -96,13 +102,13 @@ const Profile = ({ match }) => {
   };
 
   const follow = () => {
-    /*onLoading();
+    onLoading();
     UserService.follow(sourceUsername, targetUsername).then((response) => {
       if (response.status === 200) {
-        setUser({ ...user, isFollowed: true, followers: user.followers + 1 });
+        userDispatch({ type: "FOLLOW" });
         offLoading();
       }
-    });*/
+    });
   };
 
   useEffect(() => {
@@ -116,12 +122,22 @@ const Profile = ({ match }) => {
         !unfollowModalRef.current.contains(event.target)
       ) {
         setIsShowingUnfollow(false);
+        document.body.style.overflow = "auto";
       }
       if (
         postDetailModalRef.current &&
         !postDetailModalRef.current.contains(event.target)
       ) {
         setIsShowingPost(false);
+        setStatusShowing(false);
+        document.body.style.overflow = "auto";
+      }
+      if (
+        statusModalRef.current &&
+        !statusModalRef.current.contains(event.target)
+      ) {
+        setStatusShowing(false);
+        document.body.style.overflow = "auto";
       }
     };
 
@@ -145,6 +161,9 @@ const Profile = ({ match }) => {
         isShowing={isShowingPost}
         modalRef={postDetailModalRef}
         postId={postId}
+        statusModalRef={statusModalRef}
+        statusShowing={statusShowing}
+        setStatusShowing={setStatusShowing}
       />
       <Header />
       {Object.keys(user).length > 0 ? (

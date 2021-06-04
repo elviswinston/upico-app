@@ -1,13 +1,77 @@
 import { Avatar, Paper, Typography } from "@material-ui/core";
-import React from "react";
+import React, { useState } from "react";
 
-import {FavoriteBorder} from "@material-ui/icons";
+import { FavoriteBorder, Favorite } from "@material-ui/icons";
 
 import useStyles from "./styles/suggestionStyles";
-import avatar from "../../../assets/avatar.jpg";
 
-const Suggestion = () => {
+import { UserService } from "../../../services/services";
+
+const SuggestionOption = ({ suggest }) => {
   const classes = useStyles();
+  const [isFollowed, setIsFollowed] = useState(false);
+
+  const sourceUsername = localStorage.getItem("username");
+
+  const follow = (e, targetUsername) => {
+    UserService.follow(sourceUsername, targetUsername).then((response) => {
+      if (response.status === 200) {
+        setIsFollowed(true);
+      }
+    });
+  };
+
+  const unfollow = (e, targetUsername) => {
+    UserService.unfollow(sourceUsername, targetUsername).then((response) => {
+      if (response.status === 200) {
+        setIsFollowed(false);
+      }
+    });
+  };
+
+  return (
+    <div className={classes.suggest}>
+      <Avatar
+        alt="avatar"
+        src={suggest.avatarUrl ? suggest.avatarUrl : null}
+        className={classes.avatar}
+        onClick={() => {
+          window.location.href =
+            window.location.origin + "/" + suggest.userName;
+        }}
+      />
+      <div className={classes.info}>
+        <Typography
+          className={classes.name}
+          onClick={() => {
+            window.location.href =
+              window.location.origin + "/" + suggest.userName;
+          }}
+        >
+          {suggest.displayName}
+        </Typography>
+        <Typography className={classes.desc}>{suggest.bio}</Typography>
+      </div>
+      {isFollowed ? (
+        <Favorite
+          className={classes.icon}
+          onClick={(e) => unfollow(e, suggest.userName)}
+          username={suggest.userName}
+        />
+      ) : (
+        <FavoriteBorder
+          className={classes.icon}
+          onClick={(e) => follow(e, suggest.userName)}
+          username={suggest.userName}
+        />
+      )}
+    </div>
+  );
+};
+
+const Suggestion = ({ suggests }) => {
+  const classes = useStyles();
+
   return (
     <Paper className={classes.root}>
       <div className={classes.header}>
@@ -16,16 +80,10 @@ const Suggestion = () => {
         </Typography>
       </div>
       <div className={classes.container}>
-        <div className={classes.suggest}>
-          <Avatar alt="avatar" src={avatar} className={classes.avatar} />
-          <div className={classes.info}>
-            <Typography className={classes.name}>Vinh Lê Khánh</Typography>
-            <Typography className={classes.desc}>
-              Tiểu lý quảng Hoa Vinh
-            </Typography>
-          </div>
-          <FavoriteBorder className={classes.icon} />
-        </div>
+        {suggests.length > 0 &&
+          suggests.map((suggest, index) => {
+            return <SuggestionOption suggest={suggest} key={index} />;
+          })}
       </div>
     </Paper>
   );

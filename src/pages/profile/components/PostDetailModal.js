@@ -3,6 +3,7 @@ import { Avatar, Grid, Paper, TextField, Typography } from "@material-ui/core";
 import React, { useEffect, useRef, useState } from "react";
 
 import useStyles from "./styles/postDetailModalStyles";
+import { useLoading } from "../../../hooks/hooks";
 
 import {
   CommentService,
@@ -25,8 +26,17 @@ import {
 } from "@material-ui/icons";
 
 import Skeleton from "@material-ui/lab/Skeleton";
+import StatusModal from "./StatusModal";
+import FullscreenLoading from "../../../components/FullscreenLoading";
 
-const PostDetailModal = ({ isShowing, modalRef, postId }) => {
+const PostDetailModal = ({
+  isShowing,
+  modalRef,
+  postId,
+  statusModalRef,
+  statusShowing,
+  setStatusShowing,
+}) => {
   const classes = useStyles();
 
   const inputRef = useRef(null);
@@ -37,6 +47,8 @@ const PostDetailModal = ({ isShowing, modalRef, postId }) => {
   const [index, setIndex] = useState(0);
   const [gallery, setGallery] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  const { loading, onLoading, offLoading } = useLoading();
 
   const username = localStorage.getItem("username");
 
@@ -74,9 +86,28 @@ const PostDetailModal = ({ isShowing, modalRef, postId }) => {
     }
   };
 
+  const showMoreComment = () => {
+    const lastCommentId = comments[comments.length - 1].id;
+    CommentService.getMoreComment(postId, lastCommentId).then((response) => {
+      if (response.status === 200) {
+        setComments((prevComments) => {
+          return prevComments.concat(response.data);
+        });
+      }
+    });
+  };
+
+  const showStatus = () => {
+    toggleModal();
+  };
+
   isShowing
     ? (document.body.style.overflow = "hidden")
     : (document.body.style.overflow = "auto");
+
+  const toggleModal = () => {
+    setStatusShowing(!statusShowing);
+  };
 
   useEffect(() => {
     if (isShowing) {
@@ -103,9 +134,21 @@ const PostDetailModal = ({ isShowing, modalRef, postId }) => {
 
   return isShowing ? (
     <div>
+      {loading ? <FullscreenLoading /> : null}
       <Close className={classes.closeIcon} />
       <div className={classes.modalOverlay}></div>
       <Paper className={classes.root} ref={modalRef}>
+        <StatusModal
+          isShowing={statusShowing}
+          toggleModal={toggleModal}
+          auth={post.username === username}
+          privateMode={post.privateMode}
+          onLoading={onLoading}
+          offLoading={offLoading}
+          modalRef={statusModalRef}
+          setPost={setPost}
+          postId={post.id}
+        />
         <Grid container spacing={0} className={classes.postContainer}>
           <Grid
             item
@@ -196,7 +239,9 @@ const PostDetailModal = ({ isShowing, modalRef, postId }) => {
                   <Skeleton width="30%"></Skeleton>
                 </div>
               )}
-              {!isLoading ? <MoreHoriz className={classes.moreIcon} /> : null}
+              {!isLoading ? (
+                <MoreHoriz className={classes.moreIcon} onClick={showStatus} />
+              ) : null}
             </div>
             {!isLoading ? (
               <div className={classes.postComment}>
@@ -233,10 +278,11 @@ const PostDetailModal = ({ isShowing, modalRef, postId }) => {
                   comments.map((comment) => {
                     return <Comment comment={comment} key={comment.id} />;
                   })}
-                {comments.length > 10 && (
+                {comments.length === 5 && (
                   <div className={classes.more}>
                     <AddCircleOutlineOutlined
                       style={{ color: "#8e8e8e", fontSize: 25 }}
+                      onClick={showMoreComment}
                     />
                   </div>
                 )}
