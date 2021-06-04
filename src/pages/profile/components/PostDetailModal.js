@@ -21,11 +21,12 @@ import {
   FavoriteBorder,
   ModeCommentOutlined,
   Favorite,
+  MoreHoriz,
 } from "@material-ui/icons";
 
 import Skeleton from "@material-ui/lab/Skeleton";
 
-const PostDetailModal = ({ isShowing, modalRef, setIsShowing, postId }) => {
+const PostDetailModal = ({ isShowing, modalRef, postId }) => {
   const classes = useStyles();
 
   const inputRef = useRef(null);
@@ -195,6 +196,7 @@ const PostDetailModal = ({ isShowing, modalRef, setIsShowing, postId }) => {
                   <Skeleton width="30%"></Skeleton>
                 </div>
               )}
+              {!isLoading ? <MoreHoriz className={classes.moreIcon} /> : null}
             </div>
             {!isLoading ? (
               <div className={classes.postComment}>
@@ -231,11 +233,13 @@ const PostDetailModal = ({ isShowing, modalRef, setIsShowing, postId }) => {
                   comments.map((comment) => {
                     return <Comment comment={comment} key={comment.id} />;
                   })}
-                <div className={classes.more}>
-                  <AddCircleOutlineOutlined
-                    style={{ color: "#8e8e8e", fontSize: 25 }}
-                  />
-                </div>
+                {comments.length > 10 && (
+                  <div className={classes.more}>
+                    <AddCircleOutlineOutlined
+                      style={{ color: "#8e8e8e", fontSize: 25 }}
+                    />
+                  </div>
+                )}
               </div>
             ) : (
               <div className={classes.postComment}></div>

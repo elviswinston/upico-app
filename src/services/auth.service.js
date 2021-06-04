@@ -39,10 +39,11 @@ const isLoggedIn = () => {
 const logout = () => {
   localStorage.removeItem("username");
   localStorage.removeItem("token");
+  localStorage.removeItem("data");
 };
 
 const getCurrentUser = () => {
-  return JSON.parse(localStorage.getItem("username"));
+  return localStorage.getItem("username");
 };
 
 const AuthService = {

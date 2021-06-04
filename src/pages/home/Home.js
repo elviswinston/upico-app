@@ -10,7 +10,11 @@ import Upload from "./components/Upload";
 import useStyles from "./styles/homeStyles";
 import { useLoading } from "../../hooks/hooks";
 
-import { PostService } from "../../services/services";
+import {
+  AvatarService,
+  PostService,
+  UserService,
+} from "../../services/services";
 import PostSkeleton from "./components/PostSkeleton";
 
 const Home = () => {
@@ -21,7 +25,20 @@ const Home = () => {
 
   const { loading, onLoading, offLoading } = useLoading();
 
+  const [avatar, setAvatar] = useState("");
+  const [displayName, setDisplayName] = useState("");
+
   useEffect(() => {
+    AvatarService.getUserAvatar(username).then((response) => {
+      if (response.status === 200) {
+        setAvatar(response.data.path);
+      }
+    });
+    UserService.getProfile(username, username).then((response) => {
+      if (response.status === 200) {
+        setDisplayName(response.data.displayName);
+      }
+    });
     if (posts.length === 0) {
       onLoading();
       PostService.getPostUser(username).then((response) => {
@@ -50,7 +67,13 @@ const Home = () => {
     <div className={classes.root}>
       <Header isHome={true} />
       <div className={classes.content}>
-        {loading ? null : <Upload setPosts={setPosts} />}
+        {loading ? null : (
+          <Upload
+            setPosts={setPosts}
+            avatar={avatar}
+            displayName={displayName}
+          />
+        )}
         {loading ? (
           <Grid
             container

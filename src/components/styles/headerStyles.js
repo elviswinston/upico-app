@@ -88,11 +88,6 @@ export default makeStyles((theme) => ({
     height: 27,
     marginRight: 10,
   },
-  name: {
-    fontSize: 12,
-    color: "#009688",
-    fontWeight: "bold",
-  },
   user: {
     position: "absolute",
     right: 0,

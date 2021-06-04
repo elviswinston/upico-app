@@ -14,8 +14,6 @@ import {
 import useStyles from "./styles/postStyles";
 import { useModal, useLoading } from "../../../hooks/hooks";
 
-import avatar from "../../../assets/avatar.png";
-
 import { CommentService, LikeService } from "../../../services/services";
 
 import Comment from "./Comment";
@@ -114,7 +112,7 @@ const Post = ({ post, setPosts, postIndex }) => {
       <div className={classes.avatarContainer}>
         <Avatar
           alt="avatar"
-          src={post.avatarUrl ? post.avatarUrl : avatar}
+          src={post.avatarUrl ? post.avatarUrl : null}
           className={classes.avatar}
           onClick={() => {
             window.location.href = window.location.origin + "/" + post.username;
@@ -183,7 +181,9 @@ const Post = ({ post, setPosts, postIndex }) => {
         <div className={classes.button} style={{ cursor: "pointer" }}>
           <ChatBubbleOutline className={classes.icon} />
           <Typography style={{ color: "#2a3f54", fontWeight: "bold" }}>
-            {post.comments.length > 1
+            {post.comments.length === 0
+              ? post.comments.length
+              : post.comments.length > 1
               ? post.comments.length + " comments"
               : post.comments.length + " comment"}
           </Typography>

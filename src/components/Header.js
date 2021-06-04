@@ -24,7 +24,7 @@ import useStyles from "./styles/headerStyles";
 
 import { useLoading } from "../hooks/hooks";
 
-import { AuthService, AvatarService, UserService } from "../services/services";
+import { AuthService, UserService, AvatarService } from "../services/services";
 
 const Header = ({ isHome }) => {
   const classes = useStyles();
@@ -39,8 +39,8 @@ const Header = ({ isHome }) => {
   const [isSearching, setIsSearching] = useState(0);
   const [searchUsers, setSearchUsers] = useState([]);
   const [searchKey, setSearchKey] = useState("");
+
   const [avatar, setAvatar] = useState("");
-  const [displayName, setDisplayName] = useState("");
 
   const { loading, onLoading, offLoading } = useLoading();
 
@@ -81,14 +81,10 @@ const Header = ({ isHome }) => {
 
   useEffect(() => {
     AvatarService.getUserAvatar(username).then((response) => {
-      response.status === 404 ? setAvatar(null) : setAvatar(response.data.path);
-    });
-    UserService.getProfile(username, username).then((response) => {
       if (response.status === 200) {
-        setDisplayName(response.data.displayName);
+        setAvatar(response.data.path);
       }
     });
-
     const handleClickOutside = (event) => {
       if (profileRef.current && !profileRef.current.contains(event.target)) {
         setUserMenu(false);
@@ -225,18 +221,25 @@ const Header = ({ isHome }) => {
           </IconButton>
           <div className={classes.avatarContainer} onClick={handleUserMenu}>
             <Avatar alt="avatar" src={avatar} className={classes.avatar} />
-            <Typography className={classes.name}>{displayName}</Typography>
           </div>
           <Paper
             className={classes.user}
             active={userMenu ? 1 : 0}
             ref={profileRef}
           >
-            <div className={classes.option} onClick={profile}>
+            <div
+              className={classes.option}
+              onClick={profile}
+              style={{ borderTopLeftRadius: 5, borderTopRightRadius: 5 }}
+            >
               <AccountCircle className={classes.icon} />
               <Typography className={classes.text}>Profile</Typography>
             </div>
-            <div className={classes.option} onClick={logout}>
+            <div
+              className={classes.option}
+              onClick={logout}
+              style={{ borderBottomLeftRadius: 5, borderBottomRightRadius: 5 }}
+            >
               <ExitToApp className={classes.icon} />
               <Typography className={classes.text}>Logout</Typography>
             </div>

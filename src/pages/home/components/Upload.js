@@ -9,16 +9,12 @@ import useModal from "../../../hooks/useModal";
 
 import Modal from "../../../components/Modal";
 
-import { AvatarService, UserService } from "../../../services/services";
-
-const Upload = ({ setPosts }) => {
+const Upload = ({ setPosts, avatar, displayName }) => {
   const classes = useStyles();
 
   const wrapperRef = useRef(null);
   const [upload, setUpload] = useState(false);
   const [files, setFiles] = useState(null);
-  const [avatar, setAvatar] = useState("");
-  const [displayName, setDisplayName] = useState("");
 
   const { isShowing, toggle } = useModal();
 
@@ -40,15 +36,6 @@ const Upload = ({ setPosts }) => {
   };
 
   useEffect(() => {
-    AvatarService.getUserAvatar(username).then((response) => {
-      response.status === 404 ? setAvatar(null) : setAvatar(response.data.path);
-    });
-    UserService.getProfile(username, username).then((response) => {
-      if (response.status === 200) {
-        setDisplayName(response.data.displayName);
-      }
-    });
-
     const handleClickOutside = (event) => {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
         setFiles(null);

@@ -2,15 +2,11 @@ import React, { useEffect, useRef, useState } from "react";
 
 import Header from "../../components/Header";
 
-import { useLoading } from "../../hooks/hooks";
-
 import useStyles from "./styles/profileStyles";
 
-import {
-  AvatarService,
-  UserService,
-  PostService,
-} from "../../services/services";
+import { useLoading } from "../../hooks/hooks";
+
+import { AvatarService, PostService } from "../../services/services";
 
 import {
   Avatar,
@@ -31,6 +27,8 @@ import {
 import UnfollowModal from "./components/UnfollowModal";
 import PostDetailModal from "./components/PostDetailModal";
 
+import { useProfile, useDispatchProfile } from "./reducer/profileReducer";
+
 const Profile = ({ match }) => {
   const classes = useStyles();
 
@@ -38,16 +36,16 @@ const Profile = ({ match }) => {
   const postDetailModalRef = useRef(null);
   const fileInputRef = useRef(null);
 
-  const [user, setUser] = useState({});
   const [isShowingUnfollow, setIsShowingUnfollow] = useState(false);
   const [isShowingPost, setIsShowingPost] = useState(false);
-  const [posts, setPosts] = useState([]);
   const [postId, setPostId] = useState("");
 
   const { loading, onLoading, offLoading } = useLoading();
 
+  const { user, posts, targetUsername, setTargetUsername } = useProfile();
+  const { postsDispatch, userDispatch } = useDispatchProfile();
+
   const sourceUsername = localStorage.getItem("username");
-  const targetUsername = match.params.username;
 
   const handleClick = () => {
     setIsShowingUnfollow(true);
@@ -62,64 +60,56 @@ const Profile = ({ match }) => {
     fileInputRef.current.click();
   };
 
-  const uploadAvatar = (e) => {
-    const formData = new FormData();
-    formData.append("file", e.target.files[0]);
-    onLoading();
-    AvatarService.uploadAvatar(sourceUsername, formData).then((response) => {
-      if (response.status === 200) {
-        setUser({ ...user, avatarUrl: response.data.path });
-        offLoading();
-      }
-    });
-  };
-
   const editAccount = () => {
     window.location.href = window.location.origin + "/accounts/edit";
   };
 
-  const follow = () => {
-    onLoading();
-    UserService.follow(sourceUsername, targetUsername).then((response) => {
-      if (response.status === 200) {
-        setUser({ ...user, isFollowed: true, followers: user.followers + 1 });
-        offLoading();
-      }
-    });
-  };
-
   const loadMorePost = () => {
     const latestPostId = posts[posts.length - 1].id;
-    console.log(latestPostId);
-    console.log(posts);
     PostService.getMorePostProfile(
       sourceUsername,
       targetUsername,
       latestPostId
     ).then((response) => {
       if (response.status === 200) {
-        response.data.length > 0
-          ? setPosts(posts.concat(response.data))
-          : alert("There are no more posts");
+        if (response.data.length > 0) {
+          const morePosts = response.data;
+          postsDispatch({ type: "LOAD_MORE_POST", morePosts });
+        } else {
+          alert("There are no more posts");
+        }
       }
     });
   };
 
-  useEffect(() => {
-    UserService.getProfile(sourceUsername, targetUsername).then((response) => {
+  const uploadAvatar = (e) => {
+    const formData = new FormData();
+    formData.append("file", e.target.files[0]);
+    onLoading();
+    AvatarService.uploadAvatar(sourceUsername, formData).then((response) => {
       if (response.status === 200) {
-        setUser(response.data);
+        const path = response.data.path;
+        userDispatch({ type: "UPLOAD_AVATAR", path });
+        offLoading();
       }
     });
+  };
 
-    PostService.getPostProfile(sourceUsername, targetUsername).then(
-      (response) => {
-        if (response.status === 200) {
-          setPosts(response.data);
-        }
+  const follow = () => {
+    /*onLoading();
+    UserService.follow(sourceUsername, targetUsername).then((response) => {
+      if (response.status === 200) {
+        setUser({ ...user, isFollowed: true, followers: user.followers + 1 });
+        offLoading();
       }
-    );
+    });*/
+  };
 
+  useEffect(() => {
+    setTargetUsername(match.params.username);
+  }, [match.params.username, setTargetUsername]);
+
+  useEffect(() => {
     const handleClickOutside = (event) => {
       if (
         unfollowModalRef.current &&
@@ -139,7 +129,7 @@ const Profile = ({ match }) => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [sourceUsername, targetUsername, unfollowModalRef, postDetailModalRef]);
+  }, [unfollowModalRef, postDetailModalRef]);
 
   return (
     <div className={classes.root}>
@@ -150,7 +140,6 @@ const Profile = ({ match }) => {
         toggleModal={setIsShowingUnfollow}
         sourceUsername={sourceUsername}
         targetUsername={user.userName ? user.userName : null}
-        setUser={setUser}
       />
       <PostDetailModal
         isShowing={isShowingPost}

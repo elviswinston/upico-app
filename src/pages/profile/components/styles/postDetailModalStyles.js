@@ -155,4 +155,9 @@ export default makeStyles(() => ({
     marginTop: 20,
     cursor: "pointer",
   },
+  moreIcon: {
+    marginLeft: "auto",
+    cursor: "pointer",
+    color: "#8e8e8e",
+  },
 }));

@@ -8,16 +8,20 @@ import Profile from "./pages/profile/Profile";
 
 import PrivateRoute from "./components/PrivateRoute";
 
+import ProfileProvider from "./pages/profile/reducer/profileReducer";
+
 function App() {
   return (
-    <Router>
-      <Switch>
-        <Route path="/login" component={Login} />
-        <PrivateRoute exact path="/" component={Home} />
-        <PrivateRoute exact path="/:username" component={Profile} />
-        <PrivateRoute exact path="/accounts/edit" component={Account} />
-      </Switch>
-    </Router>
+    <ProfileProvider>
+      <Router>
+        <Switch>
+          <Route path="/login" component={Login} />
+          <PrivateRoute exact path="/" component={Home} />
+          <PrivateRoute exact path="/:username" component={Profile} />
+          <PrivateRoute exact path="/accounts/edit" component={Account} />
+        </Switch>
+      </Router>
+    </ProfileProvider>
   );
 }
 

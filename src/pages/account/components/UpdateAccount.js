@@ -3,6 +3,7 @@ import {
   Button,
   CircularProgress,
   Grid,
+  Snackbar,
   TextareaAutosize,
   TextField,
   Typography,
@@ -16,6 +17,11 @@ import { useLoading, useModal } from "../../../hooks/hooks";
 import { UserService } from "../../../services/services";
 import AvatarModal from "./AvatarModal";
 import BottomNotification from "../../../components/BottomNotification";
+import MuiAlert from "@material-ui/lab/Alert";
+
+const Alert = (props) => {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+};
 
 const UpdateAccount = () => {
   const classes = useStyles();
@@ -25,6 +31,7 @@ const UpdateAccount = () => {
   const [user, setUser] = useState({});
   const [error, setError] = useState("");
   const [isValid, setIsValid] = useState(true);
+  const [open, setOpen] = useState(false);
 
   const username = localStorage.getItem("username");
 
@@ -72,6 +79,7 @@ const UpdateAccount = () => {
         if (response.status === 200) {
           offLoading();
           setError("");
+          setOpen(true);
           document.body.style.overflow = "auto";
         }
       });
@@ -80,6 +88,14 @@ const UpdateAccount = () => {
 
   const changeAvatar = () => {
     toggle();
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
   };
 
   useEffect(() => {
@@ -199,7 +215,7 @@ const UpdateAccount = () => {
       </Grid>
       <Grid item className={classes.gridItem}>
         <Typography variant="body1" className={classes.infoText}>
-          Fullname
+          Firstname
         </Typography>
         <div className={classes.gridItemInfo}>
           <div style={{ width: "75%", display: "flex", alignItems: "center" }}>
@@ -291,6 +307,11 @@ const UpdateAccount = () => {
         </div>
       </Grid>
       <BottomNotification error={error} isValid={isValid} />
+      <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="success">
+          Update profile successfully!
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

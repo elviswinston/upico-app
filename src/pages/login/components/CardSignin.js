@@ -69,12 +69,12 @@ const CardSignin = () => {
   const login = () => {
     if (!validate()) {
       AuthService.login(username, password).then((response) => {
-        console.log(response);
         if (response.status === 200) {
-          localStorage.setItem("token", JSON.stringify(response.data));
+          localStorage.setItem("token", response.data.token);
           localStorage.setItem("username", username);
+          localStorage.setItem("data", JSON.stringify(response.data));
           window.location = window.location.origin;
-        } else {
+        } else {    
           setError((prevError) => ({
             ...prevError,
             username: response.data,

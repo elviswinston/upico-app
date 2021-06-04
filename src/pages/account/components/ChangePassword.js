@@ -1,10 +1,23 @@
-import { Avatar, Button, Grid, TextField, Typography } from "@material-ui/core";
+import {
+  Avatar,
+  Button,
+  Grid,
+  Snackbar,
+  TextField,
+  Typography,
+} from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 
 import useStyles from "./styles/changePasswordStyles";
 
 import { UserService } from "../../../services/services";
 import BottomNotification from "../../../components/BottomNotification";
+
+import MuiAlert from "@material-ui/lab/Alert";
+
+const Alert = (props) => {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+};
 
 const ChangePassword = () => {
   const classes = useStyles();
@@ -16,6 +29,8 @@ const ChangePassword = () => {
 
   const [error, setError] = useState("");
   const [isValid, setIsValid] = useState(false);
+
+  const [open, setOpen] = useState(false);
 
   const username = localStorage.getItem("username");
 
@@ -70,7 +85,7 @@ const ChangePassword = () => {
           );
         }
         if (response.status === 200) {
-          alert("Change password success!");
+          setOpen(true);
           setError("");
           setOldPassword("");
           setNewPassword("");
@@ -101,6 +116,14 @@ const ChangePassword = () => {
     return isValid;
   };
 
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
+
   useEffect(() => {
     UserService.getProfile(username, username).then((response) => {
       if (response.status === 200) {
@@ -110,7 +133,6 @@ const ChangePassword = () => {
   }, [username]);
   return (
     <div>
-      <BottomNotification error={error} />
       <Grid item className={classes.gridItem}>
         <div style={{ flex: "1 0 0px" }}>
           <Avatar
@@ -197,6 +219,12 @@ const ChangePassword = () => {
           </Button>
         </div>
       </Grid>
+      <BottomNotification error={error} />
+      <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="success">
+          Change password successfully!
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
