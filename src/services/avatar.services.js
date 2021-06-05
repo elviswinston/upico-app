@@ -19,9 +19,18 @@ const uploadAvatar = (username, file) => {
     });
 };
 
+const deleteAvatar = (username, photoId) => {
+  return axios
+    .delete(API_URL + username + "/" + photoId, { headers: authHeader() })
+    .catch((error) => {
+      return error.response;
+    });
+};
+
 const AvatarService = {
   getUserAvatar,
   uploadAvatar,
+  deleteAvatar,
 };
 
 export default AvatarService;

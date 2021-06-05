@@ -16,7 +16,6 @@ import { useLoading, useModal } from "../../../hooks/hooks";
 
 import { UserService } from "../../../services/services";
 import AvatarModal from "./AvatarModal";
-import BottomNotification from "../../../components/BottomNotification";
 import MuiAlert from "@material-ui/lab/Alert";
 
 const Alert = (props) => {
@@ -29,7 +28,6 @@ const UpdateAccount = () => {
   const modalRef = useRef(null);
 
   const [user, setUser] = useState({});
-  const [error, setError] = useState("");
   const [isValid, setIsValid] = useState(true);
   const [open, setOpen] = useState(false);
 
@@ -42,7 +40,9 @@ const UpdateAccount = () => {
     setUser({ ...user, displayName: e.target.value });
     if (!e.target.value) {
       setIsValid(false);
-    } else {
+    }
+
+    if (e.target.value && user.phoneNumber.length >= 10) {
       setIsValid(true);
     }
   };
@@ -61,29 +61,31 @@ const UpdateAccount = () => {
 
   const changePhone = (e) => {
     setUser({ ...user, phoneNumber: e.target.value });
+    if (e.target.value.length < 10) {
+      setIsValid(false);
+    }
+
+    if (e.target.value.length >= 10 && user.displayname !== "") {
+      setIsValid(true);
+    }
   };
 
   const updateProfile = () => {
-    if (user.phoneNumber.length < 10) {
-      setError("Please enter a valid phone number");
-    } else {
-      onLoading();
-      UserService.updateProfile(
-        user.userName,
-        user.firstName,
-        user.lastName,
-        user.displayName,
-        user.bio,
-        user.phoneNumber
-      ).then((response) => {
-        if (response.status === 200) {
-          offLoading();
-          setError("");
-          setOpen(true);
-          document.body.style.overflow = "auto";
-        }
-      });
-    }
+    onLoading();
+    UserService.updateProfile(
+      user.userName,
+      user.firstName,
+      user.lastName,
+      user.displayName,
+      user.bio,
+      user.phoneNumber
+    ).then((response) => {
+      if (response.status === 200) {
+        offLoading();
+        setOpen(true);
+        document.body.style.overflow = "auto";
+      }
+    });
   };
 
   const changeAvatar = () => {
@@ -306,7 +308,6 @@ const UpdateAccount = () => {
           </Button>
         </div>
       </Grid>
-      <BottomNotification error={error} isValid={isValid} />
       <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="success">
           Update profile successfully!

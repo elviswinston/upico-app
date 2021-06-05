@@ -20,6 +20,8 @@ const AvatarModal = ({
 
   const fileInputRef = useRef(null);
 
+  const username = localStorage.getItem("username");
+
   const selectPhoto = () => {
     fileInputRef.current.click();
   };
@@ -36,6 +38,19 @@ const AvatarModal = ({
           return { ...prevUser, avatarUrl: response.data.path };
         });
         offLoading();
+      }
+    });
+  };
+
+  const deleteAvatar = () => {
+    toggleModal();
+    onLoading();
+    AvatarService.getUserAvatar(username).then((response) => {
+      if (response.status === 200) {
+        const photoId = response.data.id;
+        AvatarService.deleteAvatar(username, photoId).then((response) => {
+          offLoading();
+        });
       }
     });
   };
@@ -66,7 +81,11 @@ const AvatarModal = ({
               ref={fileInputRef}
               onChange={fileChange}
             />
-            <div className={classes.option} style={{ color: "#ed4956" }}>
+            <div
+              className={classes.option}
+              style={{ color: "#ed4956" }}
+              onClick={deleteAvatar}
+            >
               Remove current photo
             </div>
             <div className={classes.option} onClick={() => toggleModal(false)}>
