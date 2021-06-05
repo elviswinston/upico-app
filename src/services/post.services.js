@@ -41,7 +41,7 @@ const getMorePost = (username, latestPostId) => {
         username +
         "&latestPostId=" +
         latestPostId +
-        "&numPosts=1"
+        "&numPosts=15"
     )
     .catch((error) => {
       return error.response;
