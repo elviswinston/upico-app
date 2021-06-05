@@ -8,6 +8,8 @@ import useStyles from "./styles/statusModalStyles";
 
 import { PostService } from "../../../services/services";
 
+import { useDispatchProfile } from "../reducer/profileReducer";
+
 const StatusModal = ({
   isShowing,
   toggleModal,
@@ -22,6 +24,8 @@ const StatusModal = ({
   setPost,
 }) => {
   const classes = useStyles();
+
+  const { galleryDispatch } = useDispatchProfile();
 
   const setPrivate = () => {
     onLoading();
@@ -58,11 +62,8 @@ const StatusModal = ({
       if (response.status === 200) {
         PostService.deletePost(postId).then((response) => {
           if (response.status === 200) {
-            setPosts((prevPosts) => {
-              let posts = [...prevPosts];
-              posts.splice(postIndex, 1);
-              return posts;
-            });
+            galleryDispatch({ type: "REMOVE_POST", postId });
+            toggleModal();
             offLoading();
           }
         });

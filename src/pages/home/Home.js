@@ -8,7 +8,6 @@ import Suggestion from "./components/Suggestion";
 import Upload from "./components/Upload";
 
 import useStyles from "./styles/homeStyles";
-import { useLoading } from "../../hooks/hooks";
 
 import {
   AvatarService,
@@ -21,49 +20,40 @@ const Home = () => {
   const classes = useStyles();
   const [posts, setPosts] = useState([]);
   const [suggests, setSuggests] = useState([]);
-
-  const username = localStorage.getItem("username");
-
-  const { loading, onLoading, offLoading } = useLoading();
+  const [loading, setLoading] = useState(false);
 
   const [avatar, setAvatar] = useState("");
   const [displayName, setDisplayName] = useState("");
 
   useEffect(() => {
-    if (avatar === "") {
-      AvatarService.getUserAvatar(username).then((response) => {
+    const fetchData = async () => {
+      const username = localStorage.getItem("username");
+      setLoading(true);
+      await AvatarService.getUserAvatar(username).then((response) => {
         if (response.status === 200) {
           setAvatar(response.data.path);
         }
       });
-    }
-
-    if (displayName === "") {
-      UserService.getProfile(username, username).then((response) => {
+      await UserService.getProfile(username, username).then((response) => {
         if (response.status === 200) {
           setDisplayName(response.data.displayName);
         }
       });
-    }
-
-    if (suggests.length === 0) {
-      UserService.getSuggestion(username).then((response) => {
+      await UserService.getSuggestion(username).then((response) => {
         if (response.status === 200) {
           setSuggests(response.data);
         }
       });
-    }
-
-    if (posts.length === 0) {
-      onLoading();
-      PostService.getPostUser(username).then((response) => {
+      await PostService.getPostUser(username).then((response) => {
         if (response.status === 200) {
           setPosts(response.data);
-          offLoading();
+          setLoading(false);
         }
       });
-    }
-  }, [username, suggests, posts, onLoading, offLoading, avatar, displayName]);
+    };
+
+    fetchData();
+  }, []);
 
   const handleClick = () => {
     const username = localStorage.getItem("username");

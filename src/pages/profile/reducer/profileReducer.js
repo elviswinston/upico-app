@@ -19,6 +19,8 @@ const galleryReducer = (state, action) => {
       return [];
     case "LOAD_MORE_POST":
       return state.concat(action.morePosts);
+    case "REMOVE_POST":
+      return state.filter((post) => post.id !== action.postId);
     default:
       return state;
   }

@@ -2,7 +2,7 @@ import { Paper } from "@material-ui/core";
 
 import { Public, Group, CheckCircle } from "@material-ui/icons";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import useStyles from "./styles/modalStyles";
 
@@ -22,7 +22,39 @@ const PostModal = ({
 }) => {
   const classes = useStyles();
 
+  const reportOption = [
+    "Nudity",
+    "Violence",
+    "Harassment",
+    "Suicide or Self-injury",
+    "False information",
+    "Spam",
+    "Unauthorized Sales",
+    "Hate speech",
+    "Terrorism",
+    "Gross content",
+    "Child Abuse",
+  ];
+
   const modalRef = useRef(null);
+  const [isReporting, setIsReporting] = useState(false);
+
+  const username = localStorage.getItem("username");
+
+  const showReportOption = () => {
+    setIsReporting(true);
+  };
+
+  const reportPost = (e, content) => {
+    onLoading();
+    toggleModal();
+    PostService.reportPost(postId, username, content).then((response) => {
+      if (response.status === 200) {
+        alert("Report post successfully!");
+        offLoading();
+      }
+    });
+  };
 
   const setPrivate = () => {
     onLoading();
@@ -141,14 +173,32 @@ const PostModal = ({
                   Remove
                 </div>
               </div>
-            ) : (
+            ) : !isReporting ? (
               <div
                 className={classes.option}
                 style={{ color: "#ed4956", borderRadius: 15 }}
+                onClick={showReportOption}
               >
                 Report
               </div>
+            ) : (
+              <div className={classes.option} style={{ borderRadius: 15 }}>
+                Please select a problem
+              </div>
             )}
+            {isReporting
+              ? reportOption.map((content) => {
+                  return (
+                    <div
+                      className={classes.option}
+                      style={{ borderRadius: 15, fontWeight: 400 }}
+                      onClick={(e) => reportPost(e, content)}
+                    >
+                      {content}
+                    </div>
+                  );
+                })
+              : null}
             <div
               className={classes.option}
               onClick={() => {

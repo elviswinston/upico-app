@@ -117,6 +117,14 @@ const deletePost = (postId) => {
   });
 };
 
+const reportPost = (postId, reporterUserName, reportContent) => {
+  return axios
+    .post(API_URL + "Posts/report", { postId, reporterUserName, reportContent })
+    .catch((error) => {
+      return error.response;
+    });
+};
+
 const PostService = {
   createPost,
   getPostDetail,
@@ -129,6 +137,7 @@ const PostService = {
   setPublic,
   deletePostImage,
   deletePost,
+  reportPost,
 };
 
 export default PostService;
