@@ -29,6 +29,7 @@ import Skeleton from "@material-ui/lab/Skeleton";
 import StatusModal from "./StatusModal";
 import CommentModal from "./CommentModal";
 import FullscreenLoading from "../../../components/FullscreenLoading";
+import useStyles from "./styles/postStyles";
 
 const PostDetailModal = ({
   isShowing,
@@ -116,19 +117,24 @@ const PostDetailModal = ({
   };
 
   useEffect(() => {
-    if (isShowing && Object.keys(post).length === 0 && comments.length === 0) {
-      PostService.getPostDetail(username, postId).then((response) => {
-        if (response.status === 200) {
-          setIsLoading(false);
-          setPost(response.data);
-          setGallery(response.data.postImages);
-        }
-      });
-      CommentService.getComment(postId).then((response) => {
-        if (response.status === 200) {
-          setComments(response.data);
-        }
-      });
+    if (isShowing) {
+      if (post.id !== postId) {
+        setIsLoading(true);
+        PostService.getPostDetail(username, postId).then((response) => {
+          if (response.status === 200) {
+            setIsLoading(false);
+            setPost(response.data);
+            setGallery(response.data.postImages);
+          }
+        });
+      }
+      if (post.comments > 0 && comments.length === 0) {
+        CommentService.getComment(postId).then((response) => {
+          if (response.status === 200) {
+            setComments(response.data);
+          }
+        });
+      }
     }
   }, [isShowing, comments, post, username, postId]);
 

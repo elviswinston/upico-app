@@ -48,7 +48,7 @@ const SuggestionOption = ({ suggest }) => {
               window.location.origin + "/" + suggest.userName;
           }}
         >
-          {suggest.displayName}
+          {suggest.displayName ? suggest.displayName : suggest.userName}
         </Typography>
         <Typography className={classes.desc}>{suggest.bio}</Typography>
       </div>
