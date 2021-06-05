@@ -18,7 +18,13 @@ const Comment = ({ comment, index, setComments }) => {
   const [isReplying, setIsReplying] = useState(false);
   const [isShowingReply, setIsShowingReply] = useState(false);
   const [replies, setReplies] = useState([]);
-  const [text, setText] = useState("Show " + comment.replies + " replies");
+  const [text, setText] = useState(
+    comment.replies > 0
+      ? "Show " + comment.replies + " replies"
+      : comment.replies === 0
+      ? "Hide replies"
+      : "Show replies"
+  );
   const [avatar, setAvatar] = useState("");
   const [auth, setAuth] = useState(false);
 
@@ -46,7 +52,15 @@ const Comment = ({ comment, index, setComments }) => {
       CommentService.replyComment(username, content, parentId).then(
         (response) => {
           if (response.status === 200) {
+            comment.replies <= 3 ? setText("Hide replies") : setText("Show more replies")
             setReplies([...replies, response.data]);
+            setComments((prevComments) => {
+              return prevComments.map((comment) =>
+                comment.id === parentId
+                  ? { ...comment, replies: comment.replies + 1 }
+                  : comment
+              );
+            });
             setIsReplying(false);
             setIsShowingReply(true);
           }
@@ -66,7 +80,7 @@ const Comment = ({ comment, index, setComments }) => {
             });
             const remainReply =
               comment.replies - replies.length - response.data.length;
-            remainReply !== 0
+            remainReply > 0
               ? setText("Show more " + remainReply + " replies")
               : setText("Hide replies");
           }
@@ -98,7 +112,6 @@ const Comment = ({ comment, index, setComments }) => {
 
   useEffect(() => {
     if (comment.replies > 0 && replies.length === 0) {
-      console.log("asd");
       CommentService.getReply(comment.id).then((response) => {
         if (response.status === 200) {
           setReplies(response.data);
@@ -162,7 +175,7 @@ const Comment = ({ comment, index, setComments }) => {
           </div>
         </div>
       </div>
-      {replies?.length > 0 && (
+      {comment.replies > 0 && (
         <div className={classes.reply}>
           <button className={classes.showReplyButton} onClick={showReply}>
             <div className={classes.divider}></div>

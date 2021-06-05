@@ -117,9 +117,9 @@ const deletePost = (postId) => {
   });
 };
 
-const reportPost = (postId, reporterUserName, reportContent) => {
+const reportPost = (id, reporterUserName, reportContent) => {
   return axios
-    .post(API_URL + "Posts/report", { postId, reporterUserName, reportContent })
+    .post(API_URL + "Posts/report", { id, reporterUserName, reportContent })
     .catch((error) => {
       return error.response;
     });

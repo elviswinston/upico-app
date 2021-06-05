@@ -1,20 +1,13 @@
 import React from "react";
-import {
-  List,
-  Datagrid,
-  TextField,
-  DeleteButton,
-  DateField,
-} from "react-admin";
+import { List, Datagrid, TextField, DateField } from "react-admin";
 
 const ReportList = (props) => (
   <List {...props}>
-    <Datagrid>
-      <TextField source="postId" />
+    <Datagrid rowClick="show">
+      <TextField source="id" />
       <TextField source="numOfReports" />
-      <DateField source="firstReportTime" locales="fr-FR" />
       <TextField source="firtsReporter" />
-      <DeleteButton />
+      <DateField source="firstReportTime" locales="fr-FR" showTime/>
     </Datagrid>
   </List>
 );

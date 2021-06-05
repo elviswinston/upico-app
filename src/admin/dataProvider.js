@@ -11,7 +11,7 @@ const httpClient = (url, options = {}) => {
 };
 
 const dataProvider = simpleRestProvider(
-  "http://localhost:5000/api",
+  "http://localhost:5000/api/admin",
   httpClient
 );
 

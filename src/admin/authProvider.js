@@ -1,7 +1,7 @@
 const authProvider = {
   login: ({ username, password }) => {
     const request = new Request(
-      "https://localhost:5001/api/User/authenticate",
+      "http://localhost:5000/api/Users/authenticate",
       {
         method: "POST",
         body: JSON.stringify({ username, password }),
@@ -16,7 +16,8 @@ const authProvider = {
         return response.json();
       })
       .then((auth) => {
-        localStorage.setItem("auth", JSON.stringify(auth));
+        auth.roleName === "Admin" &&
+          localStorage.setItem("auth", JSON.stringify(auth));
       })
       .catch(() => {
         throw new Error("Network error");

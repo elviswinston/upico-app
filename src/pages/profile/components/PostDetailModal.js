@@ -40,6 +40,7 @@ const PostDetailModal = ({
   commentShowing,
   setCommentShowing,
   commentModalRef,
+  togglePostDetail,
 }) => {
   const classes = useStyles();
 
@@ -153,6 +154,7 @@ const PostDetailModal = ({
           modalRef={statusModalRef}
           setPost={setPost}
           postId={post.id}
+          togglePostDetail={togglePostDetail}
         />
         <CommentModal
           isShowing={commentShowing}

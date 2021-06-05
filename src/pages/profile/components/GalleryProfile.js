@@ -99,6 +99,7 @@ const GalleryProfile = () => {
         commentShowing={commentShowing}
         setCommentShowing={setCommentShowing}
         commentModalRef={commentModalRef}
+        togglePostDetail={toggle}
       />
       <Grid container className={classes.gallery} spacing={3}>
         {gallery.length > 0

@@ -9,7 +9,7 @@ import Profile from "./pages/profile/Profile";
 import PrivateRoute from "./components/PrivateRoute";
 
 import ProfileProvider from "./pages/profile/reducer/profileReducer";
-import AdminApp from "./admin";
+import AdminApp from "./admin/index";
 
 function App() {
   return (

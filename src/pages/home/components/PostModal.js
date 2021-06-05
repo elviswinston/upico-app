@@ -1,4 +1,4 @@
-import { Paper } from "@material-ui/core";
+import { Paper, Snackbar } from "@material-ui/core";
 
 import { Public, Group, CheckCircle } from "@material-ui/icons";
 
@@ -8,6 +8,7 @@ import useStyles from "./styles/modalStyles";
 
 import ReactDOM from "react-dom";
 import { PostService } from "../../../services/services";
+import { Alert } from "@material-ui/lab";
 
 const PostModal = ({
   isShowing,
@@ -38,6 +39,8 @@ const PostModal = ({
 
   const modalRef = useRef(null);
   const [isReporting, setIsReporting] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(false);
 
   const username = localStorage.getItem("username");
 
@@ -45,14 +48,27 @@ const PostModal = ({
     setIsReporting(true);
   };
 
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setError(false);
+    setSuccess(false);
+  };
+
   const reportPost = (e, content) => {
     onLoading();
     toggleModal();
     PostService.reportPost(postId, username, content).then((response) => {
       if (response.status === 200) {
-        alert("Report post successfully!");
+        setSuccess(true);
         offLoading();
       }
+      if (response.status === 400) {
+        setError(true);
+        offLoading();
+      }
+      document.body.style.overflow = "auto";
     });
   };
 
@@ -118,6 +134,7 @@ const PostModal = ({
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
         toggleModal();
+        setIsReporting(false);
         document.body.style.overflow = "auto";
       }
     };
@@ -128,91 +145,104 @@ const PostModal = ({
     };
   }, [modalRef, toggleModal]);
 
-  return isShowing
-    ? ReactDOM.createPortal(
-        <div>
-          <div className={classes.modalOverlay}></div>
-          <Paper className={classes.root} ref={modalRef}>
-            {auth ? (
-              <div style={{ width: "100%" }}>
-                <div
-                  className={classes.option}
-                  style={{ color: "#0095f6", borderRadius: 15 }}
-                  onClick={setPrivate}
-                >
-                  <div style={{ flex: "1 0 0px", textAlign: "right" }}>
-                    <Group className={classes.icon} />
-                  </div>
-                  <div className={classes.iconContainer}>
-                    Private
-                    {privateMode && (
-                      <CheckCircle className={classes.checkIcon} />
-                    )}
-                  </div>
-                </div>
-                <div
-                  className={classes.option}
-                  style={{ color: "#0095f6" }}
-                  onClick={setPublic}
-                >
-                  <div style={{ flex: "1 0 0px", textAlign: "right" }}>
-                    <Public className={classes.icon} />
-                  </div>
-                  <div className={classes.iconContainer}>
-                    Public
-                    {!privateMode && (
-                      <CheckCircle className={classes.checkIcon} />
-                    )}
-                  </div>
-                </div>
-                <div
-                  className={classes.option}
-                  style={{ color: "#ed4956" }}
-                  onClick={removePost}
-                >
-                  Remove
-                </div>
-              </div>
-            ) : !isReporting ? (
+  return isShowing ? (
+    ReactDOM.createPortal(
+      <div>
+        <div className={classes.modalOverlay}></div>
+        <Paper className={classes.root} ref={modalRef}>
+          {auth ? (
+            <div style={{ width: "100%" }}>
               <div
                 className={classes.option}
-                style={{ color: "#ed4956", borderRadius: 15 }}
-                onClick={showReportOption}
+                style={{ color: "#0095f6", borderRadius: 15 }}
+                onClick={setPrivate}
               >
-                Report
+                <div style={{ flex: "1 0 0px", textAlign: "right" }}>
+                  <Group className={classes.icon} />
+                </div>
+                <div className={classes.iconContainer}>
+                  Private
+                  {privateMode && <CheckCircle className={classes.checkIcon} />}
+                </div>
               </div>
-            ) : (
-              <div className={classes.option} style={{ borderRadius: 15 }}>
-                Please select a problem
+              <div
+                className={classes.option}
+                style={{ color: "#0095f6" }}
+                onClick={setPublic}
+              >
+                <div style={{ flex: "1 0 0px", textAlign: "right" }}>
+                  <Public className={classes.icon} />
+                </div>
+                <div className={classes.iconContainer}>
+                  Public
+                  {!privateMode && (
+                    <CheckCircle className={classes.checkIcon} />
+                  )}
+                </div>
               </div>
-            )}
-            {isReporting
-              ? reportOption.map((content) => {
-                  return (
-                    <div
-                      className={classes.option}
-                      style={{ borderRadius: 15, fontWeight: 400 }}
-                      onClick={(e) => reportPost(e, content)}
-                    >
-                      {content}
-                    </div>
-                  );
-                })
-              : null}
+              <div
+                className={classes.option}
+                style={{ color: "#ed4956" }}
+                onClick={removePost}
+              >
+                Remove
+              </div>
+            </div>
+          ) : !isReporting ? (
             <div
               className={classes.option}
-              onClick={() => {
-                toggleModal();
-                document.body.style.overflow = "auto";
-              }}
+              style={{ color: "#ed4956", borderRadius: 15 }}
+              onClick={showReportOption}
             >
-              Cancel
+              Report
             </div>
-          </Paper>
-        </div>,
-        document.body
-      )
-    : null;
+          ) : (
+            <div className={classes.option} style={{ borderRadius: 15 }}>
+              Please select a problem
+            </div>
+          )}
+          {isReporting
+            ? reportOption.map((content) => {
+                return (
+                  <div
+                    className={classes.option}
+                    style={{ borderRadius: 15, fontWeight: 400 }}
+                    onClick={(e) => reportPost(e, content)}
+                    key={content}
+                  >
+                    {content}
+                  </div>
+                );
+              })
+            : null}
+          <div
+            className={classes.option}
+            onClick={() => {
+              setIsReporting(false);
+              toggleModal();
+              document.body.style.overflow = "auto";
+            }}
+          >
+            Cancel
+          </div>
+        </Paper>
+      </div>,
+      document.body
+    )
+  ) : (
+    <div>
+      <Snackbar open={success} autoHideDuration={3000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="success">
+          Success! We will inspect your report!
+        </Alert>
+      </Snackbar>
+      <Snackbar open={error} autoHideDuration={3000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="error">
+          You already have reported this post!
+        </Alert>
+      </Snackbar>
+    </div>
+  );
 };
 
 export default PostModal;
