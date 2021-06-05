@@ -29,7 +29,6 @@ import Skeleton from "@material-ui/lab/Skeleton";
 import StatusModal from "./StatusModal";
 import CommentModal from "./CommentModal";
 import FullscreenLoading from "../../../components/FullscreenLoading";
-import useStyles from "./styles/postStyles";
 
 const PostDetailModal = ({
   isShowing,
