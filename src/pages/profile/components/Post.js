@@ -5,8 +5,6 @@ import {
   ChatBubbleOutline,
   Favorite,
   FavoriteBorder,
-  NavigateNext,
-  NavigateBefore,
   Send,
   MoreHoriz,
 } from "@material-ui/icons";
@@ -14,27 +12,34 @@ import {
 import useStyles from "./styles/postStyles";
 import { useModal, useLoading } from "../../../hooks/hooks";
 
-import { CommentService, LikeService } from "../../../services/services";
+import {
+  CommentService,
+  LikeService,
+  PostService,
+} from "../../../services/services";
 
-import Comment from "./Comment";
 import PostModal from "./PostModal";
+import CommentPost from "./CommentPost";
 import FullscreenLoading from "../../../components/FullscreenLoading";
 
-const Post = ({ post, setPosts, postIndex }) => {
+import { useDispatchProfile } from "../reducer/profileReducer";
+
+const Post = ({ post }) => {
   const classes = useStyles();
 
   const [likes, setLikes] = useState(post.likes);
   const [isLiked, setIsLiked] = useState(post.isLiked);
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
-  const [index, setIndex] = useState(0);
+  const [postDetail, setPostDetail] = useState({});
 
-  let data = [];
   const postId = post.id;
   const username = localStorage.getItem("username");
 
   const { isShowing, toggle } = useModal();
   const { loading, onLoading, offLoading } = useLoading();
+
+  const { postsDispatch } = useDispatchProfile();
 
   const handleChange = (e) => {
     setComment(e.target.value);
@@ -57,30 +62,15 @@ const Post = ({ post, setPosts, postIndex }) => {
   const handleComment = () => {
     if (comment === "") return;
 
+    onLoading();
     CommentService.comment(username, comment, postId).then((response) => {
-      setComments((prevComments) => [response.data, ...prevComments]);
-    });
-    setPosts((prevPosts) => {
-      let posts = [...prevPosts];
-      let post = posts[postIndex];
-      post.comments += 1;
-      posts[postIndex] = post;
-      return posts;
+      if (response.status === 200) {
+        setComments((prevComments) => [response.data, ...prevComments]);
+        postsDispatch({ type: "ADD_COMMENT", postId });
+        offLoading();
+      }
     });
     setComment("");
-  };
-
-  const slideRight = () => {
-    setIndex((index + 1) % data.length);
-  };
-
-  const slideLeft = () => {
-    const nextIndex = index - 1;
-    if (nextIndex < 0) {
-      setIndex(data.length - 1);
-    } else {
-      setIndex(nextIndex);
-    }
   };
 
   const showMore = () => {
@@ -94,47 +84,52 @@ const Post = ({ post, setPosts, postIndex }) => {
     });
   };
 
-  if (post.postImages.length > 0) {
-    post.postImages.map((image) => (data = [...data, image.url]));
-  }
-
   useEffect(() => {
     if (comments.length === 0 && post.comments > 0) {
       CommentService.getComment(postId).then((response) => {
-        setComments(response.data);
+        if (response.status === 200) {
+          setComments(response.data);
+        }
       });
     }
-  }, [postId, comments, post]);
+    if (Object.keys(postDetail).length === 0) {
+      PostService.getPostDetail(username, postId).then((response) => {
+        if (response.status === 200) {
+          setPostDetail(response.data);
+        }
+      });
+    }
+  }, [postId, comments, post, postDetail, username]);
 
   return (
     <Paper className={classes.root}>
-      {loading ? <FullscreenLoading /> : null}
       <PostModal
         isShowing={isShowing}
         toggleModal={toggle}
         postId={post.id}
-        auth={post.username === username}
-        privateMode={post.privateMode}
-        setPosts={setPosts}
-        postIndex={postIndex}
+        auth={postDetail.username === username}
+        privateMode={postDetail.privateMode}
         onLoading={onLoading}
         offLoading={offLoading}
+        setPostDetail={setPostDetail}
       />
+      {loading ? <FullscreenLoading /> : null}
       <div className={classes.avatarContainer}>
         <Avatar
           alt="avatar"
-          src={post.avatarUrl ? post.avatarUrl : null}
+          src={postDetail.avatarUrl ? postDetail.avatarUrl : null}
           className={classes.avatar}
           onClick={() => {
-            window.location.href = window.location.origin + "/" + post.username;
+            window.location.href =
+              window.location.origin + "/" + postDetail.username;
           }}
         />
         <a
-          href={"/" + post.username}
+          href={"/" + postDetail.username}
           style={{ textDecoration: "none" }}
           className={classes.name}
         >
-          {post.displayName}
+          {postDetail.displayName}
         </a>
         <MoreHoriz className={classes.moreButton} onClick={toggle} />
       </div>
@@ -143,29 +138,6 @@ const Post = ({ post, setPosts, postIndex }) => {
           {post.content}
         </Typography>
       </div>
-      {data.length > 0 ? (
-        data.length > 1 ? (
-          <div style={{ position: "relative" }}>
-            <NavigateBefore
-              onClick={slideLeft}
-              className={classes.slideIcon}
-              style={{ left: 0 }}
-            />
-            <NavigateNext
-              onClick={slideRight}
-              className={classes.slideIcon}
-              style={{ right: 5 }}
-            />
-            <img
-              src={data[index]}
-              alt={index}
-              className={classes.previewImage}
-            />
-          </div>
-        ) : (
-          <img src={data} alt="previewImage" />
-        )
-      ) : null}
       <div className={classes.likeComment}>
         <div className={classes.button}>
           {isLiked ? (
@@ -199,30 +171,17 @@ const Post = ({ post, setPosts, postIndex }) => {
               : post.comments + " comment"}
           </Typography>
         </div>
-        {data.length > 1 && data.length <= 6 && (
-          <div
-            className={classes.button}
-            style={{ position: "absolute", right: 10 }}
-          >
-            {data.map((image, idx) => (
-              <span
-                key={image}
-                className={classes.dot}
-                active={idx === index ? "1" : "0"}
-              ></span>
-            ))}
-          </div>
-        )}
       </div>
       <div style={{ marginTop: 10 }}>
         {comments.length > 0 &&
           comments.map((comment, index) => {
             return (
-              <Comment
+              <CommentPost
                 comment={comment}
-                key={index}
                 setComments={setComments}
                 index={index}
+                key={index}
+                postId={post.id}
               />
             );
           })}

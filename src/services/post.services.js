@@ -48,7 +48,7 @@ const getMorePost = (username, latestPostId) => {
     });
 };
 
-const getPostProfile = (sourceUsername, targetUsername) => {
+const getPostProfile = (sourceUsername, targetUsername, getImages) => {
   return axios
     .get(
       API_URL +
@@ -56,14 +56,21 @@ const getPostProfile = (sourceUsername, targetUsername) => {
         sourceUsername +
         "&targetUsername=" +
         targetUsername +
-        "&numPosts=15"
+        "&numPosts=15" +
+        "&getImages=" +
+        getImages
     )
     .catch((error) => {
       return error.response;
     });
 };
 
-const getMorePostProfile = (sourceUsername, targetUsername, latestPostId) => {
+const getMorePostProfile = (
+  sourceUsername,
+  targetUsername,
+  latestPostId,
+  getImages
+) => {
   return axios
     .get(
       API_URL +
@@ -73,7 +80,9 @@ const getMorePostProfile = (sourceUsername, targetUsername, latestPostId) => {
         targetUsername +
         "&latestPostId=" +
         latestPostId +
-        "&numPosts=15"
+        "&numPosts=15" +
+        "&getImages=" +
+        getImages
     )
     .catch((error) => {
       return error.response;

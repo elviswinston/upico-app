@@ -27,10 +27,6 @@ export default makeStyles((theme) => ({
   text: {
     fontSize: 14,
   },
-  image: {
-    width: "100%",
-    objectFit: "cover",
-  },
   likeComment: {
     padding: "5px 15px",
     display: "flex",
@@ -68,29 +64,6 @@ export default makeStyles((theme) => ({
   },
   commentButton: {
     cursor: "pointer",
-  },
-  slideIcon: {
-    position: "absolute",
-    top: "50%",
-    padding: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.4)",
-    color: "white",
-    border: "none",
-    borderRadius: "50%",
-  },
-  previewImage: {
-    width: "100%",
-    height: "100%",
-    objectFit: "cover",
-  },
-  dot: {
-    padding: 5,
-    backgroundColor: "#bbb",
-    borderRadius: "50%",
-    marginLeft: 4,
-    "&[active='1']": {
-      backgroundColor: "#009688",
-    },
   },
   moreButton: {
     cursor: "pointer",

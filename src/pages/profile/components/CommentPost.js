@@ -3,14 +3,14 @@ import React, { useEffect, useRef, useState } from "react";
 
 import { MoreHoriz } from "@material-ui/icons";
 
-import useStyles from "./styles/commentStyles";
+import useStyles from "./styles/commentPostStyles";
 
 import TimeAgo from "react-timeago";
 
 import { AvatarService, CommentService } from "../../../services/services";
 import CommentModal from "./CommentModal";
 
-const Comment = ({ comment, index, setComments }) => {
+const CommentPost = ({ comment, setComments, postId }) => {
   const classes = useStyles();
 
   const modalRef = useRef(null);
@@ -20,15 +20,10 @@ const Comment = ({ comment, index, setComments }) => {
   const [replies, setReplies] = useState([]);
   const [text, setText] = useState("Show " + comment.replies + " replies");
   const [avatar, setAvatar] = useState("");
-  const [auth, setAuth] = useState(false);
 
   const [isShowing, setIsShowing] = useState(false);
 
   const username = localStorage.getItem("username");
-
-  const toggle = () => {
-    setIsShowing(!isShowing);
-  };
 
   const handleClick = () => {
     setIsReplying(!isReplying);
@@ -86,37 +81,40 @@ const Comment = ({ comment, index, setComments }) => {
   };
 
   const openMoreModal = (e) => {
-    e.preventDefault();
-    if (comment.username === username) {
-      setAuth(true);
-      toggle();
-    } else {
-      setAuth(false);
-      toggle();
-    }
+    setIsShowing(true);
   };
 
   useEffect(() => {
     if (comment.replies > 0 && replies.length === 0) {
-      console.log("asd");
       CommentService.getReply(comment.id).then((response) => {
         if (response.status === 200) {
           setReplies(response.data);
         }
       });
     }
-  }, [comment, replies]);
+
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        setIsShowing(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [comment, replies, modalRef]);
 
   return (
     <div>
       <CommentModal
         isShowing={isShowing}
-        toggleModal={toggle}
+        setShowingModal={setIsShowing}
         modalRef={modalRef}
-        auth={auth}
-        commentId={auth ? comment.id : null}
+        auth={comment.username === username ? true : false}
+        commentId={comment.id}
         setComments={setComments}
-        commentIndex={index}
+        postId={postId}
       />
       <div className={classes.comment}>
         <Avatar
@@ -245,4 +243,4 @@ const Comment = ({ comment, index, setComments }) => {
   );
 };
 
-export default Comment;
+export default CommentPost;

@@ -17,12 +17,14 @@ const GalleryProfile = () => {
 
   const postModalRef = useRef(null);
   const statusModalRef = useRef(null);
+  const commentModalRef = useRef(null);
 
-  const { posts, targetUsername } = useProfile();
-  const { postsDispatch } = useDispatchProfile();
+  const { gallery, targetUsername } = useProfile();
+  const { galleryDispatch } = useDispatchProfile();
 
   const [postId, setPostId] = useState("");
   const [statusShowing, setStatusShowing] = useState(false);
+  const [commentShowing, setCommentShowing] = useState(false);
 
   const { isShowing, toggle } = useModal();
 
@@ -34,7 +36,7 @@ const GalleryProfile = () => {
   };
 
   const loadMorePost = () => {
-    const latestPostId = posts[posts.length - 1].id;
+    const latestPostId = gallery[gallery.length - 1].id;
     PostService.getMorePostProfile(
       sourceUsername,
       targetUsername,
@@ -43,7 +45,7 @@ const GalleryProfile = () => {
       if (response.status === 200) {
         if (response.data.length > 0) {
           const morePosts = response.data;
-          postsDispatch({ type: "LOAD_MORE_POST", morePosts });
+          galleryDispatch({ type: "LOAD_MORE_POST", morePosts });
         } else {
           alert("There are no more posts");
         }
@@ -59,6 +61,7 @@ const GalleryProfile = () => {
       ) {
         toggle();
         setStatusShowing(false);
+        setCommentShowing(false);
         document.body.style.overflow = "auto";
       }
       if (
@@ -66,6 +69,14 @@ const GalleryProfile = () => {
         !statusModalRef.current.contains(event.target)
       ) {
         setStatusShowing(false);
+        document.body.style.overflow = "auto";
+      }
+
+      if (
+        commentModalRef.current &&
+        !commentModalRef.current.contains(event.target)
+      ) {
+        setCommentShowing(false);
         document.body.style.overflow = "auto";
       }
     };
@@ -85,10 +96,13 @@ const GalleryProfile = () => {
         statusModalRef={statusModalRef}
         statusShowing={statusShowing}
         setStatusShowing={setStatusShowing}
+        commentShowing={commentShowing}
+        setCommentShowing={setCommentShowing}
+        commentModalRef={commentModalRef}
       />
       <Grid container className={classes.gallery} spacing={3}>
-        {posts.length > 0
-          ? posts.map((post) => (
+        {gallery.length > 0
+          ? gallery.map((post) => (
               <Grid
                 item
                 xs={12}
@@ -127,7 +141,7 @@ const GalleryProfile = () => {
             ))
           : null}
       </Grid>
-      {posts.length >= 15 && (
+      {gallery.length >= 15 && (
         <div className={classes.loadMore}>
           <Button color="primary" onClick={loadMorePost}>
             Load more

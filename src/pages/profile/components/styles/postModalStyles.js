@@ -13,7 +13,7 @@ export default makeStyles(() => ({
     opacity: 0.5,
   },
   root: {
-    position: "relative",
+    position: "fixed",
     top: "50vh",
     left: "50%",
     width: "400px",

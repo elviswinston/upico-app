@@ -4,10 +4,7 @@ export default makeStyles((theme) => ({
   root: {
     position: "relative",
   },
-  gallery: {
-    maxWidth: "60%",
-    margin: "30px auto",
-  },
+  gallery: {},
   galleryItem: {
     position: "relative",
     cursor: "pointer",

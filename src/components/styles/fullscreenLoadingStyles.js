@@ -5,7 +5,7 @@ export default makeStyles((theme) => ({
     position: "fixed",
     top: 0,
     left: 0,
-    zIndex: 102,
+    zIndex: 105,
     width: "100vw",
     height: "100vh",
     backgroundColor: "#000",
@@ -15,6 +15,6 @@ export default makeStyles((theme) => ({
     position: "absolute",
     top: "50%",
     left: "50%",
-    zIndex: 100,
+    zIndex: 106,
   },
 }));

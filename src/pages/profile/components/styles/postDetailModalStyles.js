@@ -15,7 +15,7 @@ export default makeStyles(() => ({
     position: "fixed",
     top: "50vh",
     left: "50%",
-    width: "60vw",
+    width: "65vw",
     zIndex: 100,
     transform: "translate(-50%, -50%)",
   },

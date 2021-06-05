@@ -27,6 +27,7 @@ import {
 
 import Skeleton from "@material-ui/lab/Skeleton";
 import StatusModal from "./StatusModal";
+import CommentModal from "./CommentModal";
 import FullscreenLoading from "../../../components/FullscreenLoading";
 
 const PostDetailModal = ({
@@ -36,6 +37,9 @@ const PostDetailModal = ({
   statusModalRef,
   statusShowing,
   setStatusShowing,
+  commentShowing,
+  setCommentShowing,
+  commentModalRef,
 }) => {
   const classes = useStyles();
 
@@ -47,6 +51,8 @@ const PostDetailModal = ({
   const [index, setIndex] = useState(0);
   const [gallery, setGallery] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [commentId, setCommentId] = useState("");
+  const [auth, setAuth] = useState(false);
 
   const { loading, onLoading, offLoading } = useLoading();
 
@@ -110,8 +116,7 @@ const PostDetailModal = ({
   };
 
   useEffect(() => {
-    if (isShowing) {
-      setIsLoading(true);
+    if (isShowing && Object.keys(post).length === 0 && comments.length === 0) {
       PostService.getPostDetail(username, postId).then((response) => {
         if (response.status === 200) {
           setIsLoading(false);
@@ -119,18 +124,13 @@ const PostDetailModal = ({
           setGallery(response.data.postImages);
         }
       });
-
       CommentService.getComment(postId).then((response) => {
         if (response.status === 200) {
           setComments(response.data);
         }
       });
-    } else {
-      setPost({});
-      setGallery([]);
-      setComments([]);
     }
-  }, [isShowing, username, postId]);
+  }, [isShowing, comments, post, username, postId]);
 
   return isShowing ? (
     <div>
@@ -148,6 +148,14 @@ const PostDetailModal = ({
           modalRef={statusModalRef}
           setPost={setPost}
           postId={post.id}
+        />
+        <CommentModal
+          isShowing={commentShowing}
+          modalRef={commentModalRef}
+          setShowingModal={setCommentShowing}
+          auth={auth}
+          commentId={commentId}
+          setComments={setComments}
         />
         <Grid container spacing={0} className={classes.postContainer}>
           <Grid
@@ -276,7 +284,15 @@ const PostDetailModal = ({
                 </div>
                 {comments.length > 0 &&
                   comments.map((comment) => {
-                    return <Comment comment={comment} key={comment.id} />;
+                    return (
+                      <Comment
+                        comment={comment}
+                        key={comment.id}
+                        setCommentShowing={setCommentShowing}
+                        setCommentId={setCommentId}
+                        setAuth={setAuth}
+                      />
+                    );
                   })}
                 {comments.length === 5 && (
                   <div className={classes.more}>

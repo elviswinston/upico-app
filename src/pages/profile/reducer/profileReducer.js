@@ -11,7 +11,7 @@ import { PostService, UserService } from "../../../services/services";
 const ProfileStateContext = createContext();
 const ProfileDispatchContext = createContext();
 
-const postReducer = (state, action) => {
+const galleryReducer = (state, action) => {
   switch (action.type) {
     case "FETCH_SUCCESS":
       return action.payload;
@@ -19,6 +19,33 @@ const postReducer = (state, action) => {
       return [];
     case "LOAD_MORE_POST":
       return state.concat(action.morePosts);
+    default:
+      return state;
+  }
+};
+
+const postsReducer = (state, action) => {
+  switch (action.type) {
+    case "FETCH_SUCCESS":
+      return action.payload;
+    case "FETCH_ERROR":
+      return [];
+    case "LOAD_MORE_POST":
+      return state.concat(action.morePosts);
+    case "ADD_COMMENT":
+      return state.map((post) =>
+        post.id === action.postId
+          ? { ...post, comments: post.comments + 1 }
+          : post
+      );
+    case "REMOVE_COMMENT":
+      return state.map((post) =>
+        post.id === action.postId
+          ? { ...post, comments: post.comments - 1 }
+          : post
+      );
+    case "REMOVE_POST":
+      return state.filter((post) => post.id !== action.postId);
     default:
       return state;
   }
@@ -42,8 +69,10 @@ const userReducer = (state, action) => {
 };
 
 const ProfileProvider = (props) => {
-  const [posts, postsDispatch] = useReducer(postReducer, []);
+  const [gallery, galleryDispatch] = useReducer(galleryReducer, []);
   const [user, userDispatch] = useReducer(userReducer, {});
+  const [posts, postsDispatch] = useReducer(postsReducer, []);
+
   const [targetUsername, setTargetUsername] = useState("");
 
   const sourceUsername = localStorage.getItem("username");
@@ -51,6 +80,15 @@ const ProfileProvider = (props) => {
   useEffect(() => {
     if (targetUsername !== "") {
       PostService.getPostProfile(sourceUsername, targetUsername).then(
+        (response) => {
+          if (response.status === 200) {
+            galleryDispatch({ type: "FETCH_SUCCESS", payload: response.data });
+          } else {
+            galleryDispatch({ type: "FETCH_ERROR" });
+          }
+        }
+      );
+      PostService.getPostProfile(sourceUsername, targetUsername, false).then(
         (response) => {
           if (response.status === 200) {
             postsDispatch({ type: "FETCH_SUCCESS", payload: response.data });
@@ -73,6 +111,7 @@ const ProfileProvider = (props) => {
 
   const providerValue = {
     user,
+    gallery,
     posts,
     targetUsername,
     setTargetUsername,
@@ -80,7 +119,7 @@ const ProfileProvider = (props) => {
 
   return (
     <ProfileDispatchContext.Provider
-      value={{ postsDispatch: postsDispatch, userDispatch: userDispatch }}
+      value={{ galleryDispatch, postsDispatch, userDispatch }}
     >
       <ProfileStateContext.Provider value={providerValue}>
         {props.children}

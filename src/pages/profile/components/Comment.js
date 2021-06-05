@@ -9,7 +9,13 @@ import TimeAgo from "react-timeago";
 
 import { AvatarService, CommentService } from "../../../services/services";
 
-const Comment = ({ comment }) => {
+const Comment = ({
+  comment,
+  toggle,
+  setCommentShowing,
+  setCommentId,
+  setAuth,
+}) => {
   const classes = useStyles();
 
   const [isReplying, setIsReplying] = useState(false);
@@ -19,6 +25,12 @@ const Comment = ({ comment }) => {
   const [avatar, setAvatar] = useState("");
 
   const username = localStorage.getItem("username");
+
+  const openMoreModal = () => {
+    setCommentShowing(true);
+    setCommentId(comment.id);
+    setAuth(comment.username === username ? true : false);
+  };
 
   const handleClick = () => {
     setIsReplying(!isReplying);
@@ -47,12 +59,12 @@ const Comment = ({ comment }) => {
 
   const showReply = () => {
     if (replies.length < comment.replies && isShowingReply) {
-      const latestReplyId = replies[replies.length - 1].id;
+      const latestReplyId = replies[0].id;
       CommentService.getMoreReply(comment.id, latestReplyId).then(
         (response) => {
           if (response.status === 200) {
             setReplies((prevReplies) => {
-              return prevReplies.concat(response.data);
+              return response.data.concat(prevReplies);
             });
             const remainReply =
               comment.replies - replies.length - response.data.length;
@@ -76,12 +88,14 @@ const Comment = ({ comment }) => {
   };
 
   useEffect(() => {
-    CommentService.getReply(comment.id).then((response) => {
-      if (response.status === 200) {
-        setReplies(response.data);
-      }
-    });
-  }, [comment]);
+    if (comment.replies > 0 && replies.length === 0) {
+      CommentService.getReply(comment.id).then((response) => {
+        if (response.status === 200) {
+          setReplies(response.data);
+        }
+      });
+    }
+  }, [comment, replies]);
 
   return (
     <div>
@@ -111,7 +125,10 @@ const Comment = ({ comment }) => {
             >
               {comment.content}
             </Typography>
-            <MoreHorizIcon className={classes.moreButton} />
+            <MoreHorizIcon
+              className={classes.moreButton}
+              onClick={openMoreModal}
+            />
           </div>
           <div>
             <TimeAgo
@@ -148,15 +165,28 @@ const Comment = ({ comment }) => {
                       window.location.origin + "/" + reply.username;
                   }}
                 />
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  <div style={{ display: "flex" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    width: "100%",
+                  }}
+                >
+                  <div style={{ display: "flex", flexWrap: "wrap" }}>
                     <a
                       href={"/" + reply.username}
                       className={classes.displayName}
                     >
                       {reply.userDisplayName}
                     </a>
-                    <Typography varian="body1" style={{ fontSize: 14 }}>
+                    <Typography
+                      varian="body1"
+                      style={{
+                        fontSize: 14,
+                        overflowWrap: "break-word",
+                        maxWidth: "80%",
+                      }}
+                    >
                       {reply.content}
                     </Typography>
                   </div>

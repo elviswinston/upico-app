@@ -53,7 +53,7 @@ export default makeStyles((theme) => ({
     backgroundColor: "#0095f6",
   },
   divider: {
-    width: "58%",
+    width: "63%",
     margin: "0 auto",
     height: 1,
     backgroundColor: "#d9d9d9",

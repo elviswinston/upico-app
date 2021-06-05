@@ -31,13 +31,6 @@ const StatusModal = ({
         setPost((prevPost) => {
           return { ...prevPost, privateMode: true };
         });
-        /*setPosts((prevPosts) => {
-          let posts = [...prevPosts];
-          let post = posts[postIndex];
-          post.privateMode = true;
-          posts[postIndex] = post;
-          return posts;
-        });*/
         offLoading();
       }
       document.body.style.overflow = "auto";
@@ -52,13 +45,6 @@ const StatusModal = ({
         setPost((prevPost) => {
           return { ...prevPost, privateMode: false };
         });
-        /*setPosts((prevPosts) => {
-          let posts = [...prevPosts];
-          let post = posts[postIndex];
-          post.privateMode = false;
-          posts[postIndex] = post;
-          return posts;
-        });*/
         offLoading();
       }
       document.body.style.overflow = "auto";
