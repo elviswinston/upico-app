@@ -85,10 +85,9 @@ const RejectButton = ({ record }) => {
 
 const GridList = ({ record }) => {
   const classes = useStyles();
-
   return (
-    <Grid container className={classes.gallery} spacing={2}>
-      {record.postImages.map((image, index) => (
+    <Grid container className={classes.gallery} spacing={0}>
+      {record.postImages && record.postImages.map((image, index) => (
         <Grid
           items
           xs={12}
