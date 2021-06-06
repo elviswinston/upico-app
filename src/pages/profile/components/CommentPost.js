@@ -18,7 +18,13 @@ const CommentPost = ({ comment, setComments, postId }) => {
   const [isReplying, setIsReplying] = useState(false);
   const [isShowingReply, setIsShowingReply] = useState(false);
   const [replies, setReplies] = useState([]);
-  const [text, setText] = useState("Show " + comment.replies + " replies");
+  const [text, setText] = useState(
+    comment.replies > 0
+      ? "Show " + comment.replies + " replies"
+      : comment.replies === 0
+      ? "Hide replies"
+      : "Show replies"
+  );
   const [avatar, setAvatar] = useState("");
 
   const [isShowing, setIsShowing] = useState(false);
@@ -41,7 +47,17 @@ const CommentPost = ({ comment, setComments, postId }) => {
       CommentService.replyComment(username, content, parentId).then(
         (response) => {
           if (response.status === 200) {
+            comment.replies <= 3
+              ? setText("Hide replies")
+              : setText("Show more replies");
             setReplies([...replies, response.data]);
+            setComments((prevComments) => {
+              return prevComments.map((comment) =>
+                comment.id === parentId
+                  ? { ...comment, replies: comment.replies + 1 }
+                  : comment
+              );
+            });
             setIsReplying(false);
             setIsShowingReply(true);
           }

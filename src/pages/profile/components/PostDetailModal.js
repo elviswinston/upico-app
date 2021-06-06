@@ -298,6 +298,7 @@ const PostDetailModal = ({
                         setCommentShowing={setCommentShowing}
                         setCommentId={setCommentId}
                         setAuth={setAuth}
+                        setComments={setComments}
                       />
                     );
                   })}
