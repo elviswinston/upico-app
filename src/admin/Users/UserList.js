@@ -6,10 +6,18 @@ import {
   EmailField,
   BooleanField,
   useRefresh,
+  BooleanInput,
+  TopToolbar,
+  FilterButton,
+  CreateButton,
 } from "react-admin";
 import useStyles from "./listStyles";
-import { Button } from "@material-ui/core";
+import { Button, Avatar } from "@material-ui/core";
 import AdminService from "../../services/admin-service";
+
+const AvatarField = ({ record }) => {
+  return <Avatar alt="avatar" src={record.avatarUrl} />;
+};
 
 const LockButton = ({ record }) => {
   const refresh = useRefresh();
@@ -27,20 +35,28 @@ const LockButton = ({ record }) => {
         );
       }}
     >
-      {record.isLocked ? "Mở khoá" : "Khoá"}
+      {record.isLocked ? "Unlock" : "Lock"}
     </Button>
   );
 };
+
+const UserListAction = (props) => (
+  <TopToolbar>
+    <FilterButton />
+    <CreateButton />
+  </TopToolbar>
+);
+
+const userFilters = [<BooleanInput label="Locked" source="isLocked" />];
 
 const UserList = (props) => {
   const classes = useStyles();
 
   return (
-    <List {...props}>
+    <List {...props} filters={userFilters} actions={<UserListAction />}>
       <Datagrid className={classes.datagrid}>
-        <TextField source="id" />
+        <AvatarField source="avatar" />
         <TextField source="userName" />
-        <TextField source="bio" />
         <TextField source="displayName" />
         <EmailField source="email" />
         <BooleanField source="isLocked" className={classes.boolean_field} />
