@@ -21,7 +21,6 @@ import useStyles from "./showStyles";
 const AcceptButton = ({ record }) => {
   const notify = useNotify();
   const redirect = useRedirect();
-  console.log(record);
 
   const accept = () => {
     AdminService.approveReport(record.id).then((response) => {
@@ -87,7 +86,7 @@ const GridList = ({ record }) => {
   const classes = useStyles();
   return (
     <Grid container className={classes.gallery} spacing={0}>
-      {record.postImages && record.postImages.map((image, index) => (
+      {record.postImages?.length > 0 && record.postImages.map((image, index) => (
         <Grid
           items
           xs={12}
@@ -123,18 +122,19 @@ const ReportShow = (props) => {
     <Show actions={<ReportShowActions />} {...props}>
       <TabbedShowLayout>
         <Tab label="Post Detail">
-          <TextField label="Post ID" source="id" className={classes.post_id} />
+          <TextField label="Post ID" source="id" className={classes.text_field} />
+          <TextField label="Poster" source="userName" className={classes.text_field}/>
           <TextField
             label="Content"
             source="content"
-            className={classes.content}
+            className={classes.text_field}
           />
           <DateField
             label="Date Created"
             source="dateCreate"
             locales="fr-FR"
             showTime
-            className={classes.date_created}
+            className={classes.text_field}
           />
           <GridList />
         </Tab>

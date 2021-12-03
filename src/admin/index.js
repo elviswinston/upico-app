@@ -5,6 +5,7 @@ import LoginPage from "./LoginPage";
 import authProvider from "./authProvider";
 import dataProvider from "./dataProvider";
 import reports from "./Reports/index";
+import users from "./Users/index";
 
 export default function AdminApp() {
   return (
@@ -14,6 +15,7 @@ export default function AdminApp() {
       dataProvider={dataProvider}
     >
       <Resource name="reports" {...reports} />
+      <Resource name="users" {...users} />
     </Admin>
   );
 }
