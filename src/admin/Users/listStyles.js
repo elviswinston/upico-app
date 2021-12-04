@@ -6,7 +6,7 @@ export default makeStyles((theme) => ({
       textAlign: "center",
     },
   },
-  boolean_field: {
+  align_center: {
     display: "grid",
     placeItems: "center",
   },

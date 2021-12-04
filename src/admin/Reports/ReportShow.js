@@ -86,25 +86,26 @@ const GridList = ({ record }) => {
   const classes = useStyles();
   return (
     <Grid container className={classes.gallery} spacing={0}>
-      {record.postImages?.length > 0 && record.postImages.map((image, index) => (
-        <Grid
-          items
-          xs={12}
-          md={3}
-          sm={4}
-          lg={3}
-          className={classes.galleryItem}
-          key={index}
-        >
-          <div>
-            <img
-              alt="postImage"
-              className={classes.galleryImage}
-              src={image.url}
-            />
-          </div>
-        </Grid>
-      ))}
+      {record.postImages?.length > 0 &&
+        record.postImages.map((image, index) => (
+          <Grid
+            item={true}
+            xs={12}
+            md={3}
+            sm={4}
+            lg={3}
+            className={classes.galleryItem}
+            key={index}
+          >
+            <div>
+              <img
+                alt="postImage"
+                className={classes.galleryImage}
+                src={image.url}
+              />
+            </div>
+          </Grid>
+        ))}
     </Grid>
   );
 };
@@ -122,8 +123,16 @@ const ReportShow = (props) => {
     <Show actions={<ReportShowActions />} {...props}>
       <TabbedShowLayout>
         <Tab label="Post Detail">
-          <TextField label="Post ID" source="id" className={classes.text_field} />
-          <TextField label="Poster" source="userName" className={classes.text_field}/>
+          <TextField
+            label="Post ID"
+            source="id"
+            className={classes.text_field}
+          />
+          <TextField
+            label="Poster"
+            source="userName"
+            className={classes.text_field}
+          />
           <TextField
             label="Content"
             source="content"
