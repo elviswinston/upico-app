@@ -81,7 +81,7 @@ const Header = ({ isHome }) => {
 
   useEffect(() => {
     AvatarService.getUserAvatar(username).then((response) => {
-      if (response.status === 200) {
+      if (response?.status === 200) {
         setAvatar(response.data.path);
       }
     });
