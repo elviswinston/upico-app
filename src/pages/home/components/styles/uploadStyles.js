@@ -5,6 +5,11 @@ export default makeStyles((theme) => ({
     width: "15%",
     borderRadius: 2,
     position: "fixed",
+    [theme.breakpoints.down("sm")]: {
+      position: "relative",
+      width: 500,
+      marginBottom: 20,
+    },
   },
   avatarContainer: {
     backgroundColor: "#2a3f54",

@@ -4,6 +4,13 @@ export default makeStyles((theme) => ({
   root: {},
   content: {
     padding: "100px 40px",
+    [theme.breakpoints.down("sm")]: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      flexDirection: "column",
+      padding: "100px 0",
+    },
   },
   container: {
     padding: "5px 0",

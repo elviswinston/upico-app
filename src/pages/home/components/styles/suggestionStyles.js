@@ -6,6 +6,9 @@ export default makeStyles((theme) => ({
     position: "fixed",
     top: 100,
     right: 40,
+    [theme.breakpoints.down("sm")]: {
+      display: "none",
+    },
   },
   header: {
     backgroundColor: "#2a3f54",

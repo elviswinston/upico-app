@@ -104,7 +104,7 @@ const MessagesArea = ({ chatHubService }) => {
               setMessageToSend(e.currentTarget.value);
             }}
             onKeyDown={async (e) => {
-              if (e.key === "Enter" && e.shiftKey == false) {
+              if (e.key === "Enter" && e.shiftKey === false) {
                 e.preventDefault();
                 await sendMessage();
               }

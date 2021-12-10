@@ -46,13 +46,16 @@ export default makeStyles((theme) => ({
     width: "75%",
   },
   textArea: {
-    maxWidth: 312,
-    minWidth: 312,
-    width: 312,
+    width: "100%",
+    maxWidth: "75%",
     maxHeight: 312,
     minHeight: 50,
     border: "1px solid rgba(0, 0, 0, 0.23)",
     borderRadius: 4,
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+      maxWidth: "75%",
+    },
   },
   input: {
     padding: "5px 10px",

@@ -22,7 +22,7 @@ const Inbox = () => {
       chatHubService.stopHubConnection();
       chatHubService.createHubConnection(jwt, dispatch);
     }
-  }, [dispatch]);
+  }, [dispatch, jwt]);
 
   return (
     <div>
@@ -51,7 +51,7 @@ const Inbox = () => {
                           dispatch(selectHub(hub.id));
                         }}
                       >
-                        <a>
+                        <div>
                           <div className="inbox-inline">
                             <Avatar
                               className="inbox-avatar"
@@ -61,7 +61,6 @@ const Inbox = () => {
                                   : ""
                               }
                             >
-                              A
                             </Avatar>
                             <div>
                               <div>{hub.receiverUserName}</div>
@@ -71,7 +70,7 @@ const Inbox = () => {
                               </div>
                             </div>
                           </div>
-                        </a>
+                        </div>
                       </div>
                     );
                   })}

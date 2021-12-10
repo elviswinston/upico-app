@@ -7,6 +7,8 @@ import dataProvider from "./dataProvider";
 import reports from "./Reports/index";
 import users from "./Users/index";
 
+import { Report, Group } from "@material-ui/icons";
+
 export default function AdminApp() {
   return (
     <Admin
@@ -14,8 +16,16 @@ export default function AdminApp() {
       authProvider={authProvider}
       dataProvider={dataProvider}
     >
-      <Resource name="reports" {...reports} />
-      <Resource name="users" {...users} />
+      <Resource
+        name="reports"
+        {...reports}
+        icon={Report}
+      />
+      <Resource
+        name="users"
+        {...users}
+        icon={Group}
+      />
     </Admin>
   );
 }

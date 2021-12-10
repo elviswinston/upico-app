@@ -128,7 +128,7 @@ const Header = ({ isHome }) => {
             }}
           />
         </Grid>
-        <Grid item style={{ position: "relative" }}>
+        <Grid item style={{ position: "relative" }} className={classes.search}>
           <Paper className={classes.paper} onClick={search}>
             <Search className={classes.icon} icon="search" />
             <InputBase
