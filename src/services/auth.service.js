@@ -46,12 +46,17 @@ const getCurrentUser = () => {
   return localStorage.getItem("username");
 };
 
+const getToken = () => {
+  return localStorage.getItem("token");
+};
+
 const AuthService = {
   register,
   login,
   isLoggedIn,
   logout,
   getCurrentUser,
+  getToken,
 };
 
 export default AuthService;

@@ -74,7 +74,7 @@ const CardSignin = () => {
           localStorage.setItem("username", username);
           localStorage.setItem("data", JSON.stringify(response.data));
           window.location = window.location.origin;
-        } else {    
+        } else {
           setError((prevError) => ({
             ...prevError,
             username: response.data,

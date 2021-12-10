@@ -75,7 +75,7 @@
 
 .chat-message {
   display: flex;
-  max-height: 468px;
+  height: 300px;
   overflow-y: scroll;
   flex-direction: column;
 }
@@ -118,17 +118,16 @@
   border: 1px solid #dbdbdb;
   border-radius: 22px;
   align-items: center;
-  padding: 10px;
+  padding: 1px;
   min-height: 30px;
 }
 
 .input-text {
-  width: 80%;
+  width: 100%;
   border: 0;
   height: 18px;
   overflow: auto;
   resize: none;
-  padding: 8px 9px;
   outline: none;
 }
 

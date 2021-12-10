@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Badge,
   CircularProgress,
   Grid,
   IconButton,
@@ -16,6 +17,7 @@ import {
   Search,
   AccountCircle,
   ExitToApp,
+  Chat,
 } from "@material-ui/icons";
 
 import logo from "../assets/logo.jpg";
@@ -23,6 +25,7 @@ import logo from "../assets/logo.jpg";
 import useStyles from "./styles/headerStyles";
 
 import { useLoading } from "../hooks/hooks";
+import { useHistory } from "react-router-dom";
 
 import { AuthService, UserService, AvatarService } from "../services/services";
 
@@ -32,6 +35,8 @@ const Header = ({ isHome }) => {
   const inputRef = useRef(null);
   const profileRef = useRef(null);
   const searchRef = useRef(null);
+
+  const history = useHistory();
 
   const username = localStorage.getItem("username");
 
@@ -218,6 +223,16 @@ const Header = ({ isHome }) => {
           </IconButton>
           <IconButton className={classes.iconButton}>
             <FavoriteBorder className={classes.icon} />
+          </IconButton>
+          <IconButton
+            className={classes.iconButton}
+            onClick={() => {
+              history.push("/inbox");
+            }}
+          >
+            <Badge badgeContent={6} color="error" max={5}>
+              <Chat className={classes.icon} />
+            </Badge>
           </IconButton>
           <div className={classes.avatarContainer} onClick={handleUserMenu}>
             <Avatar alt="avatar" src={avatar} className={classes.avatar} />
