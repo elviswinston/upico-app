@@ -1,16 +1,9 @@
 import { makeStyles } from "@material-ui/core";
 
 export default makeStyles((theme) => ({
-  post_id: {
+  text_field: {
     display: "inline-block",
     marginRight: 30,
-  },
-  content: {
-    display: "inline-block",
-    marginRight: 30,
-  },
-  date_created: {
-    display: "inline-block",
   },
   gallery: {
     margin: "20px 0",
