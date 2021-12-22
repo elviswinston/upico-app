@@ -10,28 +10,24 @@ import PrivateRoute from "./components/PrivateRoute";
 
 import ProfileProvider from "./pages/profile/reducer/profileReducer";
 
-import { store } from "./store/store";
-import { Provider } from "react-redux";
-
 import AdminApp from "./admin/index";
 import Inbox from "./pages/inbox/inbox";
+import InboxContainer from "./pages/inbox/inboxContaner";
 
 function App() {
   return (
-    <Provider store={store}>
-      <ProfileProvider>
-        <Router>
-          <Switch>
-            <Route path="/inbox" component={Inbox} />
-            <Route path="/login" component={Login} />
-            <PrivateRoute exact path="/" component={Home} />
-            <PrivateRoute exact path="/:username" component={Profile} />
-            <PrivateRoute exact path="/accounts/edit" component={Account} />
-            <Route exact path="/upico/admin" component={AdminApp} />
-          </Switch>
-        </Router>
-      </ProfileProvider>
-    </Provider>
+    <ProfileProvider>
+      <Router>
+        <Switch>
+          <Route path="/inbox" component={InboxContainer} />
+          <Route path="/login" component={Login} />
+          <PrivateRoute exact path="/" component={Home} />
+          <PrivateRoute exact path="/:username" component={Profile} />
+          <PrivateRoute exact path="/accounts/edit" component={Account} />
+          <Route exact path="/upico/admin" component={AdminApp} />
+        </Switch>
+      </Router>
+    </ProfileProvider>
   );
 }
 
