@@ -120,7 +120,7 @@ const UpdateAccount = () => {
   }, [username, modalRef, toggle, user]);
 
   return (
-    <div>
+    <>
       <AvatarModal
         isShowing={isShowing}
         toggleModal={toggle}
@@ -220,7 +220,15 @@ const UpdateAccount = () => {
           Firstname
         </Typography>
         <div className={classes.gridItemInfo}>
-          <div style={{ width: "75%", display: "flex", alignItems: "center" }}>
+          <div
+            style={{
+              width: "75%",
+              display: "grid",
+              alignItems: "center",
+              gridTemplateColumns: "1fr 0.5fr 1fr",
+              columnGap: 10
+            }}
+          >
             <TextField
               variant="outlined"
               InputProps={{
@@ -229,7 +237,6 @@ const UpdateAccount = () => {
                 },
               }}
               value={user.firstName ? user.firstName : ""}
-              style={{ width: "35%" }}
               onChange={changeFirstname}
             />
             <Typography variant="body1" className={classes.infoText}>
@@ -243,7 +250,6 @@ const UpdateAccount = () => {
                 },
               }}
               value={user.lastName ? user.lastName : ""}
-              style={{ width: "35%", marginLeft: 20 }}
               onChange={changeLastname}
             />
           </div>
@@ -313,7 +319,7 @@ const UpdateAccount = () => {
           Update profile successfully!
         </Alert>
       </Snackbar>
-    </div>
+    </>
   );
 };
 

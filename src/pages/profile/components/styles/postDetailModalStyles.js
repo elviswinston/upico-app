@@ -1,6 +1,8 @@
 import { makeStyles } from "@material-ui/core";
 
-export default makeStyles(() => ({
+
+
+export default makeStyles((theme) => ({
   modalOverlay: {
     position: "fixed",
     top: 0,
@@ -18,6 +20,9 @@ export default makeStyles(() => ({
     width: "65vw",
     zIndex: 100,
     transform: "translate(-50%, -50%)",
+    [theme.breakpoints.down("sm")]: {
+      width: "55vw"
+    }
   },
   postContainer: {},
   postImage: {
@@ -30,6 +35,19 @@ export default makeStyles(() => ({
     alignItems: "center",
     padding: "20px 15px",
     borderBottom: "1px solid #d9d9d9",
+    [theme.breakpoints.down("sm")]: {
+      display: "none",
+    },
+  },
+  responsivePostHeader: {
+    display: "none",
+    alignItems: "center",
+    padding: "20px 15px",
+    borderBottom: "1px solid #d9d9d9",
+    [theme.breakpoints.down("sm")]: {
+      display: "flex",
+      width: "100%"
+    },
   },
   postAvatar: {
     width: 30,
@@ -49,6 +67,9 @@ export default makeStyles(() => ({
     msOverflowStyle: "none",
     scrollbarWidth: "none",
     "&::-webkit-scrollbar": {
+      display: "none",
+    },
+    [theme.breakpoints.down("sm")]: {
       display: "none",
     },
   },
@@ -92,6 +113,9 @@ export default makeStyles(() => ({
     padding: "5px 15px",
     display: "flex",
     alignItems: "center",
+    [theme.breakpoints.down("sm")]: {
+      display: "none",
+    },
   },
   textField: {
     width: "100%",

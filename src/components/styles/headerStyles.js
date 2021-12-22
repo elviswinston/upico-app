@@ -128,4 +128,9 @@ export default makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
   },
+  search: {
+    [theme.breakpoints.down("md")]: {
+      display: "none",
+    },
+  },
 }));

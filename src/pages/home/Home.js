@@ -106,9 +106,9 @@ const Home = () => {
                   item
                   style={{ padding: 0, marginBottom: 100, minWidth: 500 }}
                   xs={12}
-                  sm={4}
-                  md={4}
-                  lg={4}
+                  sm={12}
+                  md={12}
+                  lg={12}
                   key={post.id}
                 >
                   <Post post={post} setPosts={setPosts} postIndex={index} />

@@ -165,6 +165,32 @@ const PostDetailModal = ({
           setComments={setComments}
         />
         <Grid container spacing={0} className={classes.postContainer}>
+        <div className={classes.responsivePostHeader}>
+            {!isLoading ? (
+              <Avatar
+                alt="postAvatar"
+                className={classes.postAvatar}
+                src={post.avatarUrl ? post.avatarUrl : null}
+              />
+            ) : (
+              <Skeleton variant="circle">
+                <Avatar style={{ width: 30, height: 30 }} />
+              </Skeleton>
+            )}
+            {!isLoading ? (
+              <Typography variant="body1" className={classes.displayName}>
+                {post.displayName ? post.displayName : null}
+              </Typography>
+            ) : (
+              <div style={{ marginLeft: 10, width: "100%" }}>
+                <Skeleton width="40%"></Skeleton>
+                <Skeleton width="30%"></Skeleton>
+              </div>
+            )}
+            {!isLoading ? (
+              <MoreHoriz className={classes.moreIcon} onClick={showStatus} />
+            ) : null}
+          </div>
           <Grid
             item
             xs={12}

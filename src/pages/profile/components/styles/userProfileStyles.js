@@ -6,10 +6,13 @@ export default makeStyles((theme) => ({
   },
   profile: {
     padding: "100px 40px 0 40px",
+    [theme.breakpoints.down("sm")]: {
+      padding: "100px 0 0 0",
+    },
+    display: "grid",
+    placeItems: "center",
   },
   content: {
-    width: "40%",
-    margin: "0 auto",
     display: "flex",
     justifyContent: "space-between",
     alignItems: "flex-start",
@@ -28,6 +31,7 @@ export default makeStyles((theme) => ({
     "&[loading='1']": {
       opacity: 0.5,
     },
+    marginRight: 20
   },
   icon: {
     width: 20,
