@@ -1,5 +1,5 @@
 import { HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
-import { addMessage, loadMessageHubs } from "./messages";
+import { addMessage, loadMessageHubs, withdrawnMessage } from "./messages";
 
 export default class chatHubService {
   hubConnection = null;
@@ -27,6 +27,10 @@ export default class chatHubService {
       this.hubConnection.on("ReceiveMessage", (message) => {
         dispatch(addMessage(message));
       });
+
+      this.hubConnection.on("WithdrawnMessage", (message) => {
+        dispatch(withdrawnMessage(message));
+      });
     }
   };
 
@@ -43,6 +47,14 @@ export default class chatHubService {
     };
     try {
       await this.hubConnection?.invoke("SendMessage", params);
+    } catch (ex) {
+      console.log("ex", ex);
+    }
+  };
+
+  withdrawnMessage = async (messageId) => {
+    try {
+      await this.hubConnection?.invoke("WithdrawnMessage", messageId);
     } catch (ex) {
       console.log("ex", ex);
     }

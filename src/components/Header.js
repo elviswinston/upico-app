@@ -230,9 +230,7 @@ const Header = ({ isHome }) => {
               history.push("/inbox");
             }}
           >
-            <Badge badgeContent={6} color="error" max={5}>
-              <Chat className={classes.icon} />
-            </Badge>
+            <Chat className={classes.icon} />
           </IconButton>
           <div className={classes.avatarContainer} onClick={handleUserMenu}>
             <Avatar alt="avatar" src={avatar} className={classes.avatar} />

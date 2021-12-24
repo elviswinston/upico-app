@@ -1,12 +1,11 @@
 import {
-  LineChart,
-  Line,
   ResponsiveContainer,
   XAxis,
   YAxis,
   Tooltip,
   BarChart,
   Bar,
+  CartesianGrid,
 } from "recharts";
 import { Card, CardHeader, CardContent, Box, Tab } from "@material-ui/core";
 import TabContext from "@material-ui/lab/TabContext";
@@ -14,9 +13,9 @@ import TabList from "@material-ui/lab/TabList";
 import TabPanel from "@material-ui/lab/TabPanel";
 import { useEffect, useState } from "react";
 import {
-  getDateAccessCount,
-  getMonthAccessCount,
-  getYearAccessCount,
+  getDateNewUsersCount,
+  getMonthNewUsersCount,
+  getYearNewUsersCount,
 } from "../../services/admin-service";
 import DateFnsUtils from "@date-io/date-fns";
 import {
@@ -24,26 +23,26 @@ import {
   MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
 
-const AccessStatistic = () => {
-  const [dateAccessCountData, setDateAccessCountData] = useState([]);
+const NewUserStatistic = () => {
+  const [dateCountData, setDateCountData] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
 
-  const [monthAccessCountData, setMonthAccessCountData] = useState([]);
+  const [monthCountData, setMonthCountData] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState(new Date());
 
-  const [yearAccessCountData, setYearAccessCountData] = useState([]);
+  const [yearCountData, setYearCountData] = useState([]);
   const [selectedYear, setSelectedYear] = useState(new Date());
 
   const [tabValue, setTabValue] = useState("date");
 
   useEffect(() => {
     const asyncFunc = async () => {
-      const dateAccessCounts = await getDateAccessCount(selectedDate);
-      setDateAccessCountData(
+      const dateAccessCounts = await getDateNewUsersCount(selectedDate);
+      setDateCountData(
         dateAccessCounts.map((d) => {
           return {
-            name: d.hour,
-            accesses: d.accessesCount,
+            name: d.name,
+            new: d.count,
             pv: 2400,
             amt: 2400,
           };
@@ -56,12 +55,12 @@ const AccessStatistic = () => {
 
   useEffect(() => {
     const asyncFunc = async () => {
-      const monthAccessCounts = await getMonthAccessCount(selectedMonth);
-      setMonthAccessCountData(
+      const monthAccessCounts = await getMonthNewUsersCount(selectedMonth);
+      setMonthCountData(
         monthAccessCounts.map((m) => {
           return {
-            name: m.date,
-            accesses: m.accessesCount,
+            name: m.name,
+            new: m.count,
             pv: 2400,
             amt: 2400,
           };
@@ -74,7 +73,7 @@ const AccessStatistic = () => {
 
   useEffect(() => {
     const asyncFunc = async () => {
-      const yearAccessCounts = await getYearAccessCount(selectedYear);
+      const yearAccessCounts = await getYearNewUsersCount(selectedYear);
 
       const monthNames = [
         "Jan",
@@ -91,11 +90,11 @@ const AccessStatistic = () => {
         "Dec",
       ];
 
-      setYearAccessCountData(
+      setYearCountData(
         yearAccessCounts.map((m) => {
           return {
-            name: monthNames[m.month - 1],
-            accesses: m.accessesCount,
+            name: monthNames[Number(m.name) - 1],
+            new: m.count,
             pv: 2400,
             amt: 2400,
           };
@@ -108,7 +107,7 @@ const AccessStatistic = () => {
 
   return (
     <Card>
-      <CardHeader title={"Accesses"} />
+      <CardHeader title={"New Users"} />
       <CardContent>
         <Box>
           <TabContext value={tabValue}>
@@ -142,16 +141,14 @@ const AccessStatistic = () => {
               </Box>
               <div style={{ width: "100%", height: 300, marginTop: 10 }}>
                 <ResponsiveContainer>
-                  <LineChart
-                    width={400}
-                    height={400}
-                    data={dateAccessCountData}
-                  >
-                    <Line type="monotone" dataKey="accesses" stroke="#8884d8" />
+                  <BarChart width={600} height={300} data={dateCountData}>
                     <XAxis dataKey="name" />
                     <YAxis />
-                    <Tooltip />
-                  </LineChart>
+                    <Tooltip
+                      wrapperStyle={{ width: 100, backgroundColor: "#ccc" }}
+                    />
+                    <Bar dataKey="new" barSize={30} fill="#8884d8" />
+                  </BarChart>
                 </ResponsiveContainer>
               </div>
             </TabPanel>
@@ -173,16 +170,14 @@ const AccessStatistic = () => {
               </Box>
               <div style={{ width: "100%", height: 300, marginTop: 10 }}>
                 <ResponsiveContainer>
-                  <LineChart
-                    width={400}
-                    height={400}
-                    data={monthAccessCountData}
-                  >
-                    <Line type="monotone" dataKey="accesses" stroke="#8884d8" />
+                  <BarChart width={600} height={300} data={monthCountData}>
                     <XAxis dataKey="name" />
                     <YAxis />
-                    <Tooltip />
-                  </LineChart>
+                    <Tooltip
+                      wrapperStyle={{ width: 100, backgroundColor: "#ccc" }}
+                    />
+                    <Bar dataKey="new" barSize={30} fill="#8884d8" />
+                  </BarChart>
                 </ResponsiveContainer>
               </div>
             </TabPanel>
@@ -204,16 +199,14 @@ const AccessStatistic = () => {
               </Box>
               <div style={{ width: "100%", height: 300, marginTop: 10 }}>
                 <ResponsiveContainer>
-                  <LineChart
-                    width={400}
-                    height={400}
-                    data={yearAccessCountData}
-                  >
-                    <Line type="monotone" dataKey="accesses" stroke="#8884d8" />
-                    <XAxis dataKey="name" />
+                  <BarChart width={600} height={300} data={yearCountData}>
+                    <XAxis dataKey="name" stroke="#8884d8" />
                     <YAxis />
-                    <Tooltip />
-                  </LineChart>
+                    <Tooltip
+                      wrapperStyle={{ width: 100, backgroundColor: "#ccc" }}
+                    />
+                    <Bar dataKey="new" barSize={30} fill="#8884d8" />
+                  </BarChart>
                 </ResponsiveContainer>
               </div>
             </TabPanel>
@@ -224,4 +217,4 @@ const AccessStatistic = () => {
   );
 };
 
-export default AccessStatistic;
+export default NewUserStatistic;

@@ -31,6 +31,58 @@ export const getDateAccessCount = async (date) => {
   return data;
 };
 
+export const getMonthAccessCount = async (date) => {
+  const { data } = await axios.get(API_URL + "GetMonthAccessCount", {
+    params: {
+      date: date,
+    },
+  });
+
+  return data;
+};
+
+export const getYearAccessCount = async (date) => {
+  const { data } = await axios.get(API_URL + "GetYearAccessCount", {
+    params: {
+      date: date,
+    },
+  });
+
+  return data;
+};
+
+/////
+export const getDateNewUsersCount = async (date) => {
+  const { data } = await axios.get(API_URL + "GetDateNewUsersCount", {
+    params: {
+      date: date,
+    },
+  });
+
+  return data;
+};
+
+export const getMonthNewUsersCount = async (date) => {
+  const { data } = await axios.get(API_URL + "GetMonthNewUsersCount", {
+    params: {
+      date: date,
+    },
+  });
+
+  return data;
+};
+
+export const getYearNewUsersCount = async (date) => {
+  const { data } = await axios.get(API_URL + "GetYearNewUsersCount", {
+    params: {
+      date: date,
+    },
+  });
+
+  return data;
+};
+//
+
 const AdminService = {
   approveReport,
   rejectReport,

@@ -12,6 +12,8 @@ import { Report, Group } from "@material-ui/icons";
 
 import DashBoard from "./Dashboard/dashboard";
 import ShowChartIcon from "@material-ui/icons/ShowChart";
+import NewUserStatistic from "./statistics/newUserStatistic";
+import GroupAddIcon from "@material-ui/icons/GroupAdd";
 
 export default function AdminApp() {
   return (
@@ -24,6 +26,7 @@ export default function AdminApp() {
       <Resource name="reports" {...reports} icon={Report} />
       <Resource name="users" {...users} icon={Group} />
       <Resource name="access" list={AccessStatistic} icon={ShowChartIcon} />
+      <Resource name="new users" list={NewUserStatistic} icon={GroupAddIcon} />
     </Admin>
   );
 }

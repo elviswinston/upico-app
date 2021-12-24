@@ -1,4 +1,15 @@
-import { Avatar, IconButton, TextareaAutosize } from "@material-ui/core";
+import {
+  Avatar,
+  Box,
+  ButtonBase,
+  Collapse,
+  IconButton,
+  Menu,
+  MenuItem,
+  TextareaAutosize,
+  Tooltip,
+  Typography,
+} from "@material-ui/core";
 
 import SentimentSatisfiedIcon from "@material-ui/icons/SentimentSatisfied";
 import ImageOutlinedIcon from "@material-ui/icons/ImageOutlined";
@@ -9,6 +20,10 @@ import "./styles/inboxStyle.css";
 import { useSelector } from "react-redux";
 import { getSelectedHub } from "../../store/messages";
 import { useState, Fragment, useRef, useEffect } from "react";
+import { format } from "date-fns";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
+import CancelPresentationIcon from "@material-ui/icons/CancelPresentation";
+import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 
 const MessagesArea = ({ chatHubService }) => {
   const messagesEndRef = useRef(null);
@@ -16,6 +31,12 @@ const MessagesArea = ({ chatHubService }) => {
   const [messageToSend, setMessageToSend] = useState("");
   const selectedHub = useSelector(getSelectedHub);
   const selectedHubId = useSelector((state) => state.message.selectedHubId);
+
+  //withdrawn menu
+  const [collapseIn, setCollapseIn] = useState(null);
+  //
+
+  const loading = useSelector((state) => state.message.loadding);
 
   const scrollToBottom = (isSmooth = false) => {
     if (isSmooth)
@@ -71,18 +92,70 @@ const MessagesArea = ({ chatHubService }) => {
       <div className="chat-message p-4">
         {selectedHub &&
           selectedHub.messages.map((message) => {
+            const date = new Date(message.createdAt);
+            const messageTime = format(date, "MM/dd/yyyy 'at' h:mm a");
             return (
-              <div className=" chat-message-position p4">
-                <div
+              <Box
+                className=" chat-message-position p4"
+                key={message.id}
+                display="flex"
+                alignItems="center"
+                justifyContent={
+                  message.senderId === selectedHub.senderId ? "right" : "left"
+                }
+              >
+                {message.senderId === selectedHub.senderId && (
+                  <Box display="flex" alignItems="center">
+                    <Collapse
+                      orientation="horizontal"
+                      in={collapseIn === message.id}
+                    >
+                      <IconButton
+                        onClick={() => {
+                          chatHubService.withdrawnMessage(message.id);
+                          setCollapseIn(null);
+                        }}
+                      >
+                        <CancelPresentationIcon color="error" />
+                      </IconButton>
+                    </Collapse>
+                    {!message.isWithDraw && (
+                      <IconButton
+                        onClick={() => {
+                          if (collapseIn === null) setCollapseIn(message.id);
+                          else setCollapseIn(null);
+                        }}
+                      >
+                        <MoreVertIcon />
+                      </IconButton>
+                    )}
+                  </Box>
+                )}
+                <Box
                   className={
                     message.senderId === selectedHub.senderId
                       ? "chat-content-right"
                       : "chat-content-left"
                   }
                 >
-                  {message.content}
-                </div>
-              </div>
+                  <Tooltip
+                    title={messageTime}
+                    placement={
+                      message.senderId === selectedHub.senderId
+                        ? "left"
+                        : "right"
+                    }
+                  >
+                    <Box>
+                      {message.isWithDraw ? (
+                        <DeleteOutlineIcon fontSize="small" color="primary" />
+                      ) : (
+                        message.content
+                      )}
+                    </Box>
+                  </Tooltip>
+                </Box>
+              </Box>
             );
           })}
 
