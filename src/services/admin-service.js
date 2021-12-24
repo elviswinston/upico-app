@@ -16,6 +16,21 @@ const updateUserStatus = (username, isLocked) => {
   );
 };
 
+export const getDashboardInfo = async () => {
+  const { data } = await axios.get(API_URL + "DashboardInfo");
+  return data;
+};
+
+export const getDateAccessCount = async (date) => {
+  const { data } = await axios.get(API_URL + "GetDateAccessCount", {
+    params: {
+      date: date,
+    },
+  });
+
+  return data;
+};
+
 const AdminService = {
   approveReport,
   rejectReport,

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@material-ui/core": "^4.11.4",
+    "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "*",
     "@microsoft/signalr": "^6.0.0",
@@ -12,6 +12,7 @@
     "@testing-library/react": "^11.2.6",
     "@testing-library/user-event": "^12.8.3",
     "axios": "^0.21.1",
+    "date-fns": "^2.27.0",
     "infinite-react-carousel": "^1.2.11",
     "ra-data-json-server": "^3.15.2",
     "ra-data-simple-rest": "^3.13.4",
@@ -23,6 +24,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "^4.0.3",
     "react-timeago": "^6.2.1",
+    "recharts": "^2.1.8",
     "web-vitals": "^1.1.2"
   },
   "scripts": {

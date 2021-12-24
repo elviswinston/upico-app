@@ -11,7 +11,6 @@ import PrivateRoute from "./components/PrivateRoute";
 import ProfileProvider from "./pages/profile/reducer/profileReducer";
 
 import AdminApp from "./admin/index";
-import Inbox from "./pages/inbox/inbox";
 import InboxContainer from "./pages/inbox/inboxContaner";
 
 function App() {
